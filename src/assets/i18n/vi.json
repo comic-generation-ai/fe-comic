@@ -1,0 +1,87 @@
+{
+  "COMMON": {
+    "LOGO": "ComicAI",
+    "AND": "và"
+  },
+  "HERO": {
+    "TITLE_START": "Biến ",
+    "TITLE_HIGHLIGHT": "trí tưởng tượng",
+    "TITLE_END": " của bạn thành hiện thực.",
+    "SUBTITLE": "Studio tối tân tích hợp AI dành cho người sáng tạo. Tạo lập, sắp xếp và xuất bản truyện tranh tuyệt đẹp chỉ trong vài phút."
+  },
+  "AUTH": {
+    "LOGIN": {
+      "TITLE": "Cùng bắt đầu nào!",
+      "SUBTITLE": "Nhập thông tin chi tiết của bạn để truy cập studio.",
+      "TAB_LOGIN": "Đăng nhập",
+      "TAB_REGISTER": "Đăng ký",
+      "EMAIL_LABEL": "Địa chỉ Email",
+      "EMAIL_PLACEHOLDER": "creator@example.com",
+      "EMAIL_REQUIRED": "Email là bắt buộc.",
+      "EMAIL_INVALID": "Email không hợp lệ.",
+      "PASSWORD_LABEL": "Mật khẩu",
+      "PASSWORD_PLACEHOLDER": "••••••••",
+      "FORGOT_PASSWORD": "Quên mật khẩu?",
+      "PASSWORD_REQUIRED": "Mật khẩu là bắt buộc.",
+      "PASSWORD_MIN_LENGTH": "Mật khẩu phải có ít nhất 6 ký tự.",
+      "HIDE_PASSWORD": "Ẩn mật khẩu",
+      "SHOW_PASSWORD": "Hiển thị mật khẩu",
+      "CONTINUE_WITH_GOOGLE": "Tiếp tục với Google",
+      "CONTINUE_WITH_APPLE": "Tiếp tục với Apple",
+      "CONTINUE_WITH_DISCORD": "Tiếp tục với Discord",
+      "ENTER_STUDIO": "Vào Studio",
+      "OR_CONTINUE_WITH": "Hoặc tiếp tục với",
+      "POLICY_PREFIX": "Bằng việc đăng nhập, bạn đồng ý với",
+      "TERMS_OF_SERVICE": "Điều khoản dịch vụ",
+      "PRIVACY_POLICY": "Chính sách bảo mật",
+      "POLICY_SUFFIX": "của chúng tôi."
+    },
+    "REGISTER": {
+      "TITLE": "Tạo tài khoản",
+      "SUBTITLE": "Bắt đầu hành trình sáng tạo của bạn với ComicAI ngay hôm nay.",
+      "NAME_LABEL": "Họ và tên",
+      "NAME_PLACEHOLDER": "Stan Lee",
+      "NAME_REQUIRED": "Họ và tên là bắt buộc.",
+      "EMAIL_LABEL": "Địa chỉ Email",
+      "EMAIL_PLACEHOLDER": "creator@example.com",
+      "EMAIL_REQUIRED": "Email là bắt buộc.",
+      "EMAIL_INVALID": "Email không hợp lệ.",
+      "PASSWORD_LABEL": "Mật khẩu",
+      "PASSWORD_PLACEHOLDER": "••••••••",
+      "PASSWORD_REQUIRED": "Mật khẩu là bắt buộc.",
+      "PASSWORD_MIN_LENGTH": "Mật khẩu phải có ít nhất 6 ký tự.",
+      "CONFIRM_PASSWORD_LABEL": "Xác nhận mật khẩu",
+      "CONFIRM_PASSWORD_PLACEHOLDER": "••••••••",
+      "CONFIRM_PASSWORD_REQUIRED": "Vui lòng xác nhận mật khẩu.",
+      "PASSWORDS_MUST_MATCH": "Mật khẩu xác nhận không trùng khớp.",
+      "HIDE_PASSWORD": "Ẩn mật khẩu",
+      "SHOW_PASSWORD": "Hiển thị mật khẩu",
+      "CONTINUE_WITH_GOOGLE": "Tiếp tục với Google",
+      "CONTINUE_WITH_APPLE": "Tiếp tục với Apple",
+      "CONTINUE_WITH_DISCORD": "Tiếp tục với Discord",
+      "CREATE_ACCOUNT": "Tạo tài khoản",
+      "OR_CONTINUE_WITH": "Hoặc tiếp tục với",
+      "POLICY_PREFIX": "Bằng việc đăng ký, bạn đồng ý với",
+      "TERMS_OF_SERVICE": "Điều khoản dịch vụ",
+      "PRIVACY_POLICY": "Chính sách bảo mật",
+      "POLICY_SUFFIX": "của chúng tôi."
+    }
+  },
+  "LAYOUT": {
+    "SIDEBAR": {
+      "BRAND": "AI Comic",
+      "COMIC_EDITOR": "Trình vẽ truyện",
+      "STORY_BOARD": "Bảng phân cảnh",
+      "USER_NAME": "Quản trị viên",
+      "USER_ROLE": "Người sáng tạo"
+    },
+    "HEADER": {
+      "TITLE": "Bảng Điều Khiển",
+      "SUBTITLE": "Tạo và vẽ truyện tranh bằng AI",
+      "LOGOUT": "Đăng xuất",
+      "THEME_DARK": "Chế độ tối",
+      "THEME_LIGHT": "Chế độ sáng",
+      "LANGUAGE": "Ngôn ngữ"
+    }
+  }
+}

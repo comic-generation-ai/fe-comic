@@ -1,0 +1,15 @@
+<div class="layout" [class.sidebar-collapsed]="isSidebarCollapsed">
+  <aside class="layout__sidebar">
+    <app-sidebar (toggleCollapse)="isSidebarCollapsed = $event" />
+  </aside>
+
+  <div class="layout__body">
+    <header class="layout__header">
+      <app-header />
+    </header>
+
+    <main class="layout__main">
+      <router-outlet />
+    </main>
+  </div>
+</div>

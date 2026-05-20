@@ -1,0 +1,56 @@
+@import './palette';
+
+[data-theme="light"],
+.light-theme {
+  /* --- Color Palette - LIGHT THEME --- */
+  --bg-primary: #{$neutral-100};
+  --bg-secondary: #{$neutral-50};
+  --bg-surface: #{$neutral-100};
+  --bg-surface-focus: #{$neutral-50};
+  --bg-surface-hover: rgba(0, 0, 0, 0.02);
+
+  --border-color: #{$neutral-200};
+  --border-hover: #{$neutral-300};
+  --divider-color: rgba(0, 0, 0, 0.06);
+  --divider-color-subtle: rgba(0, 0, 0, 0.04);
+
+  --text-primary: #{$neutral-950};
+  --text-secondary: #{$neutral-900};
+  --text-muted: #{$neutral-400};
+  --text-disabled: #{$neutral-300};
+
+  /* Accent Colors */
+  --primary: #{$purple-600};
+  --primary-light: #{$purple-500};
+  --primary-lighter: #{$purple-400};
+  --primary-rgb: #{$purple-light-rgb};
+
+  --accent-indigo: #{$indigo-600};
+  --accent-indigo-light: #{$indigo-500};
+  --accent-blue: #{$blue-600};
+  --accent-blue-rgb: #{$blue-light-rgb};
+
+  --error: #{$red-600};
+
+  /* Gradients */
+  --logo-text-gradient: linear-gradient(135deg, var(--text-primary) 0%, var(--text-muted) 100%);
+  --hero-title-gradient: linear-gradient(135deg, #{$purple-600} 0%, #{$indigo-600} 50%, #{$blue-600} 100%);
+  --submit-gradient: linear-gradient(135deg, #{$purple-600} 0%, #{$indigo-600} 50%, #{$blue-600} 100%);
+  --submit-gradient-hover: linear-gradient(135deg, #{$purple-500} 0%, #{$indigo-500} 50%, #{$blue-500} 100%);
+  --tab-active-gradient: linear-gradient(90deg, #{$purple-600} 0%, #{$indigo-600} 100%);
+
+  /* Overlays & Effects */
+  --glass-bg: rgba(0, 0, 0, 0.02);
+  --glass-border: rgba(0, 0, 0, 0.06);
+  --hero-overlay: radial-gradient(circle at 20% 20%, rgba(#{$purple-light-rgb}, 0.06) 0%, transparent 60%),
+  linear-gradient(to right, rgba(248, 250, 252, 0) 0%, rgba(248, 250, 252, 0.98) 100%),
+  linear-gradient(to top, rgba(248, 250, 252, 0.9) 0%, rgba(248, 250, 252, 0.1) 60%);
+  --form-glow: radial-gradient(circle, rgba(#{$blue-light-rgb}, 0.02) 0%, transparent 70%);
+  --submit-shadow: 0 4px 20px rgba(#{$purple-light-rgb}, 0.15);
+  --submit-shadow-hover: 0 6px 24px rgba(#{$purple-light-rgb}, 0.25);
+  --submit-shadow-active: 0 2px 10px rgba(#{$purple-light-rgb}, 0.1);
+  --logo-shadow: drop-shadow(0 0 8px rgba(#{$purple-light-rgb}, 0.2));
+  --tab-shadow: 0 0 10px rgba(#{$purple-light-rgb}, 0.15);
+  --link-shadow: 0 0 8px rgba(#{$purple-light-rgb}, 0.15);
+  --login-bg: url('/login-bg-light.png');
+}

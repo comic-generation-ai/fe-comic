@@ -1,0 +1,205 @@
+<div class="header-wrapper">
+  <!-- Left Side: Section Title / Breadcrumbs (Desktop Only) -->
+  <div class="header-title-section">
+    <h1 class="header-title">{{ 'LAYOUT.HEADER.TITLE' | translate }}</h1>
+    <span class="header-subtitle">{{ 'LAYOUT.HEADER.SUBTITLE' | translate }}</span>
+  </div>
+
+  <!-- Left Side: Mobile Logo (Mobile Only) -->
+  <div class="mobile-logo">
+    <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 2L14.8 9.2L22 12L14.8 14.8L12 22L9.2 14.8L2 12L9.2 9.2L12 2Z" fill="url(#mobile-logo-grad)"/>
+      <defs>
+        <linearGradient id="mobile-logo-grad" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#a855f7"/>
+          <stop offset="100%" stop-color="#3b82f6"/>
+        </linearGradient>
+      </defs>
+    </svg>
+    <span class="logo-text">{{ 'LAYOUT.SIDEBAR.BRAND' | translate }}</span>
+  </div>
+
+  <!-- Right Side: Controls and Actions (Desktop Only) -->
+  <div class="header-actions">
+    <!-- Credits Pill (Token) -->
+    <div class="credits-pill">
+      <i class="pi material-symbols-outlined">confirmation_number</i>
+      <span class="credits-text">120/500 Credits</span>
+    </div>
+
+    <!-- Notification Bell -->
+    <div class="notification-container">
+      <button type="button" class="btn-action btn-notification" aria-label="Notifications" (click)="toggleNotifications($event)">
+        <i class="pi material-symbols-outlined">notifications</i>
+        <span class="badge-dot" *ngIf="hasUnreadNotifications()"></span>
+      </button>
+      <app-modal
+        [isOpen]="showNotifications"
+        [notifications]="mockNotifications"
+        (close)="showNotifications = false"
+        (markAllAsRead)="markAllNotificationsAsRead()"
+        (markAsRead)="markNotificationAsRead($event)"
+      ></app-modal>
+    </div>
+
+    <!-- User Profile Avatar & Dropdown -->
+    <div class="user-profile-menu">
+      <button type="button" class="btn-avatar" (click)="toggleDropdown($event)" aria-label="User profile menu">
+        <div class="avatar-circle">A</div>
+      </button>
+
+      <!-- Dropdown Menu -->
+      <div class="dropdown-menu" *ngIf="showDropdown" (click)="$event.stopPropagation()">
+        <!-- User Info Section -->
+        <div class="dropdown-user-info">
+          <div class="avatar-circle avatar-large">A</div>
+          <div class="user-details">
+            <span class="user-name">{{ 'LAYOUT.SIDEBAR.USER_NAME' | translate }}</span>
+            <span class="user-email">admin@comicai.com</span>
+          </div>
+        </div>
+
+        <div class="dropdown-divider"></div>
+
+        <!-- Theme Switching Row in Menu -->
+        <button type="button" class="dropdown-item" (click)="toggleTheme($event)">
+          <i class="pi material-symbols-outlined">{{ isDark ? 'light_mode' : 'dark_mode' }}</i>
+          <span class="dropdown-item-text">{{ (isDark ? 'LAYOUT.HEADER.THEME_LIGHT' : 'LAYOUT.HEADER.THEME_DARK') | translate }}</span>
+          <span class="theme-badge" [class.badge-light]="!isDark">{{ (isDark ? 'dark' : 'light') | uppercase }}</span>
+        </button>
+
+        <!-- Language Selector Row in Menu -->
+        <div class="dropdown-item no-hover">
+          <i class="pi material-symbols-outlined">language</i>
+          <span class="dropdown-item-text">{{ 'LAYOUT.HEADER.LANGUAGE' | translate }}</span>
+          <div class="lang-pill-selector">
+            <button 
+              type="button" 
+              class="lang-pill" 
+              [class.active]="i18n.lang === 'vi'" 
+              (click)="i18n.setLang('vi')"
+            >VI</button>
+            <button 
+              type="button" 
+              class="lang-pill" 
+              [class.active]="i18n.lang === 'en'" 
+              (click)="i18n.setLang('en')"
+            >EN</button>
+          </div>
+        </div>
+
+        <div class="dropdown-divider"></div>
+
+        <!-- Sign Out Button -->
+        <button type="button" class="dropdown-item btn-logout" (click)="logout()">
+          <i class="pi material-symbols-outlined">logout</i>
+          <span class="dropdown-item-text">{{ 'LAYOUT.HEADER.LOGOUT' | translate }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hamburger Menu Button (Mobile Only) -->
+  <button type="button" class="btn-hamburger" (click)="toggleMobileMenu()" [class.active]="showMobileMenu" aria-label="Toggle Menu">
+    <i class="pi material-symbols-outlined">{{ showMobileMenu ? 'close' : 'menu' }}</i>
+  </button>
+</div>
+
+<!-- Mobile Navigation Drawer Overlay (Mobile Only) -->
+<div class="mobile-drawer" *ngIf="showMobileMenu" (click)="$event.stopPropagation()">
+  <!-- User Profile Section -->
+  <div class="drawer-user-info">
+    <div class="avatar-circle avatar-large">A</div>
+    <div class="user-details">
+      <span class="user-name">{{ 'LAYOUT.SIDEBAR.USER_NAME' | translate }}</span>
+      <span class="user-email">admin@comicai.com</span>
+    </div>
+  </div>
+
+  <div class="drawer-divider"></div>
+
+  <!-- Sidebar Navigation Links -->
+  <nav class="drawer-nav">
+    <a routerLink="/app/comic-editor" routerLinkActive="active" class="drawer-nav-item" (click)="showMobileMenu = false">
+      <i class="pi material-symbols-outlined">palette</i>
+      <span>{{ 'LAYOUT.SIDEBAR.COMIC_EDITOR' | translate }}</span>
+    </a>
+    <a routerLink="/app/story-board" routerLinkActive="active" class="drawer-nav-item" (click)="showMobileMenu = false">
+      <i class="pi material-symbols-outlined">grid_view</i>
+      <span>{{ 'LAYOUT.SIDEBAR.STORY_BOARD' | translate }}</span>
+    </a>
+  </nav>
+
+  <div class="drawer-divider"></div>
+
+  <!-- Header Features / Action List -->
+  <div class="drawer-actions">
+    <!-- Credits info -->
+    <div class="drawer-credits-row">
+      <div class="credits-label">
+        <i class="pi material-symbols-outlined">confirmation_number</i>
+        <span>Credits</span>
+      </div>
+      <span class="credits-value">120/500</span>
+    </div>
+
+    <!-- Notifications Toggle -->
+    <div class="drawer-notification-container">
+      <button type="button" class="drawer-action-btn" aria-label="Notifications" (click)="toggleNotifications($event, true)">
+        <div class="action-btn-left">
+          <i class="pi material-symbols-outlined">notifications</i>
+          <span>{{ 'LAYOUT.HEADER.TITLE' | translate }} (Thông báo)</span>
+        </div>
+        <span class="badge-dot-glow" *ngIf="hasUnreadNotifications()"></span>
+      </button>
+      <app-modal
+        [isOpen]="showNotifications"
+        [notifications]="mockNotifications"
+        (close)="showNotifications = false"
+        (markAllAsRead)="markAllNotificationsAsRead()"
+        (markAsRead)="markNotificationAsRead($event)"
+      ></app-modal>
+    </div>
+
+    <!-- Theme Toggler -->
+    <button type="button" class="drawer-action-btn" (click)="toggleTheme($event)">
+      <div class="action-btn-left">
+        <i class="pi material-symbols-outlined">{{ isDark ? 'light_mode' : 'dark_mode' }}</i>
+        <span>{{ (isDark ? 'LAYOUT.HEADER.THEME_LIGHT' : 'LAYOUT.HEADER.THEME_DARK') | translate }}</span>
+      </div>
+      <span class="theme-badge" [class.badge-light]="!isDark">{{ (isDark ? 'dark' : 'light') | uppercase }}</span>
+    </button>
+
+    <!-- Language Toggler -->
+    <div class="drawer-lang-row">
+      <div class="lang-row-left">
+        <i class="pi material-symbols-outlined">language</i>
+        <span>{{ 'LAYOUT.HEADER.LANGUAGE' | translate }}</span>
+      </div>
+      <div class="lang-pill-selector">
+        <button 
+          type="button" 
+          class="lang-pill" 
+          [class.active]="i18n.lang === 'vi'" 
+          (click)="i18n.setLang('vi')"
+        >VI</button>
+        <button 
+          type="button" 
+          class="lang-pill" 
+          [class.active]="i18n.lang === 'en'" 
+          (click)="i18n.setLang('en')"
+        >EN</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="drawer-divider"></div>
+
+  <!-- Logout Trigger -->
+  <button type="button" class="drawer-action-btn btn-logout" (click)="logout()">
+    <div class="action-btn-left">
+      <i class="pi material-symbols-outlined">logout</i>
+      <span>{{ 'LAYOUT.HEADER.LOGOUT' | translate }}</span>
+    </div>
+  </button>
+</div>

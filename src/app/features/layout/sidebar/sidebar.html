@@ -1,0 +1,37 @@
+<div class="sidebar-wrapper" [class.collapsed]="isCollapsed">
+  <!-- Brand Logo -->
+  <div class="sidebar-logo">
+    <div class="logo-content">
+      <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2L14.8 9.2L22 12L14.8 14.8L12 22L9.2 14.8L2 12L9.2 9.2L12 2Z" fill="url(#sidebar-logo-grad)"/>
+        <defs>
+          <linearGradient id="sidebar-logo-grad" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#a855f7"/>
+            <stop offset="100%" stop-color="#3b82f6"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <span class="logo-text">{{ 'LAYOUT.SIDEBAR.BRAND' | translate }}</span>
+    </div>
+  </div>
+
+  <!-- Navigation Menu -->
+  <nav class="sidebar-nav">
+    <a routerLink="/app/comic-editor" routerLinkActive="active" class="nav-item" [title]="(isCollapsed ? ('LAYOUT.SIDEBAR.COMIC_EDITOR' | translate) : '')">
+      <i class="pi material-symbols-outlined">palette</i>
+      <span class="nav-text">{{ 'LAYOUT.SIDEBAR.COMIC_EDITOR' | translate }}</span>
+    </a>
+    <a routerLink="/app/story-board" routerLinkActive="active" class="nav-item" [title]="(isCollapsed ? ('LAYOUT.SIDEBAR.STORY_BOARD' | translate) : '')">
+      <i class="pi material-symbols-outlined">grid_view</i>
+      <span class="nav-text">{{ 'LAYOUT.SIDEBAR.STORY_BOARD' | translate }}</span>
+    </a>
+  </nav>
+
+  <!-- Sidebar Footer with Collapse Button at the bottom -->
+  <div class="sidebar-footer">
+    <button type="button" class="btn-toggle" (click)="toggle()" [title]="(isCollapsed ? 'Expand' : 'Collapse')">
+      <i class="pi material-symbols-outlined">{{ isCollapsed ? 'chevron_right' : 'chevron_left' }}</i>
+      <span class="toggle-text">{{ (isCollapsed ? 'Expand' : 'Collapse') }}</span>
+    </button>
+  </div>
+</div>

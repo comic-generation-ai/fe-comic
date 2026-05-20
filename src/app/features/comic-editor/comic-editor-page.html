@@ -1,0 +1,13 @@
+<div class="editor-container">
+  <aside class="left-panel">
+    <app-input-comic (onGenerateSuccess)="onGenerateComplete($event)"></app-input-comic>
+  </aside>
+
+  <main class="right-panel">
+    <app-workspace-comic [comicData]="comicData"></app-workspace-comic>
+
+    <section *ngIf="hasResult" class="editor-panel">
+      <app-editor-comic [comicData]="comicData"></app-editor-comic>
+    </section>
+  </main>
+</div>

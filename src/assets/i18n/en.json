@@ -1,0 +1,87 @@
+{
+  "COMMON": {
+    "LOGO": "ComicAI",
+    "AND": "and"
+  },
+  "HERO": {
+    "TITLE_START": "Bring your ",
+    "TITLE_HIGHLIGHT": "imagination",
+    "TITLE_END": " to life.",
+    "SUBTITLE": "The ultimate AI-powered studio for creators. Generate, arrange, and publish stunning comic books in minutes."
+  },
+  "AUTH": {
+    "LOGIN": {
+      "TITLE": "Start Your Journey!",
+      "SUBTITLE": "Enter your details to access the studio.",
+      "TAB_LOGIN": "Log in",
+      "TAB_REGISTER": "Register",
+      "EMAIL_LABEL": "Email Address",
+      "EMAIL_PLACEHOLDER": "creator@example.com",
+      "EMAIL_REQUIRED": "Email is required.",
+      "EMAIL_INVALID": "Invalid email address.",
+      "PASSWORD_LABEL": "Password",
+      "PASSWORD_PLACEHOLDER": "••••••••",
+      "FORGOT_PASSWORD": "Forgot password?",
+      "PASSWORD_REQUIRED": "Password is required.",
+      "PASSWORD_MIN_LENGTH": "Password must be at least 6 characters.",
+      "HIDE_PASSWORD": "Hide password",
+      "SHOW_PASSWORD": "Show password",
+      "CONTINUE_WITH_GOOGLE": "Continue with Google",
+      "CONTINUE_WITH_APPLE": "Continue with Apple",
+      "CONTINUE_WITH_DISCORD": "Continue with Discord",
+      "ENTER_STUDIO": "Enter Studio",
+      "OR_CONTINUE_WITH": "Or continue with",
+      "POLICY_PREFIX": "By logging in, you agree to our",
+      "TERMS_OF_SERVICE": "Terms of Service",
+      "PRIVACY_POLICY": "Privacy Policy",
+      "POLICY_SUFFIX": "."
+    },
+    "REGISTER": {
+      "TITLE": "Create Account",
+      "SUBTITLE": "Start your creative journey with ComicAI today.",
+      "NAME_LABEL": "Full Name",
+      "NAME_PLACEHOLDER": "Stan Lee",
+      "NAME_REQUIRED": "Full name is required.",
+      "EMAIL_LABEL": "Email Address",
+      "EMAIL_PLACEHOLDER": "creator@example.com",
+      "EMAIL_REQUIRED": "Email is required.",
+      "EMAIL_INVALID": "Invalid email address.",
+      "PASSWORD_LABEL": "Password",
+      "PASSWORD_PLACEHOLDER": "••••••••",
+      "PASSWORD_REQUIRED": "Password is required.",
+      "PASSWORD_MIN_LENGTH": "Password must be at least 6 characters.",
+      "CONFIRM_PASSWORD_LABEL": "Confirm Password",
+      "CONFIRM_PASSWORD_PLACEHOLDER": "••••••••",
+      "CONFIRM_PASSWORD_REQUIRED": "Please confirm your password.",
+      "PASSWORDS_MUST_MATCH": "Passwords do not match.",
+      "HIDE_PASSWORD": "Hide password",
+      "SHOW_PASSWORD": "Show password",
+      "CONTINUE_WITH_GOOGLE": "Continue with Google",
+      "CONTINUE_WITH_APPLE": "Continue with Apple",
+      "CONTINUE_WITH_DISCORD": "Continue with Discord",
+      "CREATE_ACCOUNT": "Create Account",
+      "OR_CONTINUE_WITH": "Or continue with",
+      "POLICY_PREFIX": "By registering, you agree to our",
+      "TERMS_OF_SERVICE": "Terms of Service",
+      "PRIVACY_POLICY": "Privacy Policy",
+      "POLICY_SUFFIX": "."
+    }
+  },
+  "LAYOUT": {
+    "SIDEBAR": {
+      "BRAND": "AI Comic",
+      "COMIC_EDITOR": "Comic Editor",
+      "STORY_BOARD": "Story Board",
+      "USER_NAME": "Admin Creator",
+      "USER_ROLE": "Administrator"
+    },
+    "HEADER": {
+      "TITLE": "Studio Console",
+      "SUBTITLE": "Create and generate comics with AI",
+      "LOGOUT": "Sign out",
+      "THEME_DARK": "Dark Mode",
+      "THEME_LIGHT": "Light Mode",
+      "LANGUAGE": "Language"
+    }
+  }
+}
