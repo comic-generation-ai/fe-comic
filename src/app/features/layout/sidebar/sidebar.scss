@@ -38,7 +38,7 @@
       width: 28px;
       height: 28px;
       flex-shrink: 0;
-      filter: drop-shadow(0 0 8px rgba(168, 85, 247, 0.4));
+      filter: var(--logo-shadow);
     }
 
     .logo-text {
@@ -46,7 +46,7 @@
       font-size: 18px;
       font-weight: 800;
       letter-spacing: -0.2px;
-      background: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%);
+      background: var(--avatar-gradient);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       opacity: 1;

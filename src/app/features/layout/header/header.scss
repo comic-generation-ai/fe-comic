@@ -46,7 +46,7 @@
       padding: 6px 14px;
       backdrop-filter: blur(10px);
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      box-shadow: var(--shadow-sm);
 
       i {
         font-size: 14px;
@@ -66,7 +66,7 @@
         background: var(--bg-surface-hover);
         border-color: var(--border-hover);
         transform: translateY(-1px);
-        box-shadow: 0 6px 16px rgba(168, 85, 247, 0.1);
+        box-shadow: var(--shadow-md);
       }
     }
 
@@ -148,7 +148,7 @@
         &:hover {
           transform: scale(1.05);
           .avatar-circle {
-            box-shadow: 0 0 16px rgba(168, 85, 247, 0.5);
+            box-shadow: var(--shadow-lg);
           }
         }
 
@@ -161,14 +161,14 @@
         width: 38px;
         height: 38px;
         border-radius: 50%;
-        background: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%);
+        background: var(--avatar-gradient);
         display: flex;
         align-items: center;
         justify-content: center;
         font-weight: 700;
-        color: #ffffff;
+        color: var(--avatar-text);
         font-size: 14px;
-        box-shadow: 0 4px 10px rgba(168, 85, 247, 0.3);
+        box-shadow: var(--avatar-shadow);
         transition: all 0.3s ease;
         user-select: none;
 
@@ -176,7 +176,7 @@
           width: 48px;
           height: 48px;
           font-size: 18px;
-          box-shadow: 0 6px 14px rgba(168, 85, 247, 0.4);
+          box-shadow: var(--avatar-shadow-lg);
         }
       }
 
@@ -191,7 +191,7 @@
         border-radius: 16px;
         padding: 16px 8px;
         backdrop-filter: blur(20px);
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        box-shadow: var(--shadow-dropdown);
         z-index: 100;
         display: flex;
         flex-direction: column;
@@ -287,14 +287,14 @@
             font-weight: 800;
             padding: 3px 6px;
             border-radius: 6px;
-            background: rgba(168, 85, 247, 0.12);
+            background: var(--badge-primary-bg);
             color: var(--primary-light);
-            border: 1px solid rgba(168, 85, 247, 0.2);
+            border: 1px solid var(--badge-primary-border);
 
             &.badge-light {
-              background: rgba(234, 179, 8, 0.12);
-              color: #eab308;
-              border-color: rgba(234, 179, 8, 0.2);
+              background: var(--badge-warning-bg);
+              color: var(--warning);
+              border-color: var(--badge-warning-border);
             }
           }
 
@@ -324,8 +324,8 @@
 
               &.active {
                 background: var(--primary-light);
-                color: #ffffff;
-                box-shadow: 0 2px 6px rgba(168, 85, 247, 0.3);
+                color: var(--avatar-text);
+                box-shadow: var(--badge-primary-shadow);
               }
             }
           }
@@ -333,7 +333,7 @@
           /* Logout specific hover color */
           &.btn-logout:hover {
             color: var(--error);
-            background-color: rgba(239, 68, 68, 0.05);
+            background-color: var(--error-bg-hover);
 
             i {
               color: var(--error);
@@ -350,17 +350,17 @@
   0% {
     transform: scale(0.9);
     opacity: 0.8;
-    box-shadow: 0 0 0 0 rgba(168, 85, 247, 0.4);
+    box-shadow: var(--pulse-glow-start);
   }
   70% {
     transform: scale(1.1);
     opacity: 1;
-    box-shadow: 0 0 0 6px rgba(168, 85, 247, 0);
+    box-shadow: var(--pulse-glow-mid);
   }
   100% {
     transform: scale(0.9);
     opacity: 0.8;
-    box-shadow: 0 0 0 0 rgba(168, 85, 247, 0);
+    box-shadow: var(--pulse-glow-end);
   }
 }
 
@@ -465,7 +465,7 @@
     flex-direction: column;
     overflow-y: auto;
     animation: drawer-slide-down 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    box-shadow: var(--shadow-drawer);
 
     .drawer-user-info {
       display: flex;
@@ -477,14 +477,14 @@
         width: 48px;
         height: 48px;
         border-radius: 50%;
-        background: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%);
+        background: var(--avatar-gradient);
         display: flex;
         align-items: center;
         justify-content: center;
         font-weight: 700;
-        color: #ffffff;
+        color: var(--avatar-text);
         font-size: 18px;
-        box-shadow: 0 6px 14px rgba(168, 85, 247, 0.4);
+        box-shadow: var(--avatar-shadow-lg);
         user-select: none;
       }
 
@@ -549,8 +549,8 @@
         }
 
         &.active {
-          background: linear-gradient(90deg, rgba(168, 85, 247, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%);
-          border-color: rgba(168, 85, 247, 0.2);
+          background: var(--nav-active-bg);
+          border-color: var(--nav-active-border);
         }
       }
     }
@@ -646,14 +646,14 @@
           font-weight: 800;
           padding: 3px 8px;
           border-radius: 6px;
-          background: rgba(168, 85, 247, 0.12);
+          background: var(--badge-primary-bg);
           color: var(--primary-light);
-          border: 1px solid rgba(168, 85, 247, 0.2);
+          border: 1px solid var(--badge-primary-border);
 
           &.badge-light {
-            background: rgba(234, 179, 8, 0.12);
-            color: #eab308;
-            border-color: rgba(234, 179, 8, 0.2);
+            background: var(--badge-warning-bg);
+            color: var(--warning);
+            border-color: var(--badge-warning-border);
           }
         }
 
@@ -662,8 +662,8 @@
 
           &:hover {
             color: var(--error);
-            background-color: rgba(239, 68, 68, 0.05);
-            border-color: rgba(239, 68, 68, 0.1);
+            background-color: var(--error-bg-hover);
+            border-color: var(--error-border-hover);
 
             .action-btn-left i {
               color: var(--error);
@@ -714,8 +714,8 @@
 
             &.active {
               background: var(--primary-light);
-              color: #ffffff;
-              box-shadow: 0 2px 6px rgba(168, 85, 247, 0.3);
+              color: var(--avatar-text);
+              box-shadow: var(--badge-primary-shadow);
             }
           }
         }

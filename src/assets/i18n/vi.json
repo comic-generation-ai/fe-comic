@@ -83,5 +83,25 @@
       "THEME_LIGHT": "Chế độ sáng",
       "LANGUAGE": "Ngôn ngữ"
     }
+  },
+  "INPUT_COMIC": {
+    "PANEL_TITLE": "Công cụ sáng tạo",
+    "PANEL_SUBTITLE": "Định hình câu chuyện của bạn",
+    "STORY_TITLE": "TÊN TRUYỆN",
+    "STORY_TITLE_PLACEHOLDER": "Ví dụ: Hành trình tới tương lai",
+    "STORY_SCRIPT": "NỘI DUNG KỊCH BẢN",
+    "STORY_SCRIPT_PLACEHOLDER": "Mô tả diễn biến, lời thoại hoặc ý tưởng chính của bạn tại đây...",
+    "ART_STYLE": "PHONG CÁCH",
+    "FRAME_COUNT": "SỐ KHUNG HÌNH",
+    "FRAMES_SUFFIX": "khung",
+    "GENERATE_BUTTON": "TẠO TRUYỆN TRANH"
+  },
+  "WORKSPACE_COMIC": {
+    "TITLE": "Bản vẽ phân cảnh",
+    "PREVIEW_SUBTITLE": "Bản xem trước bố cục truyện tranh {{count}} khung hình",
+    "GENERATED_SUBTITLE": "Đang vẽ câu chuyện: \"{{title}}\"",
+    "STATUS_DRAFT": "Bản nháp bố cục",
+    "STATUS_GENERATED": "Đã tạo bởi AI",
+    "EMPTY_PANEL_HINT": "Đang chờ mô tả..."
   }
 }

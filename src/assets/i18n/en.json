@@ -83,5 +83,25 @@
       "THEME_LIGHT": "Light Mode",
       "LANGUAGE": "Language"
     }
+  },
+  "INPUT_COMIC": {
+    "PANEL_TITLE": "Creative Engine",
+    "PANEL_SUBTITLE": "Define your story",
+    "STORY_TITLE": "STORY TITLE",
+    "STORY_TITLE_PLACEHOLDER": "E.g. Journey to the Future",
+    "STORY_SCRIPT": "STORY SCRIPT",
+    "STORY_SCRIPT_PLACEHOLDER": "Describe scene details, dialogues, or your main ideas here...",
+    "ART_STYLE": "ART STYLE",
+    "FRAME_COUNT": "FRAME COUNT",
+    "FRAMES_SUFFIX": "frames",
+    "GENERATE_BUTTON": "GENERATE COMIC"
+  },
+  "WORKSPACE_COMIC": {
+    "TITLE": "Storyboard Workspace",
+    "PREVIEW_SUBTITLE": "Previewing {{count}}-frame comic layout",
+    "GENERATED_SUBTITLE": "Generating story: \"{{title}}\"",
+    "STATUS_DRAFT": "Layout Draft",
+    "STATUS_GENERATED": "AI Generated",
+    "EMPTY_PANEL_HINT": "Waiting for script..."
   }
 }

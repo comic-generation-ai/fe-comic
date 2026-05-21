@@ -1,13 +1,30 @@
 <div class="editor-container">
   <aside class="left-panel">
-    <app-input-comic (onGenerateSuccess)="onGenerateComplete($event)"></app-input-comic>
+    <app-input-comic 
+      [storyTitle]="storyTitle"
+      (storyTitleChange)="onInputChange('storyTitle', $event)"
+      [storyScript]="storyScript"
+      (storyScriptChange)="onInputChange('storyScript', $event)"
+      [artStyle]="artStyle"
+      (artStyleChange)="onInputChange('artStyle', $event)"
+      [frameCount]="selectedFrames"
+      (onFrameCountChange)="onInputChange('selectedFrames', $event)"
+      [isGenerating]="isGenerating"
+      [isFormValid]="isFormValid"
+      (onGenerate)="generateComic()"
+    ></app-input-comic>
   </aside>
 
-  <main class="right-panel">
-    <app-workspace-comic [comicData]="comicData"></app-workspace-comic>
+  <main class="right-panel" [class.split-view]="isGenerated">
+    <app-workspace-comic 
+      [selectedFrames]="selectedFrames" 
+      [comicData]="generatedResult"
+    ></app-workspace-comic>
 
-    <section *ngIf="hasResult" class="editor-panel">
-      <app-editor-comic [comicData]="comicData"></app-editor-comic>
-    </section>
+    @if (isGenerated) {
+      <section class="editor-panel">
+        <app-editor-comic [comicData]="generatedResult"></app-editor-comic>
+      </section>
+    }
   </main>
 </div>

@@ -13,7 +13,7 @@
   border-radius: 20px;
   backdrop-filter: blur(25px);
   -webkit-backdrop-filter: blur(25px);
-  box-shadow: 0 10px 45px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  box-shadow: var(--shadow-dropdown);
   z-index: 1000;
   display: flex;
   flex-direction: column;
@@ -49,7 +49,7 @@
       cursor: pointer;
       padding: 0;
       transition: all 0.2s ease;
-      text-shadow: 0 0 12px rgba(168, 85, 247, 0.1);
+      text-shadow: var(--notif-mark-shadow);
 
       &:hover {
         color: var(--primary-lighter);
@@ -85,11 +85,11 @@
     }
 
     &::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.1);
+      background: var(--scrollbar-thumb-light);
       border-radius: 10px;
 
       &:hover {
-        background: rgba(255, 255, 255, 0.2);
+        background: var(--scrollbar-thumb-light-hover);
       }
     }
 
@@ -99,17 +99,17 @@
       cursor: pointer;
       transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       position: relative;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+      border-bottom: 1px solid var(--glass-border-subtle);
 
       &:hover {
         background-color: var(--bg-surface-hover);
       }
 
       &.unread {
-        background-color: rgba(168, 85, 247, 0.02);
+        background-color: var(--notif-unread-bg);
 
         &:hover {
-          background-color: rgba(168, 85, 247, 0.04);
+          background-color: var(--notif-unread-bg-hover);
         }
       }
 
@@ -128,21 +128,21 @@
         }
 
         &.feature {
-          background: rgba(168, 85, 247, 0.12);
-          color: #a855f7;
-          border: 1px solid rgba(168, 85, 247, 0.15);
+          background: var(--notif-feature-bg);
+          color: var(--primary);
+          border: 1px solid var(--notif-feature-border);
         }
 
         &.billing {
-          background: rgba(244, 63, 94, 0.12);
-          color: #f43f5e;
-          border: 1px solid rgba(244, 63, 94, 0.15);
+          background: var(--notif-billing-bg);
+          color: var(--rose);
+          border: 1px solid var(--notif-billing-border);
         }
 
         &.update {
-          background: rgba(59, 130, 246, 0.12);
-          color: #3b82f6;
-          border: 1px solid rgba(59, 130, 246, 0.15);
+          background: var(--notif-update-bg);
+          color: var(--accent-blue);
+          border: 1px solid var(--notif-update-border);
         }
       }
 
@@ -178,8 +178,8 @@
             width: 6px;
             height: 6px;
             border-radius: 50%;
-            background-color: #ef4444;
-            box-shadow: 0 0 8px #ef4444;
+            background-color: var(--notif-unread-dot);
+            box-shadow: var(--notif-unread-dot-shadow);
             flex-shrink: 0;
           }
         }
@@ -232,7 +232,7 @@
     align-items: center;
     justify-content: center;
     padding: 12px 20px;
-    background: rgba(255, 255, 255, 0.01);
+    background: var(--glass-bg-footer);
 
     .btn-view-all {
       background: none;

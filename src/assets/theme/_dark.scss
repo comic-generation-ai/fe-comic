@@ -56,4 +56,82 @@
   --tab-shadow: 0 0 10px rgba(#{$purple-rgb}, 0.4);
   --link-shadow: 0 0 8px rgba(#{$purple-rgb}, 0.3);
   --login-bg: url('/login-bg-dark.png');
+
+  /* Status & Category Colors */
+  --warning: #{$yellow-500};
+  --warning-rgb: #{$yellow-rgb};
+  --rose: #{$rose-500};
+  --rose-rgb: #{$rose-rgb};
+  --red-rgb: #{$red-rgb};
+
+  /* Overlay Base RGB */
+  --black-rgb: #{$black-rgb};
+  --white-rgb: #{$white-rgb};
+
+  /* Avatar & Gradient */
+  --avatar-gradient: linear-gradient(135deg, #{$purple-500} 0%, #{$blue-500} 100%);
+  --avatar-text: #{$neutral-50};
+  --avatar-shadow: 0 4px 10px rgba(#{$purple-rgb}, 0.3);
+  --avatar-shadow-lg: 0 6px 14px rgba(#{$purple-rgb}, 0.4);
+
+  /* Badge (Theme / Notification) */
+  --badge-primary-bg: rgba(#{$purple-rgb}, 0.12);
+  --badge-primary-border: rgba(#{$purple-rgb}, 0.2);
+  --badge-primary-shadow: 0 2px 6px rgba(#{$purple-rgb}, 0.3);
+  --badge-warning-bg: rgba(#{$yellow-rgb}, 0.12);
+  --badge-warning-border: rgba(#{$yellow-rgb}, 0.2);
+
+  /* Glow & Shadow */
+  --shadow-sm: 0 4px 12px rgba(#{$black-rgb}, 0.05);
+  --shadow-md: 0 6px 16px rgba(#{$purple-rgb}, 0.1);
+  --shadow-lg: 0 0 16px rgba(#{$purple-rgb}, 0.5);
+  --shadow-dropdown: 0 10px 40px rgba(#{$black-rgb}, 0.3), inset 0 1px 0 rgba(#{$white-rgb}, 0.05);
+  --shadow-panel: 0 8px 32px rgba(#{$black-rgb}, 0.15), inset 0 1px 0 rgba(#{$white-rgb}, 0.05);
+  --shadow-drawer: 0 20px 40px rgba(#{$black-rgb}, 0.3);
+  --shadow-sidebar: 4px 0 24px rgba(#{$black-rgb}, 0.2);
+  --shadow-header: 0 4px 20px rgba(#{$black-rgb}, 0.1);
+  --shadow-panel-hover: 0 12px 40px rgba(#{$black-rgb}, 0.2);
+
+  /* Scrollbar */
+  --scrollbar-thumb: rgba(#{$white-rgb}, 0.08);
+  --scrollbar-thumb-hover: rgba(#{$white-rgb}, 0.15);
+  --scrollbar-thumb-light: rgba(#{$white-rgb}, 0.1);
+  --scrollbar-thumb-light-hover: rgba(#{$white-rgb}, 0.2);
+
+  /* Glass Effects (extra alpha variations) */
+  --glass-border-subtle: rgba(#{$white-rgb}, 0.02);
+  --glass-border-light: rgba(#{$white-rgb}, 0.05);
+  --glass-bg-footer: rgba(#{$white-rgb}, 0.01);
+  --glass-border-hover: rgba(#{$white-rgb}, 0.12);
+
+  /* Editor Panel */
+  --editor-panel-bg: rgba(#{$purple-rgb}, 0.02);
+  --editor-panel-border: rgba(#{$purple-rgb}, 0.12);
+  --editor-panel-shadow: 0 8px 32px rgba(#{$purple-rgb}, 0.05), inset 0 1px 0 rgba(#{$white-rgb}, 0.02);
+
+  /* Notification Items */
+  --notif-unread-bg: rgba(#{$purple-rgb}, 0.02);
+  --notif-unread-bg-hover: rgba(#{$purple-rgb}, 0.04);
+  --notif-feature-bg: rgba(#{$purple-rgb}, 0.12);
+  --notif-feature-border: rgba(#{$purple-rgb}, 0.15);
+  --notif-billing-bg: rgba(#{$rose-rgb}, 0.12);
+  --notif-billing-border: rgba(#{$rose-rgb}, 0.15);
+  --notif-update-bg: rgba(#{$blue-rgb}, 0.12);
+  --notif-update-border: rgba(#{$blue-rgb}, 0.15);
+  --notif-unread-dot: #{$red-500};
+  --notif-unread-dot-shadow: 0 0 8px #{$red-500};
+  --notif-mark-shadow: 0 0 12px rgba(#{$purple-rgb}, 0.1);
+
+  /* Active Nav / Drawer */
+  --nav-active-bg: linear-gradient(90deg, rgba(#{$purple-rgb}, 0.1) 0%, rgba(#{$blue-rgb}, 0.05) 100%);
+  --nav-active-border: rgba(#{$purple-rgb}, 0.2);
+
+  /* Error Hover */
+  --error-bg-hover: rgba(#{$red-rgb}, 0.05);
+  --error-border-hover: rgba(#{$red-rgb}, 0.1);
+
+  /* Pulse Keyframe Values */
+  --pulse-glow-start: 0 0 0 0 rgba(#{$purple-rgb}, 0.4);
+  --pulse-glow-mid: 0 0 0 6px rgba(#{$purple-rgb}, 0);
+  --pulse-glow-end: 0 0 0 0 rgba(#{$purple-rgb}, 0);
 }

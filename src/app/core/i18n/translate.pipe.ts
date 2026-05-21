@@ -7,9 +7,9 @@ import { I18nService } from './i18n.service';
   pure: false // Set pure to false to re-evaluate on language changes immediately
 })
 export class TranslatePipe implements PipeTransform {
-  constructor(private i18n: I18nService) {}
+  constructor(private i18n: I18nService) { }
 
-  transform(key: string): string {
-    return this.i18n.translate(key);
+  transform(key: string, params?: any): string {
+    return this.i18n.translate(key, params);
   }
 }

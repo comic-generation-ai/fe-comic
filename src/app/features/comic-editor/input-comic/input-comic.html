@@ -1,1 +1,162 @@
-<p>input-comic works!</p>
+<div class="input-panel-container">
+    <!-- Header -->
+    <header class="panel-header">
+        <h2 class="panel-title">{{ 'INPUT_COMIC.PANEL_TITLE' | translate }}</h2>
+        <p class="panel-subtitle">{{ 'INPUT_COMIC.PANEL_SUBTITLE' | translate }}</p>
+    </header>
+
+    <!-- Vertical Stack Form -->
+    <div class="panel-form-stack">
+        <!-- Story Title Section -->
+        <div class="form-group">
+            <label class="form-label" for="story-title-input">
+                <svg class="label-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 20h9"></path>
+                    <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                </svg>
+                <span class="label-text">{{ 'INPUT_COMIC.STORY_TITLE' | translate }}</span>
+            </label>
+            <div class="input-wrapper">
+        <input 
+          id="story-title-input" 
+          type="text" 
+          class="form-input" 
+          [placeholder]="'INPUT_COMIC.STORY_TITLE_PLACEHOLDER' | translate"
+          [(ngModel)]="storyTitle"
+          (ngModelChange)="storyTitleChange.emit($event)"
+          [disabled]="isGenerating"
+        />
+      </div>
+        </div>
+
+        <!-- Story Script Section -->
+        <div class="form-group">
+            <label class="form-label" for="story-script-textarea">
+                <svg class="label-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+                <span class="label-text">{{ 'INPUT_COMIC.STORY_SCRIPT' | translate }}</span>
+            </label>
+            <div class="textarea-wrapper">
+        <textarea 
+          id="story-script-textarea" 
+          class="form-textarea" 
+          [placeholder]="'INPUT_COMIC.STORY_SCRIPT_PLACEHOLDER' | translate"
+          [(ngModel)]="storyScript"
+          (ngModelChange)="storyScriptChange.emit($event)"
+          [disabled]="isGenerating"
+          rows="5"
+        ></textarea>
+      </div>
+        </div>
+
+        <!-- Art Style Section -->
+        <div class="form-group">
+            <label class="form-label" for="art-style-select">
+                <svg class="label-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22C17.52 22 22 17.52 22 12S17.52 2 12 2 2 6.48 2 12s4.48 10 10 10z"></path>
+                    <circle cx="7.5" cy="10.5" r="1.5" fill="currentColor"></circle>
+                    <circle cx="12" cy="7.5" r="1.5" fill="currentColor"></circle>
+                    <circle cx="16.5" cy="10.5" r="1.5" fill="currentColor"></circle>
+                </svg>
+                <span class="label-text">{{ 'INPUT_COMIC.ART_STYLE' | translate }}</span>
+            </label>
+            <div class="select-wrapper">
+        <select 
+          id="art-style-select" 
+          class="form-select" 
+          [(ngModel)]="artStyle"
+          (ngModelChange)="artStyleChange.emit($event)"
+          [disabled]="isGenerating"
+        >
+          <option *ngFor="let s of styles" [value]="s">{{ s }}</option>
+        </select>
+                <span class="select-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </span>
+            </div>
+        </div>
+
+        <!-- Frame Count Section -->
+        <div class="form-group">
+            <label class="form-label">
+                <svg class="label-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="12" y1="3" x2="12" y2="21"></line>
+                </svg>
+                <span class="label-text">{{ 'INPUT_COMIC.FRAME_COUNT' | translate }}</span>
+            </label>
+            <!-- Segmented Control with Illustrative Layouts -->
+            <div class="segmented-control frame-layouts">
+                <button *ngFor="let f of frames" type="button" class="segment-item frame-item"
+                    [class.active]="frameCount === f" (click)="setFrameCount(f)" [disabled]="isGenerating"
+                    [attr.aria-label]="f + ' frames'">
+                    <div class="frame-layout-icon">
+                        <svg *ngIf="f === 3" viewBox="0 0 24 20" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <rect x="1" y="1" width="22" height="18" rx="1.5" />
+                            <line x1="8" y1="1" x2="8" y2="19" />
+                            <line x1="16" y1="1" x2="16" y2="19" />
+                        </svg>
+                        <svg *ngIf="f === 4" viewBox="0 0 24 20" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <rect x="1" y="1" width="22" height="18" rx="1.5" />
+                            <line x1="1" y1="10" x2="23" y2="10" />
+                            <line x1="12" y1="1" x2="12" y2="19" />
+                        </svg>
+                        <svg *ngIf="f === 5" viewBox="0 0 24 20" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <rect x="1" y="1" width="22" height="18" rx="1.5" />
+                            <line x1="1" y1="10" x2="23" y2="10" />
+                            <line x1="12" y1="1" x2="12" y2="10" />
+                            <line x1="8" y1="10" x2="8" y2="19" />
+                            <line x1="16" y1="10" x2="16" y2="19" />
+                        </svg>
+                        <svg *ngIf="f === 6" viewBox="0 0 24 20" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <rect x="1" y="1" width="22" height="18" rx="1.5" />
+                            <line x1="1" y1="10" x2="23" y2="10" />
+                            <line x1="8" y1="1" x2="8" y2="19" />
+                            <line x1="16" y1="1" x2="16" y2="19" />
+                        </svg>
+                    </div>
+                    <span class="frame-label-text">{{ f }} {{ 'INPUT_COMIC.FRAMES_SUFFIX' | translate }}</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA Action Button -->
+  <div class="panel-action">
+    <button 
+      type="button" 
+      class="btn-generate" 
+      [class.generating]="isGenerating"
+      [disabled]="isGenerating || !isFormValid"
+      (click)="generateComic()"
+      id="btn-generate-comic"
+    >
+            <ng-container *ngIf="!isGenerating">
+                <svg class="btn-icon star-sparkle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path
+                        d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m11.314 11.314l.707-.707M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z">
+                    </path>
+                </svg>
+                <span class="btn-text">{{ 'INPUT_COMIC.GENERATE_BUTTON' | translate }}</span>
+            </ng-container>
+            <ng-container *ngIf="isGenerating">
+                <span class="spinner"></span>
+                <span class="btn-text">GENERATING...</span>
+            </ng-container>
+        </button>
+    </div>
+</div>

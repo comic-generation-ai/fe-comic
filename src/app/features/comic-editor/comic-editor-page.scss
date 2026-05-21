@@ -9,17 +9,23 @@
     flex: 0 0 30%;
     max-width: 30%;
     min-width: 280px;
+    height: fit-content;
     background: var(--bg-secondary);
     border: 1px solid var(--glass-border);
     border-radius: 20px;
     padding: 24px;
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    overflow: visible;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    transition: all 0.3s ease;
+    transition: border-color 0.3s ease, transform 0.2s ease;
+
+    &:hover,
+    &:focus-within {
+      border-color: var(--primary);
+      transform: scale(1.01);
+    }
 
     &::-webkit-scrollbar {
       width: 6px;
@@ -30,11 +36,11 @@
     }
 
     &::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.08);
+      background: var(--scrollbar-thumb);
       border-radius: 10px;
 
       &:hover {
-        background: rgba(255, 255, 255, 0.15);
+        background: var(--scrollbar-thumb-hover);
       }
     }
   }
@@ -46,7 +52,26 @@
     flex-direction: column;
     gap: 20px;
     overflow-y: auto;
-    padding-right: 4px; 
+    padding: 8px; 
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+
+    &.split-view {
+      @media (min-width: 1025px) {
+        flex-direction: row;
+        align-items: stretch;
+        
+        app-workspace-comic {
+          flex: 1;
+          min-width: 0;
+        }
+
+        .editor-panel {
+          flex: 1;
+          min-width: 0;
+          animation: slide-right-fade 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+      }
+    }
 
     &::-webkit-scrollbar {
       width: 6px;
@@ -57,11 +82,11 @@
     }
 
     &::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.08);
+      background: var(--scrollbar-thumb);
       border-radius: 10px;
 
       &:hover {
-        background: rgba(255, 255, 255, 0.15);
+        background: var(--scrollbar-thumb-hover);
       }
     }
 
@@ -71,28 +96,34 @@
       border: 1px solid var(--glass-border);
       border-radius: 20px;
       padding: 28px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-      transition: all 0.3s ease;
+      transition: border-color 0.3s ease, transform 0.2s ease;
       min-height: 380px;
       display: block;
 
-      &:hover {
-        border-color: rgba(255, 255, 255, 0.12);
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+      &:hover,
+      &:focus-within {
+        border-color: var(--primary);
+        transform: scale(1.01);
       }
     }
 
     /* Editor Panel (Conditional rendering wrapper) */
     .editor-panel {
-      background: rgba(168, 85, 247, 0.02);
-      border: 1px solid rgba(168, 85, 247, 0.12);
+      background: var(--editor-panel-bg);
+      border: 1px solid var(--editor-panel-border);
       border-radius: 20px;
       padding: 24px;
-      box-shadow: 0 8px 32px rgba(168, 85, 247, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.02);
       animation: slide-up-fade 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       display: block;
+      transition: border-color 0.3s ease, transform 0.2s ease;
+
+      &:hover,
+      &:focus-within {
+        border-color: var(--primary);
+        transform: scale(1.01);
+      }
 
       app-editor-comic {
         display: block;
@@ -110,6 +141,17 @@
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes slide-right-fade {
+  from {
+    opacity: 0;
+    transform: translateX(24px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
   }
 }
 

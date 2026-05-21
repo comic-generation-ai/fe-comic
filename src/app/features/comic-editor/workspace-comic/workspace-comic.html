@@ -1,1 +1,62 @@
-<p>workspace-comic works!</p>
+<div class="workspace-container">
+  <!-- Header of Workspace -->
+  <header class="workspace-header">
+    <div class="header-info">
+      <h2 class="workspace-title">{{ 'WORKSPACE_COMIC.TITLE' | translate }}</h2>
+      <p class="workspace-subtitle">
+        @if (comicData) {
+          {{ 'WORKSPACE_COMIC.GENERATED_SUBTITLE' | translate: { title: comicData.title } }}
+        } @else {
+          {{ 'WORKSPACE_COMIC.PREVIEW_SUBTITLE' | translate: { count: selectedFrames } }}
+        }
+      </p>
+    </div>
+    
+    <!-- Status Badge -->
+    <div class="status-badge" [class.generated]="!!comicData">
+      <span class="badge-dot"></span>
+      <span class="badge-text">
+        @if (comicData) {
+          {{ 'WORKSPACE_COMIC.STATUS_GENERATED' | translate }}
+        } @else {
+          {{ 'WORKSPACE_COMIC.STATUS_DRAFT' | translate }}
+        }
+      </span>
+    </div>
+  </header>
+
+  <!-- Comic Panel Grid -->
+  <div class="comic-grid-layout" [attr.data-frames]="selectedFrames">
+    @for (panelNum of panels; track panelNum) {
+      <div class="comic-panel-card">
+        <div class="panel-header-num">
+          <span class="panel-number">#{{ panelNum }}</span>
+        </div>
+        <div class="panel-content-area">
+          @if (comicData) {
+            <!-- Generated panel state -->
+            <div class="generated-placeholder-glow">
+              <svg class="panel-icon-sparkle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="1.5">
+                <path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m11.314 11.314l.707-.707M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"/>
+              </svg>
+              <span class="panel-text">Panel {{ panelNum }} Rendered</span>
+            </div>
+          } @else {
+            <!-- Empty draft state -->
+            <div class="draft-placeholder">
+              <svg class="draft-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" />
+                <circle cx="8.5" cy="8.5" r="1.5" />
+                <path d="M20.4 14.5L16 10 4 20" />
+              </svg>
+              <span class="draft-hint">{{ 'WORKSPACE_COMIC.EMPTY_PANEL_HINT' | translate }}</span>
+            </div>
+          }
+        </div>
+        <div class="card-border-glow"></div>
+      </div>
+    }
+  </div>
+</div>

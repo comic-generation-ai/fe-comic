@@ -21,7 +21,7 @@ export class I18nService {
     this.currentLang.set(lang);
   }
 
-  translate(key: string): string {
+  translate(key: string, params?: any): string {
     const keys = key.split('.');
     let translation: any = TRANSLATIONS[this.currentLang()];
 
@@ -31,6 +31,12 @@ export class I18nService {
       } else {
         return key; // fallback to key
       }
+    }
+
+    if (typeof translation === 'string' && params) {
+      Object.keys(params).forEach(p => {
+        translation = translation.replace(new RegExp(`{{${p}}}`, 'g'), String(params[p]));
+      });
     }
 
     return translation;
