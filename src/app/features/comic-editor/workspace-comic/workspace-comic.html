@@ -1,62 +1,199 @@
-<div class="workspace-container">
+<div class="workspace-container" (click)="deselectBubble($event)">
   <!-- Header of Workspace -->
   <header class="workspace-header">
-    <div class="header-info">
-      <h2 class="workspace-title">{{ 'WORKSPACE_COMIC.TITLE' | translate }}</h2>
-      <p class="workspace-subtitle">
-        @if (comicData) {
+    <div class="header-left-group">
+      @if (showBackButton) {
+      <button class="btn-back-workspace" (click)="onBack.emit(); $event.stopPropagation();" [title]="'WORKSPACE_COMIC.BACK' | translate">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round" class="back-icon">
+          <polyline points="15 18 9 12 15 6" />
+        </svg>
+        <span>{{ 'WORKSPACE_COMIC.BACK' | translate }}</span>
+      </button>
+      }
+      <div class="header-info">
+        <h2 class="workspace-title">{{ 'WORKSPACE_COMIC.TITLE' | translate }}</h2>
+        <p class="workspace-subtitle">
+          @if (comicData) {
           {{ 'WORKSPACE_COMIC.GENERATED_SUBTITLE' | translate: { title: comicData.title } }}
-        } @else {
+          } @else {
           {{ 'WORKSPACE_COMIC.PREVIEW_SUBTITLE' | translate: { count: selectedFrames } }}
-        }
-      </p>
+          }
+        </p>
+      </div>
     </div>
-    
-    <!-- Status Badge -->
-    <div class="status-badge" [class.generated]="!!comicData">
-      <span class="badge-dot"></span>
-      <span class="badge-text">
-        @if (comicData) {
+
+    <div class="header-actions">
+      <!-- Status Badge -->
+      <div class="status-badge" [class.generated]="!!comicData">
+        <span class="badge-dot"></span>
+        <span class="badge-text">
+          @if (comicData) {
           {{ 'WORKSPACE_COMIC.STATUS_GENERATED' | translate }}
-        } @else {
+          } @else {
           {{ 'WORKSPACE_COMIC.STATUS_DRAFT' | translate }}
-        }
-      </span>
+          }
+        </span>
+      </div>
     </div>
   </header>
 
   <!-- Comic Panel Grid -->
-  <div class="comic-grid-layout" [attr.data-frames]="selectedFrames">
-    @for (panelNum of panels; track panelNum) {
-      <div class="comic-panel-card">
-        <div class="panel-header-num">
-          <span class="panel-number">#{{ panelNum }}</span>
-        </div>
-        <div class="panel-content-area">
-          @if (comicData) {
-            <!-- Generated panel state -->
-            <div class="generated-placeholder-glow">
-              <svg class="panel-icon-sparkle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="1.5">
-                <path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m11.314 11.314l.707-.707M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"/>
-              </svg>
-              <span class="panel-text">Panel {{ panelNum }} Rendered</span>
-            </div>
-          } @else {
-            <!-- Empty draft state -->
-            <div class="draft-placeholder">
-              <svg class="draft-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="3" width="18" height="18" rx="2" />
-                <circle cx="8.5" cy="8.5" r="1.5" />
-                <path d="M20.4 14.5L16 10 4 20" />
-              </svg>
-              <span class="draft-hint">{{ 'WORKSPACE_COMIC.EMPTY_PANEL_HINT' | translate }}</span>
-            </div>
-          }
-        </div>
-        <div class="card-border-glow"></div>
+  <div class="comic-grid-layout" [attr.data-frames]="selectedFrames" [style.gap.px]="editorState.gutterSize">
+    @for (panelNum of panels; track panelNum; let idx = $index) {
+    <div class="comic-panel-card" [id]="'panel-card-' + idx"
+      [class.active-panel]="comicData && editorState.activePanelIndex === idx"
+      (click)="selectPanel(idx, $event)"
+      [style.border-width.px]="editorState.borderWidth"
+      [style.border-radius.px]="editorState.borderRadius" [style.border-color]="editorState.borderColor"
+      [style.border-style]="editorState.borderWidth > 0 ? 'solid' : 'dashed'">
+
+      <!-- Panel Number Badge -->
+      <div class="panel-header-num">
+        <span class="panel-number">#{{ panelNum }}</span>
       </div>
+
+      <div class="panel-content-area">
+        @if (comicData) {
+        <!-- Generated panel image state with simulated premium fallback -->
+        <img [src]="'https://picsum.photos/seed/comic_panel_' + idx + '_seed/600/400'" class="panel-image"
+          alt="Comic Panel Image">
+
+        <!-- Hover quick panel overlay to add speech bubbles easily -->
+        <div class="panel-action-overlay">
+          <span class="overlay-title">{{ 'WORKSPACE_COMIC.ADD_BUBBLE_TITLE' | translate }}</span>
+          <div class="overlay-btn-group">
+            <button class="overlay-btn btn-rnd" (click)="addSpeechBubbleToPanel(idx, 'round', $event)" [title]="'WORKSPACE_COMIC.BUBBLE_ROUND' | translate">💬
+              {{ 'WORKSPACE_COMIC.BUBBLE_ROUND' | translate }}</button>
+            <button class="overlay-btn btn-sq" (click)="addSpeechBubbleToPanel(idx, 'square', $event)" [title]="'WORKSPACE_COMIC.BUBBLE_SQUARE' | translate">🔲
+              {{ 'WORKSPACE_COMIC.BUBBLE_SQUARE' | translate }}</button>
+            <button class="overlay-btn btn-cld" (click)="addSpeechBubbleToPanel(idx, 'cloud', $event)" [title]="'WORKSPACE_COMIC.BUBBLE_CLOUD' | translate">💭
+              {{ 'WORKSPACE_COMIC.BUBBLE_CLOUD' | translate }}</button>
+          </div>
+        </div>
+        } @else {
+        <!-- Empty draft state -->
+        <div class="draft-placeholder">
+          <svg class="draft-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2" />
+            <circle cx="8.5" cy="8.5" r="1.5" />
+            <path d="M20.4 14.5L16 10 4 20" />
+          </svg>
+          <span class="draft-hint">{{ 'WORKSPACE_COMIC.EMPTY_PANEL_HINT' | translate }}</span>
+        </div>
+        }
+      </div>
+
+      <!-- SVG Speech Bubble Vector Layer (Only when image is generated) -->
+      @if (comicData) {
+      <svg class="vector-overlay-layer">
+        @for (bubble of getBubblesForPanel(idx); track bubble.id) {
+        <!-- Wrap in a translated <g> so coordinates x,y represent percentage of parent card size -->
+        <g cdkDrag
+           (cdkDragEnded)="onBubbleDragEnded($event, bubble)"
+           class="bubble-vector-group"
+           [style.transform]="'translate(' + bubble.x + '%, ' + bubble.y + '%)'"
+           style="pointer-events: auto;">
+
+          <!-- Draw the group contents in local coordinate system translated so center of bubble is at 0,0 -->
+          <g [attr.transform]="'translate(' + (-bubble.w / 2) + ', ' + (-bubble.h / 2) + ')'"
+            (mousedown)="selectBubble(bubble.id, $event)">
+
+            <!-- Bounding Box dotted outline shown when selected -->
+            @if (editorState.selectedBubbleId === bubble.id) {
+            <rect [attr.x]="-6" [attr.y]="-6" [attr.width]="bubble.w + 12" [attr.height]="bubble.h + 12" fill="none"
+              stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="3,3" rx="4" />
+            }
+
+            <!-- Main bubble shape fill and outline -->
+            @if (bubble.type === 'round') {
+            <ellipse [attr.cx]="bubble.w / 2" [attr.cy]="bubble.h / 2" [attr.rx]="bubble.w / 2 - 2"
+              [attr.ry]="bubble.h / 2 - 2" fill="#ffffff" stroke="#000000" stroke-width="3" class="bubble-body-shape"
+              (mousedown)="startDrag($event, bubble, 'move')" />
+
+            <!-- Tail elements for seamless outline -->
+            <polygon [attr.points]="getTailPoints(bubble)" fill="#ffffff" stroke="none" />
+            <path [attr.d]="getTailStroke(bubble)" fill="none" stroke="#000000" stroke-width="3"
+              stroke-linecap="round" />
+            }
+
+            @if (bubble.type === 'square') {
+            <rect x="2" y="2" [attr.width]="bubble.w - 4" [attr.height]="bubble.h - 4" rx="14" ry="14" fill="#ffffff"
+              stroke="#000000" stroke-width="3" class="bubble-body-shape"
+              (mousedown)="startDrag($event, bubble, 'move')" />
+
+            <!-- Tail elements for seamless outline -->
+            <polygon [attr.points]="getTailPoints(bubble)" fill="#ffffff" stroke="none" />
+            <path [attr.d]="getTailStroke(bubble)" fill="none" stroke="#000000" stroke-width="3"
+              stroke-linecap="round" />
+            }
+
+            @if (bubble.type === 'cloud') {
+            <path [attr.d]="getCloudPath(bubble.w, bubble.h)" fill="#ffffff" stroke="#000000" stroke-width="3"
+              class="bubble-body-shape" (mousedown)="startDrag($event, bubble, 'move')" />
+
+            <!-- Tail is represented by 3 circles of decreasing size towards the pointer target -->
+            <g class="cloud-tail">
+              <circle [attr.cx]="bubble.w/2 + bubble.tailX * 0.3" [attr.cy]="bubble.h/2 + bubble.tailY * 0.3" r="9"
+                fill="#ffffff" stroke="#000000" stroke-width="3" />
+              <circle [attr.cx]="bubble.w/2 + bubble.tailX * 0.6" [attr.cy]="bubble.h/2 + bubble.tailY * 0.6" r="6"
+                fill="#ffffff" stroke="#000000" stroke-width="3" />
+              <circle [attr.cx]="bubble.w/2 + bubble.tailX * 0.9" [attr.cy]="bubble.h/2 + bubble.tailY * 0.9" r="4"
+                fill="#ffffff" stroke="#000000" stroke-width="3" />
+            </g>
+            }
+
+            <!-- Inner text overlay via foreignObject for seamless native HTML layout -->
+            <foreignObject x="12" y="12" [attr.width]="bubble.w - 24" [attr.height]="bubble.h - 24"
+              style="pointer-events: auto;">
+              <div xmlns="http://www.w3.org/1999/xhtml" class="inner-bubble-text-container">
+                @if (editingTextId === bubble.id) {
+                <textarea [style.font-family]="bubble.fontFamily" [style.font-size.px]="bubble.fontSize"
+                  [style.color]="bubble.fontColor" [style.text-align]="bubble.textAlign"
+                  [style.line-height]="bubble.lineHeight" class="bubble-textarea-input" [(ngModel)]="bubble.text"
+                  (ngModelChange)="onTextChange(bubble.id, $event)" (blur)="onTextBlur(bubble.id)"
+                  (mousedown)="$event.stopPropagation()" (click)="$event.stopPropagation()" placeholder="..." focus>
+                      </textarea>
+                } @else {
+                <div [style.font-family]="bubble.fontFamily" [style.font-size.px]="bubble.fontSize"
+                  [style.color]="bubble.fontColor" [style.text-align]="bubble.textAlign"
+                  [style.line-height]="bubble.lineHeight" class="bubble-static-text"
+                  (dblclick)="startEditingText(bubble.id, $event)">
+                  {{ bubble.text || ('WORKSPACE_COMIC.DOUBLE_CLICK_EDIT' | translate) }}
+                </div>
+                }
+              </div>
+            </foreignObject>
+
+            <!-- Custom handles only displayed when bubble is selected -->
+            @if (editorState.selectedBubbleId === bubble.id) {
+            <g class="selection-handles">
+              <!-- Resize handle (bottom-right) -->
+              <circle [attr.cx]="bubble.w" [attr.cy]="bubble.h" r="7" class="handle-knob resize-knob"
+                (mousedown)="startDrag($event, bubble, 'resize')" />
+
+              <!-- Tail direct manipulation target knob -->
+              <circle [attr.cx]="bubble.w/2 + bubble.tailX" [attr.cy]="bubble.h/2 + bubble.tailY" r="7"
+                class="handle-knob tail-knob" (mousedown)="startDrag($event, bubble, 'tail')" />
+
+              <!-- Deletion action quick button -->
+              <g class="btn-delete-bubble" (click)="deleteBubble(bubble.id, $event)"
+                [attr.transform]="'translate(' + (bubble.w) + ', -8)'">
+                <circle cx="0" cy="0" r="10" fill="#ef4444" stroke="#ffffff" stroke-width="1.5" />
+                <line x1="-4" y1="-4" x2="4" y2="4" stroke="#ffffff" stroke-width="2" stroke-linecap="round" />
+                <line x1="4" y1="-4" x2="-4" y2="4" stroke="#ffffff" stroke-width="2" stroke-linecap="round" />
+              </g>
+            </g>
+            }
+          </g>
+        </g>
+        }
+      </svg>
+      }
+
+      <div class="card-border-glow"></div>
+    </div>
     }
   </div>
 </div>

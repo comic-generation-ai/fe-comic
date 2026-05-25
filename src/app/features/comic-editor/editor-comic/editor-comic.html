@@ -1,1 +1,291 @@
-<p>editor-comic works!</p>
+<div class="editor-sidebar-container">
+  <!-- Top Editor Header -->
+  <header class="editor-panel-header">
+    <div class="header-main-info">
+      <h3 class="panel-title">{{ 'EDITOR_COMIC.TITLE' | translate }}</h3>
+      <p class="panel-subtitle">{{ 'EDITOR_COMIC.SUBTITLE' | translate }}</p>
+    </div>
+
+    <!-- History Controls (Undo / Redo / Reset) -->
+    <div class="history-controls">
+      <button class="btn-history" [disabled]="!canUndo()" (click)="undo()" [title]="'EDITOR_COMIC.UNDO' | translate">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round" class="history-icon">
+          <path d="M3 7v6h6" />
+          <path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13" />
+        </svg>
+      </button>
+      <button class="btn-history" [disabled]="!canRedo()" (click)="redo()" [title]="'EDITOR_COMIC.REDO' | translate">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round" class="history-icon">
+          <path d="M21 7v6h-6" />
+          <path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3l3 2.7" />
+        </svg>
+      </button>
+      <button class="btn-history danger" (click)="resetAll()" [title]="'EDITOR_COMIC.RESET' | translate">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round" class="history-icon">
+          <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+          <path d="M3 3v5h5" />
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Accordion/Tab selectors -->
+  <nav class="sidebar-tabs">
+    <button class="tab-btn" [class.active]="activeTab === 'frame'" (click)="setTab('frame')">
+       {{ 'EDITOR_COMIC.TAB_FRAME' | translate }}
+    </button>
+    <button class="tab-btn" [class.active]="activeTab === 'bubble'" (click)="setTab('bubble')">
+       {{ 'EDITOR_COMIC.TAB_BUBBLE' | translate }}
+    </button>
+    <button class="tab-btn" [class.active]="activeTab === 'text'" (click)="setTab('text')">
+       {{ 'EDITOR_COMIC.TAB_TEXT' | translate }}
+    </button>
+  </nav>
+
+  <!-- Tab Content Area -->
+  <div class="sidebar-tab-content">
+
+    <!-- TAB 1: FRAME STYLING -->
+    @if (activeTab === 'frame') {
+    <div class="tab-panel animate-fade">
+      <h4 class="panel-section-title">{{ 'EDITOR_COMIC.FRAME_SETTINGS_TITLE' | translate }}</h4>
+
+      <!-- Border Width Control -->
+      <div class="control-group">
+        <div class="control-label-row">
+          <span class="control-label">{{ 'EDITOR_COMIC.BORDER_WIDTH' | translate }}</span>
+          <span class="control-val-badge">{{ editorState.borderWidth }}px</span>
+        </div>
+        <input type="range" min="0" max="20" [ngModel]="editorState.borderWidth"
+          (ngModelChange)="onBorderWidthChange($event)" class="range-slider">
+      </div>
+
+      <!-- Border Radius Control -->
+      <div class="control-group">
+        <div class="control-label-row">
+          <span class="control-label">{{ 'EDITOR_COMIC.BORDER_RADIUS' | translate }}</span>
+          <span class="control-val-badge">{{ editorState.borderRadius }}px</span>
+        </div>
+        <input type="range" min="0" max="50" [ngModel]="editorState.borderRadius"
+          (ngModelChange)="onBorderRadiusChange($event)" class="range-slider">
+      </div>
+
+      <!-- Border Color Control -->
+      <div class="control-group">
+        <div class="control-label-row">
+          <span class="control-label">{{ 'EDITOR_COMIC.BORDER_COLOR' | translate }}</span>
+          <span class="control-val-badge">{{ editorState.borderColor }}</span>
+        </div>
+        <div class="color-picker-wrapper">
+          <input type="color" [ngModel]="editorState.borderColor" (ngModelChange)="onBorderColorChange($event)"
+            class="color-input">
+          <div class="color-swatches">
+            <span class="swatch" style="background-color: #000000;" (click)="onBorderColorChange('#000000')"></span>
+            <span class="swatch" style="background-color: #ffffff; border: 1px solid #ccc;"
+              (click)="onBorderColorChange('#ffffff')"></span>
+            <span class="swatch" style="background-color: #1e1e24;" (click)="onBorderColorChange('#1e1e24')"></span>
+            <span class="swatch" style="background-color: #ef4444;" (click)="onBorderColorChange('#ef4444')"></span>
+            <span class="swatch" style="background-color: #f59e0b;" (click)="onBorderColorChange('#f59e0b')"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gutter Gap Control -->
+      <div class="control-group">
+        <div class="control-label-row">
+          <span class="control-label">{{ 'EDITOR_COMIC.GUTTER_GAP' | translate }}</span>
+          <span class="control-val-badge">{{ editorState.gutterSize }}px</span>
+        </div>
+        <input type="range" min="0" max="30" [ngModel]="editorState.gutterSize"
+          (ngModelChange)="onGutterSizeChange($event)" class="range-slider">
+      </div>
+    </div>
+    }
+
+    <!-- TAB 2: SPEECH BUBBLES -->
+    @if (activeTab === 'bubble') {
+    <div class="tab-panel animate-fade">
+      <h4 class="panel-section-title">{{ 'EDITOR_COMIC.BUBBLE_SETTINGS_TITLE' | translate }}</h4>
+
+        <!-- Panel selection dropdown -->
+        <div class="control-group">
+          <label class="control-label">{{ 'EDITOR_COMIC.TARGET_PANEL_LABEL' | translate }}</label>
+          <select [ngModel]="targetPanelIndex" (ngModelChange)="onTargetPanelChange($event)" class="custom-select">
+            @for (pIdx of panelsCount; track pIdx) {
+              <option [value]="pIdx">{{ 'EDITOR_COMIC.FRAME_NUM' | translate:{num: pIdx + 1} }}</option>
+            }
+          </select>
+        </div>
+
+        <!-- Speech bubbles of active frame selection dropdown -->
+        <div class="control-group">
+          <label class="control-label">{{ 'EDITOR_COMIC.BUBBLES_IN_FRAME_LABEL' | translate }}</label>
+          @if (getBubblesForActiveFrame().length > 0) {
+            <select [ngModel]="editorState.selectedBubbleId" (ngModelChange)="selectBubble($event)" class="custom-select">
+              <option [value]="null">{{ 'EDITOR_COMIC.SELECT_BUBBLE_PLACEHOLDER' | translate }}</option>
+              @for (b of getBubblesForActiveFrame(); track b.id; let bIdx = $index) {
+                <option [value]="b.id">{{ 'EDITOR_COMIC.BUBBLE_NUM' | translate:{num: bIdx + 1} }} ({{ b.text | slice:0:15 }}{{ b.text.length > 15 ? '...' : '' }})</option>
+              }
+            </select>
+          } @else {
+            <p class="empty-subtext" style="font-size: 0.72rem; color: #64748b; margin: 2px 0 0 0;">
+              {{ 'EDITOR_COMIC.EMPTY_BUBBLES_HINT' | translate }}
+            </p>
+          }
+        </div>
+
+      <!-- Speech bubble shapes selectors buttons -->
+      <div class="bubble-shapes-grid">
+        <button class="shape-card" (click)="addBubble('round')">
+          <span class="shape-icon">💬</span>
+          <span class="shape-name">{{ 'EDITOR_COMIC.SHAPE_ROUND' | translate }}</span>
+        </button>
+        <button class="shape-card" (click)="addBubble('square')">
+          <span class="shape-icon">🔲</span>
+          <span class="shape-name">{{ 'EDITOR_COMIC.SHAPE_SQUARE' | translate }}</span>
+        </button>
+        <button class="shape-card" (click)="addBubble('cloud')">
+          <span class="shape-icon">💭</span>
+          <span class="shape-name">{{ 'EDITOR_COMIC.SHAPE_CLOUD' | translate }}</span>
+        </button>
+      </div>
+
+      <!-- Selection details -->
+      <div class="bubble-selection-card">
+        @if (selectedBubble) {
+        <div class="selection-active-badge">
+          <span class="badge-dot"></span>
+          <span class="badge-text">{{ 'EDITOR_COMIC.SELECTED_BUBBLE_PREFIX' | translate }}{{ selectedBubble.type === 'round' ? ('EDITOR_COMIC.TYPES.ROUND' | translate) : selectedBubble.type === 'square' ? ('EDITOR_COMIC.TYPES.SQUARE' | translate) : ('EDITOR_COMIC.TYPES.CLOUD' | translate) }}</span>
+        </div>
+        <p class="bubble-meta">
+          {{ 'EDITOR_COMIC.POSITION_SIZE' | translate:{x: (selectedBubble.x | number:'1.0-0'), y: (selectedBubble.y | number:'1.0-0'), w: selectedBubble.w, h: selectedBubble.h} }}
+        </p>
+        <button class="btn-delete-bubble-action" (click)="deleteSelectedBubble()">
+           {{ 'EDITOR_COMIC.DELETE_BUBBLE_BTN' | translate }}
+        </button>
+        } @else {
+        <div class="selection-empty-state">
+          <p class="empty-text">{{ 'EDITOR_COMIC.NO_BUBBLE_SELECTED' | translate }}</p>
+          <p class="empty-subtext">{{ 'EDITOR_COMIC.SELECT_BUBBLE_HINT' | translate }}</p>
+        </div>
+        }
+      </div>
+    </div>
+    }
+
+    <!-- TAB 3: TEXT EDITOR -->
+    @if (activeTab === 'text') {
+    <div class="tab-panel animate-fade">
+      <h4 class="panel-section-title">{{ 'EDITOR_COMIC.TEXT_SETTINGS_TITLE' | translate }}</h4>
+
+      @if (selectedBubble) {
+      <!-- Bubble Text direct textarea input -->
+      <div class="control-group">
+        <label class="control-label">{{ 'EDITOR_COMIC.TEXT_CONTENT_LABEL' | translate }}</label>
+        <textarea [ngModel]="selectedBubble.text" (ngModelChange)="updateSelectedBubble({ text: $event })"
+          class="custom-textarea" rows="3" [placeholder]="'EDITOR_COMIC.TEXT_CONTENT_PLACEHOLDER' | translate"></textarea>
+      </div>
+
+      <!-- Font Family Selector dropdown -->
+      <div class="control-group">
+        <label class="control-label">{{ 'EDITOR_COMIC.FONT_FAMILY_LABEL' | translate }}</label>
+        <select [ngModel]="selectedBubble.fontFamily" (ngModelChange)="updateSelectedBubble({ fontFamily: $event })"
+          class="custom-select">
+          @for (font of fontFamilies; track font.value) {
+          <option [value]="font.value">{{ font.name | translate }}</option>
+          }
+        </select>
+      </div>
+
+      <!-- Font Size Selector slider -->
+      <div class="control-group">
+        <div class="control-label-row">
+          <span class="control-label">{{ 'EDITOR_COMIC.FONT_SIZE_LABEL' | translate }}</span>
+          <span class="control-val-badge">{{ selectedBubble.fontSize }}px</span>
+        </div>
+        <input type="range" min="12" max="48" [ngModel]="selectedBubble.fontSize"
+          (ngModelChange)="updateSelectedBubble({ fontSize: $event })" class="range-slider">
+      </div>
+
+      <!-- Line Height Selector slider -->
+      <div class="control-group">
+        <div class="control-label-row">
+          <span class="control-label">{{ 'EDITOR_COMIC.LINE_HEIGHT_LABEL' | translate }}</span>
+          <span class="control-val-badge">{{ selectedBubble.lineHeight }}x</span>
+        </div>
+        <input type="range" min="1" max="2" step="0.1" [ngModel]="selectedBubble.lineHeight"
+          (ngModelChange)="updateSelectedBubble({ lineHeight: $event })" class="range-slider">
+      </div>
+
+      <!-- Text Align buttons toggles group -->
+      <div class="control-group">
+        <span class="control-label">{{ 'EDITOR_COMIC.TEXT_ALIGN_LABEL' | translate }}</span>
+        <div class="align-btn-group">
+          <button class="align-btn" [class.active]="selectedBubble.textAlign === 'left'"
+            (click)="updateSelectedBubble({ textAlign: 'left' })" [title]="'EDITOR_COMIC.ALIGN_LEFT_TITLE' | translate">
+             {{ 'EDITOR_COMIC.ALIGN_LEFT' | translate }}
+          </button>
+          <button class="align-btn" [class.active]="selectedBubble.textAlign === 'center'"
+            (click)="updateSelectedBubble({ textAlign: 'center' })" [title]="'EDITOR_COMIC.ALIGN_CENTER_TITLE' | translate">
+             {{ 'EDITOR_COMIC.ALIGN_CENTER' | translate }}
+          </button>
+          <button class="align-btn" [class.active]="selectedBubble.textAlign === 'right'"
+            (click)="updateSelectedBubble({ textAlign: 'right' })" [title]="'EDITOR_COMIC.ALIGN_RIGHT_TITLE' | translate">
+             {{ 'EDITOR_COMIC.ALIGN_RIGHT' | translate }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Font Color input picker -->
+      <div class="control-group">
+        <div class="control-label-row">
+          <span class="control-label">{{ 'EDITOR_COMIC.FONT_COLOR_LABEL' | translate }}</span>
+          <span class="control-val-badge">{{ selectedBubble.fontColor }}</span>
+        </div>
+        <div class="color-picker-wrapper">
+          <input type="color" [ngModel]="selectedBubble.fontColor"
+            (ngModelChange)="updateSelectedBubble({ fontColor: $event })" class="color-input">
+          <div class="color-swatches">
+            <span class="swatch" style="background-color: #000000;"
+              (click)="updateSelectedBubble({ fontColor: '#000000' })"></span>
+            <span class="swatch" style="background-color: #ef4444;"
+              (click)="updateSelectedBubble({ fontColor: '#ef4444' })"></span>
+            <span class="swatch" style="background-color: #2563eb;"
+              (click)="updateSelectedBubble({ fontColor: '#2563eb' })"></span>
+            <span class="swatch" style="background-color: #10b981;"
+              (click)="updateSelectedBubble({ fontColor: '#10b981' })"></span>
+            <span class="swatch" style="background-color: #f59e0b;"
+              (click)="updateSelectedBubble({ fontColor: '#f59e0b' })"></span>
+          </div>
+        </div>
+      </div>
+
+      } @else {
+      <!-- Empty Text State placeholder -->
+      <div class="selection-empty-state text-align-center">
+        <span class="empty-icon">📝</span>
+        <p class="empty-text">{{ 'EDITOR_COMIC.NO_BUBBLE_TEXT_TITLE' | translate }}</p>
+        <p class="empty-subtext">{{ 'EDITOR_COMIC.NO_BUBBLE_TEXT_HINT' | translate }}</p>
+      </div>
+      }
+    </div>
+    }
+
+  </div>
+
+  <!-- Premium Sticky Footer for Exporting -->
+  <footer class="editor-sidebar-footer">
+    <button class="btn-export-full" (click)="exportComic()">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+        stroke-linecap="round" stroke-linejoin="round" class="btn-icon">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+        <polyline points="7 10 12 15 17 10" />
+        <line x1="12" y1="15" x2="12" y2="3" />
+      </svg>
+      {{ 'EDITOR_COMIC.DOWNLOAD_BTN' | translate }}
+    </button>
+  </footer>
+</div>

@@ -1,0 +1,24 @@
+services:
+  # 1. Cấu hình cho Angular
+  fe-comic:
+    container_name: angular_frontend
+    build: 
+      context: .      # Trỏ vào thư mục chứa code
+      dockerfile: Dockerfile
+      target: development      # Chỉ chạy cấu hình Dev
+    ports:
+      - "4200:4200"            # Ánh xạ port ra máy thật
+    volumes:
+      - .:/app        # Đồng bộ code để dùng Hot-reload
+      - /app/node_modules      # Giữ node_modules độc lập trong container
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+
+  # 2. Cấu hình cho API Orchestrator (Ví dụ)
+  # orchestrator-ai:
+  #   container_name: api_orchestrator
+  #   build:
+  #     context: ./orchestrator-ai
+  #     # Bạn sẽ cần 1 file Dockerfile bên trong thư mục orchestrator-ai nữa
+  #   ports:
+  #     - "3000:3000"

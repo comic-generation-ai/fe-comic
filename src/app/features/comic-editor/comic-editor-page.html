@@ -1,30 +1,21 @@
 <div class="editor-container">
+  @if (viewMode === 'input') {
   <aside class="left-panel">
-    <app-input-comic 
-      [storyTitle]="storyTitle"
-      (storyTitleChange)="onInputChange('storyTitle', $event)"
-      [storyScript]="storyScript"
-      (storyScriptChange)="onInputChange('storyScript', $event)"
-      [artStyle]="artStyle"
-      (artStyleChange)="onInputChange('artStyle', $event)"
-      [frameCount]="selectedFrames"
-      (onFrameCountChange)="onInputChange('selectedFrames', $event)"
-      [isGenerating]="isGenerating"
-      [isFormValid]="isFormValid"
-      (onGenerate)="generateComic()"
-    ></app-input-comic>
+    <app-input-comic [storyTitle]="storyTitle" (storyTitleChange)="onInputChange('storyTitle', $event)"
+      [storyScript]="storyScript" (storyScriptChange)="onInputChange('storyScript', $event)" [artStyle]="artStyle"
+      (artStyleChange)="onInputChange('artStyle', $event)" [frameCount]="selectedFrames"
+      (onFrameCountChange)="onInputChange('selectedFrames', $event)" [isGenerating]="isGenerating"
+      [isFormValid]="isFormValid" (onGenerate)="generateComic()"></app-input-comic>
   </aside>
+  }
 
-  <main class="right-panel" [class.split-view]="isGenerated">
-    <app-workspace-comic 
-      [selectedFrames]="selectedFrames" 
-      [comicData]="generatedResult"
-    ></app-workspace-comic>
+  <main class="right-panel" [class.split-view]="viewMode === 'edit'" [class.full-width]="viewMode === 'edit'">
+    <app-workspace-comic [selectedFrames]="selectedFrames" [comicData]="generatedResult" [showBackButton]="viewMode === 'edit'" (onBack)="goBack()"></app-workspace-comic>
 
-    @if (isGenerated) {
-      <section class="editor-panel">
-        <app-editor-comic [comicData]="generatedResult"></app-editor-comic>
-      </section>
+    @if (viewMode === 'edit') {
+    <section class="editor-panel">
+      <app-editor-comic [comicData]="generatedResult"></app-editor-comic>
+    </section>
     }
   </main>
 </div>
