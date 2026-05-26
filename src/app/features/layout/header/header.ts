@@ -1,9 +1,10 @@
-import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
-import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { Component, ElementRef, HostListener, inject } from '@angular/core';
+import { Router, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { I18nService } from '../../../core/i18n/i18n.service';
 import { TranslatePipe } from '../../../core/i18n/translate.pipe';
 import { Modal } from '../../../shared/ui/modal/modal';
+import { ThemeService } from '../../../core/theme/theme.service';
 
 @Component({
   selector: 'app-header',
@@ -11,11 +12,16 @@ import { Modal } from '../../../shared/ui/modal/modal';
   templateUrl: './header.html',
   styleUrl: './header.scss',
 })
-export class Header implements OnInit {
+export class Header {
+  private readonly themeService = inject(ThemeService);
+
   showDropdown = false;
   showMobileMenu = false;
   showNotifications = false;
-  isDark = true;
+
+  get isDark() {
+    return this.themeService.isDark;
+  }
 
   mockNotifications = [
     {
@@ -50,23 +56,11 @@ export class Header implements OnInit {
     private elementRef: ElementRef
   ) {}
 
-  ngOnInit() {
-    if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
-      const savedTheme = localStorage.getItem('theme') || 'dark';
-      this.isDark = savedTheme === 'dark';
-      this.applyTheme(this.isDark);
-    }
-  }
-
   toggleTheme(event?: MouseEvent) {
     const newIsDark = !this.isDark;
     
     const applyThemeAction = () => {
-      this.isDark = newIsDark;
-      this.applyTheme(this.isDark);
-      if (typeof localStorage !== 'undefined') {
-        localStorage.setItem('theme', this.isDark ? 'dark' : 'light');
-      }
+      this.themeService.setTheme(newIsDark);
     };
 
     if (typeof document !== 'undefined' && (document as any).startViewTransition) {
@@ -116,16 +110,6 @@ export class Header implements OnInit {
     }
   }
 
-  private applyTheme(isDark: boolean) {
-    if (typeof document !== 'undefined') {
-      if (isDark) {
-        document.documentElement.removeAttribute('data-theme');
-      } else {
-        document.documentElement.setAttribute('data-theme', 'light');
-      }
-    }
-  }
-
   toggleDropdown(event: Event) {
     event.stopPropagation();
     this.showDropdown = !this.showDropdown;
@@ -133,6 +117,7 @@ export class Header implements OnInit {
       this.showNotifications = false;
     }
   }
+
 
   @HostListener('document:click', ['$event'])
   onClickOutside(event: Event) {
