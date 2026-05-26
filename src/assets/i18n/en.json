@@ -73,7 +73,8 @@
       "COMIC_EDITOR": "Comic Editor",
       "STORY_BOARD": "Story Board",
       "USER_NAME": "Admin Creator",
-      "USER_ROLE": "Administrator"
+      "USER_ROLE": "Administrator",
+      "PROFILE": "Profile"
     },
     "HEADER": {
       "TITLE": "Studio Console",
@@ -168,6 +169,20 @@
       "ARIAL": "Arial",
       "IMPACT": "Impact",
       "OUTFIT": "Outfit"
+    }
+  },
+  "STORY_BOARD": {
+    "TITLE": "My Library",
+    "SUBTITLE": "Manage and review your generated comic projects.",
+    "DRAFT": "Draft",
+    "PAGE": "page",
+    "PAGES": "pages",
+    "GRID_VIEW": "Grid view",
+    "FILTERS": {
+      "ALL_DATES": "All dates",
+      "TODAY": "Today",
+      "THIS_WEEK": "This week",
+      "ALL_GENRES": "All genres"
     }
   }
 }

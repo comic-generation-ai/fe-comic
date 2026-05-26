@@ -1,0 +1,524 @@
+.library-container {
+  padding: 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+  min-height: 100vh;
+  box-sizing: border-box;
+  font-family: var(--font-body), sans-serif;
+  background-color: var(--bg-primary);
+
+  .library-header {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 40px;
+    gap: 24px;
+
+    .header-text {
+      .library-title {
+        font-family: var(--font-title), sans-serif;
+        font-size: 2.25rem;
+        font-weight: 800;
+        color: var(--text-primary);
+        margin: 0 0 8px 0;
+        letter-spacing: -0.03em;
+      }
+
+      .library-subtitle {
+        font-size: 0.95rem;
+        color: var(--text-muted);
+        margin: 0;
+        font-weight: 400;
+      }
+    }
+
+    .header-filters {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      /* Premium Glassmorphic Dropdown */
+      .custom-dropdown {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+
+        .dropdown-trigger {
+          position: relative;
+          background: transparent;
+          border: 1px solid var(--library-dropdown-border);
+          border-radius: 10px;
+          color: var(--text-primary);
+          font-family: var(--font-body), sans-serif;
+          font-size: 0.85rem;
+          font-weight: 500;
+          padding: 10px 36px 10px 16px;
+          cursor: pointer;
+          min-width: 120px;
+          text-align: left;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+
+          &:hover {
+            background: var(--bg-surface-hover);
+            border-color: var(--border-hover);
+          }
+
+          &:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--library-dropdown-focus-shadow);
+          }
+        }
+
+        .dropdown-chevron {
+          position: absolute;
+          right: 12px;
+          color: var(--text-muted);
+          pointer-events: none;
+          font-size: 1.1rem;
+        }
+
+        /* Options Menu with Blur & Radius styling */
+        .dropdown-menu {
+          position: absolute;
+          top: calc(100% + 8px);
+          left: 0;
+          width: 100%;
+          min-width: 180px;
+          background: var(--library-dropdown-bg);
+          border: 1px solid var(--border-color);
+          border-radius: 12px;
+          box-shadow: var(--shadow-dropdown);
+          padding: 6px;
+          margin: 0;
+          list-style: none;
+          z-index: 300; /* Tăng z-index lên cao để đè lên các card ở dưới */
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+          box-sizing: border-box;
+          animation: dropdownFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+
+          .dropdown-item {
+            padding: 8px 12px;
+            color: var(--text-primary);
+            font-size: 0.82rem;
+            font-weight: 500;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+
+            &:hover {
+              background: var(--library-dropdown-hover);
+              color: var(--library-dropdown-active);
+            }
+
+            &.active {
+              background: var(--library-dropdown-active);
+              color: var(--text-primary);
+            }
+          }
+        }
+      }
+
+      /* Premium Layout Toggle Button */
+      .btn-layout-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        border: 1px solid var(--library-dropdown-border);
+        color: var(--text-primary);
+        padding: 9px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.25s ease;
+
+        span {
+          font-size: 1.25rem;
+          transition: color 0.25s ease;
+        }
+
+        &:hover {
+          background: var(--bg-surface-hover);
+          border-color: var(--border-hover);
+          transform: scale(1.02);
+        }
+
+        &:active {
+          transform: scale(0.98);
+        }
+      }
+    }
+  }
+
+  /* Responsive Cards Grid Layout */
+  .library-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    width: 100%;
+    margin-top: 10px;
+
+    /* Comic Card Structure */
+    .comic-card {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      aspect-ratio: 2 / 3;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      box-shadow: var(--library-card-shadow);
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+
+      /* Glow highlighting board active state */
+      .card-glow-effect {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        border: 1.5px solid transparent;
+        border-radius: 16px;
+        transition: all 0.35s ease;
+      }
+
+      /* Hover Effects */
+      &:hover {
+        transform: translateY(-8px) scale(1.01);
+        border-color: var(--library-card-hover-border);
+        box-shadow: var(--library-card-hover-shadow);
+
+        .card-image-wrapper .comic-cover {
+          transform: scale(1.04);
+        }
+
+        .card-glow-effect {
+          border-color: var(--library-card-hover-border);
+          opacity: 0.4;
+          box-shadow: inset 0 0 15px var(--library-card-glow-inner);
+        }
+      }
+
+      /* Image and Overlay container */
+      .card-image-wrapper {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        overflow: hidden;
+
+        .comic-cover {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Draft Badge styling */
+        .badge-draft {
+          position: absolute;
+          top: 16px;
+          left: 16px;
+          background: var(--library-draft-bg);
+          border: 1px solid var(--library-draft-border);
+          color: var(--library-draft-text);
+          backdrop-filter: blur(8px);
+          -webkit-backdrop-filter: blur(8px);
+          padding: 6px 14px;
+          border-radius: 8px;
+          font-family: var(--font-body), sans-serif;
+          font-size: 0.72rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          box-shadow: var(--library-draft-shadow);
+          z-index: 10;
+        }
+
+        /* High contrast gradient overlay for maximum title readability */
+        .card-gradient-overlay {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: var(--library-card-overlay-bg);
+          z-index: 2;
+        }
+      }
+
+      /* Metadata Content */
+      .card-content-overlay {
+        position: relative;
+        z-index: 3;
+        padding: 24px;
+        width: 100%;
+        box-sizing: border-box;
+
+        .comic-title {
+          font-family: var(--font-title), sans-serif;
+          font-size: 1.35rem;
+          font-weight: 700;
+          color: var(--library-card-title);
+          margin: 0 0 10px 0;
+          letter-spacing: -0.02em;
+          line-height: 1.25;
+        }
+
+        .comic-metadata {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          color: var(--library-card-text);
+
+          .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+
+            .meta-icon {
+              font-size: 0.85rem;
+              color: var(--library-card-icon);
+            }
+
+            .meta-text {
+              font-size: 0.78rem;
+              font-weight: 500;
+            }
+          }
+
+          .meta-dot {
+            font-size: 0.8rem;
+            color: var(--library-card-dot);
+          }
+        }
+      }
+    }
+  }
+}
+
+/* Options Menu Animation */
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Entry Animations */
+.animate-fade {
+  animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-fade-up {
+  animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Animations for Staggered Cards Entry */
+.comic-card {
+  opacity: 0;
+  animation: cardEntry 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes cardEntry {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+/* Grid & List View Mode layouts mapped to HostBindings */
+:host.view-list {
+  .library-container {
+    .library-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      width: 100%;
+      margin-top: 10px;
+
+      .comic-card {
+        aspect-ratio: auto;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        height: 120px;
+        padding: 0;
+        border-radius: 12px;
+
+        .card-image-wrapper {
+          position: relative;
+          width: 80px;
+          height: 100%;
+          flex-shrink: 0;
+          border-radius: 12px 0 0 12px;
+          overflow: hidden;
+
+          .comic-cover {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
+
+          .card-gradient-overlay {
+            display: none; /* No overlay required since text is outside the image in list view */
+          }
+        }
+
+        .card-content-overlay {
+          position: relative;
+          padding: 0 24px;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: space-between;
+          flex-grow: 1;
+          z-index: 3;
+          height: 100%;
+
+          .comic-title {
+            margin: 0;
+            font-size: 1.15rem;
+            color: var(--text-primary);
+          }
+
+          .comic-metadata {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            color: var(--text-muted);
+
+            .meta-item {
+              display: flex;
+              align-items: center;
+              gap: 6px;
+              color: var(--text-muted);
+
+              .meta-icon {
+                font-size: 0.85rem;
+                color: var(--text-muted);
+              }
+
+              .meta-text {
+                font-size: 0.78rem;
+                font-weight: 500;
+              }
+            }
+
+            .meta-dot {
+              font-size: 0.8rem;
+              color: var(--divider-color);
+            }
+          }
+        }
+
+        &:hover {
+          transform: translateX(6px); /* subtle side slide on hover in list view */
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+      }
+    }
+  }
+}
+
+/* Responsive breakdowns */
+@media (max-width: 1200px) {
+  .library-container {
+    .library-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+  }
+}
+
+@media (max-width: 850px) {
+  .library-container {
+    padding: 24px;
+
+    .library-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 16px;
+
+      .header-filters {
+        width: 100%;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+
+        .custom-dropdown {
+          flex-grow: 1;
+          .dropdown-trigger {
+            width: 100%;
+          }
+        }
+      }
+    }
+
+    .library-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .library-container {
+    padding: 16px;
+
+    .library-header {
+      .header-text {
+        .library-title {
+          font-size: 1.75rem;
+        }
+      }
+    }
+
+    .library-grid {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+  }
+}

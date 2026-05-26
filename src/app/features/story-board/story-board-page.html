@@ -1,1 +1,112 @@
-<p>story-board-page works!</p>
+<div class="library-container">
+  <!-- Header with search/filters -->
+  <header class="library-header animate-fade">
+    <div class="header-text">
+      <h1 class="library-title">{{ 'STORY_BOARD.TITLE' | translate }}</h1>
+      <p class="library-subtitle">{{ 'STORY_BOARD.SUBTITLE' | translate }}</p>
+    </div>
+
+    <div class="header-filters">
+      <!-- Dropdown Filter 1 -->
+      <div class="custom-dropdown">
+        <button class="dropdown-trigger" (click)="toggleDateDropdown($event)">
+          <span>{{ (selectedDateFilter === 'All Dates' ? 'STORY_BOARD.FILTERS.ALL_DATES' : selectedDateFilter ===
+            'Today' ? 'STORY_BOARD.FILTERS.TODAY' : 'STORY_BOARD.FILTERS.THIS_WEEK') | translate }}</span>
+          <span class="material-symbols-outlined dropdown-chevron">expand_more</span>
+        </button>
+
+        @if (showDateDropdown) {
+        <ul class="dropdown-menu">
+          <li class="dropdown-item" [class.active]="selectedDateFilter === 'All Dates'"
+            (click)="setDateFilter('All Dates')">
+            {{ 'STORY_BOARD.FILTERS.ALL_DATES' | translate }}
+          </li>
+          <li class="dropdown-item" [class.active]="selectedDateFilter === 'Today'" (click)="setDateFilter('Today')">
+            {{ 'STORY_BOARD.FILTERS.TODAY' | translate }}
+          </li>
+          <li class="dropdown-item" [class.active]="selectedDateFilter === 'This Week'"
+            (click)="setDateFilter('This Week')">
+            {{ 'STORY_BOARD.FILTERS.THIS_WEEK' | translate }}
+          </li>
+        </ul>
+        }
+      </div>
+
+      <!-- Dropdown Filter 2 -->
+      <div class="custom-dropdown">
+        <button class="dropdown-trigger" (click)="toggleGenreDropdown($event)">
+          <span>{{ (selectedGenreFilter === 'All Genres' ? 'STORY_BOARD.FILTERS.ALL_GENRES' : selectedGenreFilter) |
+            translate }}</span>
+          <span class="material-symbols-outlined dropdown-chevron">expand_more</span>
+        </button>
+
+        @if (showGenreDropdown) {
+        <ul class="dropdown-menu">
+          <li class="dropdown-item" [class.active]="selectedGenreFilter === 'All Genres'"
+            (click)="setGenreFilter('All Genres')">
+            {{ 'STORY_BOARD.FILTERS.ALL_GENRES' | translate }}
+          </li>
+          <li class="dropdown-item" [class.active]="selectedGenreFilter === 'Sci-Fi'"
+            (click)="setGenreFilter('Sci-Fi')">
+            Sci-Fi
+          </li>
+          <li class="dropdown-item" [class.active]="selectedGenreFilter === 'Fantasy'"
+            (click)="setGenreFilter('Fantasy')">
+            Fantasy
+          </li>
+          <li class="dropdown-item" [class.active]="selectedGenreFilter === 'Drama'" (click)="setGenreFilter('Drama')">
+            Drama
+          </li>
+        </ul>
+        }
+      </div>
+
+      <!-- Layout View Toggle -->
+      <button class="btn-layout-toggle" [title]="'STORY_BOARD.GRID_VIEW' | translate">
+        <span class="material-symbols-outlined">grid_view</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Comic Cards Grid -->
+  <div class="library-grid animate-fade-up">
+    @for (comic of filteredComics; track comic.title + '_' + selectedDateFilter + '_' + selectedGenreFilter; let idx =
+    $index) {
+    <div class="comic-card" [style.animation-delay.ms]="idx * 60">
+      <!-- Card Image -->
+      <div class="card-image-wrapper">
+        <img [src]="comic.coverImage" [alt]="comic.title" class="comic-cover">
+
+        <!-- Draft Badge (if draft) -->
+        @if (comic.isDraft) {
+        <span class="badge-draft">{{ 'STORY_BOARD.DRAFT' | translate }}</span>
+        }
+
+        <!-- Dark Gradient Overlay for title overlay text readability -->
+        <div class="card-gradient-overlay"></div>
+      </div>
+
+      <!-- Card Metadata overlay inside bottom section of card -->
+      <div class="card-content-overlay">
+        <h3 class="comic-title">{{ comic.title }}</h3>
+
+        <div class="comic-metadata">
+          <div class="meta-item">
+            <span class="material-symbols-outlined meta-icon">calendar_today</span>
+            <span class="meta-text">{{ comic.createdAt | date:'MMM dd, yyyy' }}</span>
+          </div>
+          <span class="meta-dot">•</span>
+          <div class="meta-item">
+            <span class="material-symbols-outlined meta-icon">auto_stories</span>
+            <span class="meta-text">{{ comic.pages }} {{ (comic.pages === 1 ? 'STORY_BOARD.PAGE' : 'STORY_BOARD.PAGES')
+              | translate }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interactive Card Border Highlight -->
+      <div class="card-glow-effect"></div>
+    </div>
+    }
+  </div>
+</div>

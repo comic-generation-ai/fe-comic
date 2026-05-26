@@ -52,6 +52,13 @@ export const routes: Routes = [
             './features/comic-editor/comic-editor-page'
           ).then((m) => m.ComicEditorPage),
       },
+      {
+        path: 'profile',
+        loadComponent: () =>
+          import(
+            './features/information-page/information-page'
+          ).then((m) => m.InformationPage),
+      },
       // Redirect /app → /app/comic-editor
       { path: '', redirectTo: 'comic-editor', pathMatch: 'full' },
     ],

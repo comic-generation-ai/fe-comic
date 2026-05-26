@@ -25,6 +25,10 @@
       <i class="pi material-symbols-outlined">grid_view</i>
       <span class="nav-text">{{ 'LAYOUT.SIDEBAR.STORY_BOARD' | translate }}</span>
     </a>
+    <a routerLink="/app/profile" routerLinkActive="active" class="nav-item" [title]="(isCollapsed ? ('LAYOUT.SIDEBAR.PROFILE' | translate) : '')">
+      <i class="pi material-symbols-outlined">account_circle</i>
+      <span class="nav-text">{{ 'LAYOUT.SIDEBAR.PROFILE' | translate }}</span>
+    </a>
   </nav>
 
   <!-- Sidebar Footer with Collapse Button at the bottom -->

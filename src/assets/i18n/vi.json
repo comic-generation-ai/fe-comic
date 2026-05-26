@@ -73,7 +73,8 @@
       "COMIC_EDITOR": "Trình vẽ truyện",
       "STORY_BOARD": "Bảng phân cảnh",
       "USER_NAME": "Quản trị viên",
-      "USER_ROLE": "Người sáng tạo"
+      "USER_ROLE": "Người sáng tạo",
+      "PROFILE": "Trang cá nhân"
     },
     "HEADER": {
       "TITLE": "Bảng Điều Khiển",
@@ -168,6 +169,20 @@
       "ARIAL": "Arial",
       "IMPACT": "Impact",
       "OUTFIT": "Outfit"
+    }
+  },
+  "STORY_BOARD": {
+    "TITLE": "Thư Viện Dự Án",
+    "SUBTITLE": "Quản lý và xem lại các dự án truyện tranh đã tạo.",
+    "DRAFT": "Bản nháp",
+    "PAGE": "trang",
+    "PAGES": "trang",
+    "GRID_VIEW": "Chế độ lưới",
+    "FILTERS": {
+      "ALL_DATES": "Tất cả ngày",
+      "TODAY": "Hôm nay",
+      "THIS_WEEK": "Tuần này",
+      "ALL_GENRES": "Tất cả thể loại"
     }
   }
 }
