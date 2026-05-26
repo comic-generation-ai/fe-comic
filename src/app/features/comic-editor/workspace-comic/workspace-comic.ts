@@ -48,7 +48,7 @@ export class WorkspaceComic implements OnInit, OnDestroy {
     );
     this.sub.add(
       this.editorService.export$.subscribe(() => {
-        this.exportComic();
+        this.exportComicAsImage();
       })
     );
   }
@@ -99,9 +99,12 @@ export class WorkspaceComic implements OnInit, OnDestroy {
     this.editorService.deleteBubble(id);
   }
 
-  // Drag handles & move controllers
   startDrag(event: MouseEvent, bubble: SpeechBubble, dragType: 'move' | 'resize' | 'tail') {
-    event.preventDefault();
+    // Chỉ gọi preventDefault khi không phải là thao tác di chuyển ('move')
+    // Điều này cho phép sự kiện dblclick (double click) kích hoạt chế độ chỉnh sửa chữ hoạt động bình thường
+    if (dragType !== 'move') {
+      event.preventDefault();
+    }
     event.stopPropagation();
 
     this.activeDragType = dragType;
@@ -279,27 +282,26 @@ export class WorkspaceComic implements OnInit, OnDestroy {
     return `M ${ax} ${ay} L ${tx} ${ty} L ${bx} ${by}`;
   }
 
-  // Premium Canvas Export logic at 2x quality
-  exportComic() {
+  // Premium Canvas Export logic at 2x quality with custom layout padding
+  exportComicAsImage() {
     const gridElement = this.el.nativeElement.querySelector('.comic-grid-layout');
     if (!gridElement) return;
 
     const rect = gridElement.getBoundingClientRect();
-    const width = rect.width;
-    const height = rect.height;
+    const outerPadding = 30; // 30px padding on all sides for premium comic book page layout
 
     // Create 2x resolution canvas
     const canvas = document.createElement('canvas');
-    canvas.width = width * 2;
-    canvas.height = height * 2;
+    canvas.width = (rect.width + outerPadding * 2) * 2;
+    canvas.height = (rect.height + outerPadding * 2) * 2;
     const ctx = canvas.getContext('2d')!;
 
     // Enable high quality scaling image smoothing
     ctx.imageSmoothingEnabled = true;
     ctx.imageSmoothingQuality = 'high';
 
-    // Draw background
-    ctx.fillStyle = this.editorState.borderColor || '#1e1e24';
+    // Draw solid white page background (incorporates margins & gutters)
+    ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     const panelCards = this.el.nativeElement.querySelectorAll('.comic-panel-card');
@@ -307,8 +309,8 @@ export class WorkspaceComic implements OnInit, OnDestroy {
 
     panelCards.forEach((card: HTMLElement, idx: number) => {
       const cardRect = card.getBoundingClientRect();
-      const cx = (cardRect.left - rect.left) * 2;
-      const cy = (cardRect.top - rect.top) * 2;
+      const cx = (cardRect.left - rect.left + outerPadding) * 2;
+      const cy = (cardRect.top - rect.top + outerPadding) * 2;
       const cw = cardRect.width * 2;
       const ch = cardRect.height * 2;
 
@@ -364,8 +366,8 @@ export class WorkspaceComic implements OnInit, OnDestroy {
     Promise.all(imagePromises).then(() => {
       panelCards.forEach((card: HTMLElement, idx: number) => {
         const cardRect = card.getBoundingClientRect();
-        const cx = (cardRect.left - rect.left) * 2;
-        const cy = (cardRect.top - rect.top) * 2;
+        const cx = (cardRect.left - rect.left + outerPadding) * 2;
+        const cy = (cardRect.top - rect.top + outerPadding) * 2;
         const cw = cardRect.width * 2;
         const ch = cardRect.height * 2;
 

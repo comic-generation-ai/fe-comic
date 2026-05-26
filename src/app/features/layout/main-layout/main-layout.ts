@@ -10,6 +10,6 @@ import { Sidebar } from '../sidebar/sidebar';
   styleUrl: './main-layout.scss',
 })
 export class MainLayout {
-  isSidebarCollapsed = false;
+  isSidebarCollapsed = true;
 }
 

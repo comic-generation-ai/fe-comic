@@ -147,7 +147,8 @@
             <!-- Inner text overlay via foreignObject for seamless native HTML layout -->
             <foreignObject x="12" y="12" [attr.width]="bubble.w - 24" [attr.height]="bubble.h - 24"
               style="pointer-events: auto;">
-              <div xmlns="http://www.w3.org/1999/xhtml" class="inner-bubble-text-container">
+              <div xmlns="http://www.w3.org/1999/xhtml" class="inner-bubble-text-container"
+                (mousedown)="editingTextId !== bubble.id ? startDrag($event, bubble, 'move') : null">
                 @if (editingTextId === bubble.id) {
                 <textarea [style.font-family]="bubble.fontFamily" [style.font-size.px]="bubble.fontSize"
                   [style.color]="bubble.fontColor" [style.text-align]="bubble.textAlign"
@@ -169,17 +170,21 @@
             <!-- Custom handles only displayed when bubble is selected -->
             @if (editorState.selectedBubbleId === bubble.id) {
             <g class="selection-handles">
-              <!-- Resize handle (bottom-right) -->
-              <circle [attr.cx]="bubble.w" [attr.cy]="bubble.h" r="7" class="handle-knob resize-knob"
-                (mousedown)="startDrag($event, bubble, 'resize')" />
+              <!-- Resize handle (bottom-right) with expanded click target -->
+              <g class="resize-handle-group" (mousedown)="startDrag($event, bubble, 'resize')" style="cursor: nwse-resize; pointer-events: auto;">
+                <circle [attr.cx]="bubble.w" [attr.cy]="bubble.h" r="16" fill="transparent" />
+                <circle [attr.cx]="bubble.w" [attr.cy]="bubble.h" r="7" class="handle-knob resize-knob" style="pointer-events: none;" />
+              </g>
 
-              <!-- Tail direct manipulation target knob -->
-              <circle [attr.cx]="bubble.w/2 + bubble.tailX" [attr.cy]="bubble.h/2 + bubble.tailY" r="7"
-                class="handle-knob tail-knob" (mousedown)="startDrag($event, bubble, 'tail')" />
+              <!-- Tail direct manipulation target knob with expanded click target -->
+              <g class="tail-handle-group" (mousedown)="startDrag($event, bubble, 'tail')" style="cursor: pointer; pointer-events: auto;">
+                <circle [attr.cx]="bubble.w/2 + bubble.tailX" [attr.cy]="bubble.h/2 + bubble.tailY" r="16" fill="transparent" />
+                <circle [attr.cx]="bubble.w/2 + bubble.tailX" [attr.cy]="bubble.h/2 + bubble.tailY" r="7" class="handle-knob tail-knob" style="pointer-events: none;" />
+              </g>
 
               <!-- Deletion action quick button -->
               <g class="btn-delete-bubble" (click)="deleteBubble(bubble.id, $event)"
-                [attr.transform]="'translate(' + (bubble.w) + ', -8)'">
+                [attr.transform]="'translate(' + (bubble.w) + ', -8)'" style="pointer-events: auto;">
                 <circle cx="0" cy="0" r="10" fill="#ef4444" stroke="#ffffff" stroke-width="1.5" />
                 <line x1="-4" y1="-4" x2="4" y2="4" stroke="#ffffff" stroke-width="2" stroke-linecap="round" />
                 <line x1="4" y1="-4" x2="-4" y2="4" stroke="#ffffff" stroke-width="2" stroke-linecap="round" />

@@ -115,12 +115,30 @@ export class ComicEditorService {
     });
   }
 
+  deleteBubblesOnPanel(panelIndex: number) {
+    this.saveHistory();
+    const current = this.stateSubject.getValue();
+    const remainingBubbles = current.bubbles.filter(b => b.panelIndex !== panelIndex);
+    const selectedBubble = current.selectedBubbleId ? current.bubbles.find(b => b.id === current.selectedBubbleId) : null;
+    const nextSelectedId = selectedBubble && selectedBubble.panelIndex === panelIndex ? null : current.selectedBubbleId;
+
+    this.stateSubject.next({
+      ...current,
+      bubbles: remainingBubbles,
+      selectedBubbleId: nextSelectedId
+    });
+  }
+
   selectBubble(id: string | null) {
     const current = this.stateSubject.getValue();
     if (current.selectedBubbleId !== id) {
+      const bubble = id ? current.bubbles.find(b => b.id === id) : null;
+      const nextActivePanel = bubble ? bubble.panelIndex : current.activePanelIndex;
+
       this.stateSubject.next({
         ...current,
-        selectedBubbleId: id
+        selectedBubbleId: id,
+        activePanelIndex: nextActivePanel
       });
     }
   }

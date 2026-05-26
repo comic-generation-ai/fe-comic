@@ -452,10 +452,16 @@
 
             .btn-delete-bubble {
               cursor: pointer;
-              transition: transform 0.2s ease;
+
+              circle, line {
+                transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+                transform-origin: 0px 0px;
+              }
 
               &:hover {
-                transform: scale(1.2);
+                circle, line {
+                  transform: scale(1.2);
+                }
               }
             }
           }
@@ -507,12 +513,16 @@
           overflow: hidden;
           pointer-events: auto;
           user-select: none;
-          cursor: text;
+          cursor: grab;
           font-weight: 700;
           transition: transform 0.15s ease;
 
           &:hover {
             transform: scale(1.02);
+          }
+
+          &:active {
+            cursor: grabbing;
           }
         }
       }

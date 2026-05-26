@@ -10,7 +10,7 @@ import { TranslatePipe } from '../../../core/i18n/translate.pipe';
   styleUrl: './sidebar.scss',
 })
 export class Sidebar {
-  isCollapsed = false;
+  isCollapsed = true;
 
   @Output() toggleCollapse = new EventEmitter<boolean>();
 

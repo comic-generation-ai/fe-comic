@@ -142,7 +142,7 @@
       "CLOUD": "Mây suy nghĩ"
     },
     "POSITION_SIZE": "Vị trí: (X: {{x}}%, Y: {{y}}%) | Kích thước: {{w}}x{{h}}px",
-    "DELETE_BUBBLE_BTN": "Xóa bóng thoại này",
+    "DELETE_BUBBLE_BTN": "Xóa tất cả bóng thoại của khung này",
     "NO_BUBBLE_SELECTED": "Chưa có bong bóng thoại nào được chọn.",
     "SELECT_BUBBLE_HINT": "Click chọn một bong bóng trên Canvas kịch bản để tùy biến nâng cao.",
     "TEXT_SETTINGS_TITLE": "Chỉnh Sửa Văn Bản",

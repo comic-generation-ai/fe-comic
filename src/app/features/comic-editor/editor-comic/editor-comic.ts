@@ -51,9 +51,17 @@ export class EditorComic implements OnInit, OnDestroy {
         const prevSelectedId = this.editorState?.selectedBubbleId;
         this.editorState = state;
 
-        // 1. If active panel index changed, focus 'bubble' tab
+        // 1. If active panel index changed, focus 'frame' tab
         if (state.activePanelIndex !== undefined && state.activePanelIndex !== prevPanelIndex) {
-          this.activeTab = 'bubble';
+          this.activeTab = 'frame';
+          
+          // Tự động bỏ chọn bong bóng nếu nó không thuộc panel đang chọn
+          if (state.selectedBubbleId) {
+            const currentBubble = state.bubbles.find(b => b.id === state.selectedBubbleId);
+            if (currentBubble && currentBubble.panelIndex !== state.activePanelIndex) {
+              this.editorService.selectBubble(null);
+            }
+          }
         }
 
         // 2. If selected bubble ID changed (and is not null), focus 'text' tab
@@ -120,9 +128,7 @@ export class EditorComic implements OnInit, OnDestroy {
   }
 
   deleteSelectedBubble() {
-    if (this.editorState.selectedBubbleId) {
-      this.editorService.deleteBubble(this.editorState.selectedBubbleId);
-    }
+    this.editorService.deleteBubblesOnPanel(this.targetPanelIndex);
   }
 
   // Text details modifiers

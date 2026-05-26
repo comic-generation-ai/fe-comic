@@ -142,7 +142,7 @@
       "CLOUD": "Thought Cloud"
     },
     "POSITION_SIZE": "Position: (X: {{x}}%, Y: {{y}}%) | Size: {{w}}x{{h}}px",
-    "DELETE_BUBBLE_BTN": "Delete this bubble",
+    "DELETE_BUBBLE_BTN": "Delete all bubbles on this frame",
     "NO_BUBBLE_SELECTED": "No speech bubble selected.",
     "SELECT_BUBBLE_HINT": "Select a bubble on the storyboard canvas for advanced customization.",
     "TEXT_SETTINGS_TITLE": "Text Settings",
