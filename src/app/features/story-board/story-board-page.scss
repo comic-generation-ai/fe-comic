@@ -192,6 +192,59 @@
         transition: all 0.35s ease;
       }
 
+      /* Premium Hover Action Buttons */
+      .card-actions {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        display: flex;
+        gap: 8px;
+        z-index: 15;
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+
+        .btn-action {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 36px;
+          height: 36px;
+          border-radius: 10px;
+          border: 1px solid var(--library-dropdown-border);
+          background: var(--library-dropdown-bg);
+          backdrop-filter: blur(8px);
+          -webkit-backdrop-filter: blur(8px);
+          color: var(--text-primary);
+          cursor: pointer;
+          transition: all 0.25s ease;
+
+          span {
+            font-size: 1.15rem;
+          }
+
+          &.btn-edit:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: rgba(var(--white-rgb), 1);
+            box-shadow: 0 0 12px rgba(var(--primary-rgb), 0.4);
+            transform: scale(1.05);
+          }
+
+          &.btn-delete:hover {
+            background: var(--error);
+            border-color: var(--error);
+            color: rgba(var(--white-rgb), 1);
+            box-shadow: 0 0 12px rgba(var(--red-rgb), 0.4);
+            transform: scale(1.05);
+          }
+
+          &:active {
+            transform: scale(0.95);
+          }
+        }
+      }
+
       /* Hover Effects */
       &:hover {
         transform: translateY(-8px) scale(1.01);
@@ -206,6 +259,11 @@
           border-color: var(--library-card-hover-border);
           opacity: 0.4;
           box-shadow: inset 0 0 15px var(--library-card-glow-inner);
+        }
+
+        .card-actions {
+          opacity: 1;
+          transform: translateY(0);
         }
       }
 
@@ -405,6 +463,10 @@
           .card-gradient-overlay {
             display: none; /* No overlay required since text is outside the image in list view */
           }
+
+          .badge-draft {
+            display: none; /* Hide default absolute badge in list view */
+          }
         }
 
         .card-content-overlay {
@@ -422,6 +484,22 @@
             margin: 0;
             font-size: 1.15rem;
             color: var(--text-primary);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+
+            .badge-draft-list {
+              font-size: 0.65rem;
+              font-weight: 700;
+              text-transform: uppercase;
+              letter-spacing: 0.05em;
+              padding: 3px 8px;
+              border-radius: 6px;
+              background: var(--library-draft-bg);
+              border: 1px solid var(--library-draft-border);
+              color: var(--library-draft-text);
+              line-height: 1;
+            }
           }
 
           .comic-metadata {
@@ -430,6 +508,7 @@
             align-items: center;
             gap: 16px;
             color: var(--text-muted);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 
             .meta-item {
               display: flex;
@@ -455,9 +534,25 @@
           }
         }
 
+        .card-actions {
+          top: 50% !important;
+          right: 24px !important;
+          transform: translateY(-50%) translateX(10px) !important;
+          opacity: 0 !important;
+        }
+
         &:hover {
           transform: translateX(6px); /* subtle side slide on hover in list view */
-          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+          box-shadow: 0 4px 20px rgba(var(--black-rgb), 0.15);
+
+          .card-content-overlay .comic-metadata {
+            transform: translateX(-90px);
+          }
+
+          .card-actions {
+            opacity: 1 !important;
+            transform: translateY(-50%) translateX(0) !important;
+          }
         }
       }
     }

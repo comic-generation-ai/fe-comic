@@ -1,0 +1,273 @@
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+  box-sizing: border-box;
+
+  /* Hiệu ứng đóng/mở mượt mà cho phần nền che (backdrop) */
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+
+  &.open {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+
+    .modal-container {
+      transform: scale(1) translateY(0);
+      opacity: 1;
+    }
+  }
+}
+
+.modal-container {
+  position: relative;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 440px;
+  box-shadow: var(--shadow-drawer), 0 20px 50px rgba(0, 0, 0, 0.3);
+  padding: 32px 24px 24px 24px;
+  box-sizing: border-box;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  overflow: hidden;
+
+  /* Hiệu ứng đóng/mở mượt mà cho hộp thoại modal */
+  opacity: 0;
+  transform: scale(0.92) translateY(12px);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.3s ease;
+
+  /* Premium Glowing accent border ở đỉnh đầu modal */
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 8px;
+    background: var(--primary);
+  }
+
+  /* Định cấu hình chi tiết cho từng loại PopUp: danger, warning, primary */
+  &.danger {
+    &::before {
+      background: var(--error);
+    }
+    .icon-wrapper {
+      background: rgba(var(--red-rgb), 0.12);
+      border-color: rgba(var(--red-rgb), 0.2);
+      color: var(--error);
+      box-shadow: 0 0 16px rgba(var(--red-rgb), 0.1);
+    }
+    .btn-confirm {
+      background: var(--error);
+      box-shadow: 0 4px 14px rgba(var(--red-rgb), 0.25);
+      &:hover {
+        background: #ef4444; // static fallback for Light Theme
+        box-shadow: 0 6px 20px rgba(var(--red-rgb), 0.4);
+        transform: translateY(-1.5px);
+      }
+    }
+  }
+
+  &.warning {
+    &::before {
+      background: var(--warning);
+    }
+    .icon-wrapper {
+      background: rgba(var(--warning-rgb), 0.12);
+      border-color: rgba(var(--warning-rgb), 0.2);
+      color: var(--warning);
+      box-shadow: 0 0 16px rgba(var(--warning-rgb), 0.1);
+    }
+    .btn-confirm {
+      background: var(--warning);
+      box-shadow: 0 4px 14px rgba(var(--warning-rgb), 0.25);
+      color: #000000;
+      &:hover {
+        background: #eab308;
+        box-shadow: 0 6px 20px rgba(var(--warning-rgb), 0.4);
+        transform: translateY(-1.5px);
+      }
+    }
+  }
+
+  &.primary {
+    &::before {
+      background: var(--primary);
+    }
+    .icon-wrapper {
+      background: rgba(var(--primary-rgb), 0.12);
+      border-color: rgba(var(--primary-rgb), 0.2);
+      color: var(--primary);
+      box-shadow: 0 0 16px rgba(var(--primary-rgb), 0.1);
+    }
+    .btn-confirm {
+      background: var(--primary);
+      box-shadow: 0 4px 14px rgba(var(--primary-rgb), 0.25);
+      &:hover {
+        background: var(--primary-light);
+        box-shadow: 0 6px 20px rgba(var(--primary-rgb), 0.4);
+        transform: translateY(-1.5px);
+      }
+    }
+  }
+
+  /* Nút X đóng ở góc phải */
+  .btn-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-radius: 50%;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+
+    span {
+      font-size: 1.2rem;
+    }
+
+    &:hover {
+      background: var(--bg-surface-hover);
+      color: var(--text-primary);
+    }
+  }
+
+  /* Header chứa Icon */
+  .modal-header {
+    margin-top: 10px;
+    
+    .icon-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      border: 1px solid transparent;
+      transition: transform 0.3s ease;
+
+      span {
+        font-size: 2.25rem;
+      }
+
+      &.image-icon {
+        overflow: hidden;
+        border-radius: 12px;
+        background: transparent;
+        border: none;
+        width: 80px;
+        height: 80px;
+
+        .illustration-img {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+        }
+      }
+    }
+  }
+
+  /* Thân Modal (Title & Message) */
+  .modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    .modal-title {
+      font-family: var(--font-title), sans-serif;
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin: 0;
+      letter-spacing: -0.02em;
+    }
+
+    .modal-message {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin: 0;
+    }
+  }
+
+  /* Chân Modal (Các nút hành động) */
+  .modal-footer {
+    display: flex;
+    width: 100%;
+    gap: 12px;
+    margin-top: 10px;
+
+    button {
+      flex: 1;
+      padding: 12.5px 18px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      border-radius: 10px;
+      cursor: pointer;
+      font-family: var(--font-body), sans-serif;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+
+      &:active {
+        transform: scale(0.98);
+      }
+    }
+
+    .btn-cancel {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+
+      &:hover {
+        background: var(--bg-surface-hover);
+        border-color: var(--border-hover);
+        color: var(--text-primary);
+      }
+    }
+
+    .btn-confirm {
+      border: none;
+      color: #ffffff;
+    }
+  }
+}
+
+/* Thích ứng trên thiết bị di động (Responsive) */
+@media (max-width: 480px) {
+  .modal-container {
+    padding: 24px 20px 20px 20px;
+    gap: 16px;
+
+    .modal-footer {
+      flex-direction: column-reverse;
+      gap: 10px;
+
+      button {
+        width: 100%;
+      }
+    }
+  }
+}

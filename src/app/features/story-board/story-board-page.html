@@ -62,8 +62,10 @@
       </div>
 
       <!-- Layout View Toggle -->
-      <button class="btn-layout-toggle" [title]="'STORY_BOARD.GRID_VIEW' | translate">
-        <span class="material-symbols-outlined">grid_view</span>
+      <button class="btn-layout-toggle" [title]="(viewMode === 'grid' ? 'STORY_BOARD.LIST_VIEW' : 'STORY_BOARD.GRID_VIEW') | translate" (click)="toggleViewMode()">
+        <span class="material-symbols-outlined">
+          {{ viewMode === 'grid' ? 'list' : 'grid_view' }}
+        </span>
       </button>
     </div>
   </header>
@@ -73,6 +75,16 @@
     @for (comic of filteredComics; track comic.title + '_' + selectedDateFilter + '_' + selectedGenreFilter; let idx =
     $index) {
     <div class="comic-card" [style.animation-delay.ms]="idx * 60">
+      <!-- Actions Overlay (Edit & Delete) -->
+      <div class="card-actions">
+        <button class="btn-action btn-edit" [title]="'COMMON.EDIT' | translate" (click)="editComic($event, comic)">
+          <span class="material-symbols-outlined">edit</span>
+        </button>
+        <button class="btn-action btn-delete" [title]="'COMMON.DELETE' | translate" (click)="deleteComic($event, comic)">
+          <span class="material-symbols-outlined">delete</span>
+        </button>
+      </div>
+
       <!-- Card Image -->
       <div class="card-image-wrapper">
         <img [src]="comic.coverImage" [alt]="comic.title" class="comic-cover">
@@ -88,7 +100,12 @@
 
       <!-- Card Metadata overlay inside bottom section of card -->
       <div class="card-content-overlay">
-        <h3 class="comic-title">{{ comic.title }}</h3>
+        <h3 class="comic-title">
+          {{ comic.title }}
+          @if (comic.isDraft && viewMode === 'list') {
+          <span class="badge-draft-list">{{ 'STORY_BOARD.DRAFT' | translate }}</span>
+          }
+        </h3>
 
         <div class="comic-metadata">
           <div class="meta-item">
@@ -109,4 +126,17 @@
     </div>
     }
   </div>
+
+  <!-- Reusable Confirmation PopUp for Deleting a Comic Project -->
+  <app-pop-up
+    [isOpen]="showDeletePopup"
+    [title]="'STORY_BOARD.DELETE_CONFIRM_TITLE' | translate"
+    [message]="'STORY_BOARD.DELETE_CONFIRM_MESSAGE' | translate:{title: comicToDelete?.title || ''}"
+    [confirmLabel]="'STORY_BOARD.CONFIRM_DELETE_LABEL' | translate"
+    [cancelLabel]="'STORY_BOARD.CANCEL_DELETE_LABEL' | translate"
+    [type]="'danger'"
+    [materialIcon]="'delete_forever'"
+    (confirm)="confirmDelete()"
+    (cancel)="cancelDelete()">
+  </app-pop-up>
 </div>

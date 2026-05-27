@@ -1,7 +1,9 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, HostBinding } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { TranslatePipe } from '../../core/i18n/translate.pipe';
+import { PopUp } from '../../shared/ui/pop-up/pop-up';
 
 export interface ComicProject {
   title: string;
@@ -15,11 +17,13 @@ export interface ComicProject {
 @Component({
   selector: 'app-story-board-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslatePipe],
+  imports: [CommonModule, FormsModule, TranslatePipe, PopUp],
   templateUrl: './story-board-page.html',
   styleUrl: './story-board-page.scss',
 })
 export class StoryBoardPage {
+  constructor(private router: Router) {}
+
   comics: ComicProject[] = [
     {
       title: 'Neon Genesis',
@@ -57,6 +61,17 @@ export class StoryBoardPage {
 
   showDateDropdown = false;
   showGenreDropdown = false;
+
+  viewMode: 'grid' | 'list' = 'grid';
+
+  @HostBinding('class.view-list')
+  get isListView(): boolean {
+    return this.viewMode === 'list';
+  }
+
+  toggleViewMode() {
+    this.viewMode = this.viewMode === 'grid' ? 'list' : 'grid';
+  }
 
   // Lọc danh sách truyện theo Ngày và Phong cách (Genre)
   get filteredComics(): ComicProject[] {
@@ -106,6 +121,34 @@ export class StoryBoardPage {
   setGenreFilter(value: string) {
     this.selectedGenreFilter = value;
     this.showGenreDropdown = false;
+  }
+
+  showDeletePopup = false;
+  comicToDelete?: ComicProject;
+
+  editComic(event: Event, comic: ComicProject) {
+    event.stopPropagation();
+    console.log('Chỉnh sửa dự án:', comic.title);
+    this.router.navigate(['/app/comic-editor']);
+  }
+
+  deleteComic(event: Event, comic: ComicProject) {
+    event.stopPropagation();
+    this.comicToDelete = comic;
+    this.showDeletePopup = true;
+  }
+
+  confirmDelete() {
+    if (this.comicToDelete) {
+      this.comics = this.comics.filter(c => c !== this.comicToDelete);
+      this.comicToDelete = undefined;
+    }
+    this.showDeletePopup = false;
+  }
+
+  cancelDelete() {
+    this.comicToDelete = undefined;
+    this.showDeletePopup = false;
   }
 
   @HostListener('document:click')

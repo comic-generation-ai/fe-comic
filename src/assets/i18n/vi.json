@@ -1,7 +1,9 @@
 {
   "COMMON": {
     "LOGO": "ComicAI",
-    "AND": "và"
+    "AND": "và",
+    "EDIT": "Chỉnh sửa",
+    "DELETE": "Xóa"
   },
   "HERO": {
     "TITLE_START": "Biến ",
@@ -176,8 +178,13 @@
     "SUBTITLE": "Quản lý và xem lại các dự án truyện tranh đã tạo.",
     "DRAFT": "Bản nháp",
     "PAGE": "trang",
-    "PAGES": "trang",
+    "PAGES": "khung",
     "GRID_VIEW": "Chế độ lưới",
+    "LIST_VIEW": "Chế độ danh sách",
+    "DELETE_CONFIRM_TITLE": "Xác nhận xóa dự án?",
+    "DELETE_CONFIRM_MESSAGE": "Bạn có chắc chắn muốn xóa dự án truyện tranh \"{{title}}\" không? Hành động này không thể hoàn tác.",
+    "CONFIRM_DELETE_LABEL": "Xóa vĩnh viễn",
+    "CANCEL_DELETE_LABEL": "Hủy bỏ",
     "FILTERS": {
       "ALL_DATES": "Tất cả ngày",
       "TODAY": "Hôm nay",

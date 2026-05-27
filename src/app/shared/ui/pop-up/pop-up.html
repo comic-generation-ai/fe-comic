@@ -1,0 +1,39 @@
+<div class="modal-backdrop" [class.open]="isOpen" (click)="onBackdropClick($event)">
+  <div class="modal-container" [ngClass]="type">
+    
+    <!-- Nút đóng nhanh ở góc trên bên phải -->
+    <button class="btn-close" (click)="onCancel()" aria-label="Close modal">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+
+    <!-- Khu vực hiển thị Icon / Minh họa -->
+    <div class="modal-header">
+      @if (iconUrl) {
+        <div class="icon-wrapper image-icon">
+          <img [src]="iconUrl" [alt]="title" class="illustration-img" />
+        </div>
+      } @else {
+        <div class="icon-wrapper symbol-icon">
+          <span class="material-symbols-outlined">{{ materialIcon || getDefaultIcon(type) }}</span>
+        </div>
+      }
+    </div>
+
+    <!-- Nội dung chính (Tiêu đề & Tin nhắn) -->
+    <div class="modal-body">
+      <h2 class="modal-title">{{ title }}</h2>
+      <p class="modal-message">{{ message }}</p>
+    </div>
+
+    <!-- Khu vực nút hành động (Footer) -->
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="onCancel()">
+        {{ cancelLabel }}
+      </button>
+      <button class="btn-confirm" (click)="onConfirm()">
+        {{ confirmLabel }}
+      </button>
+    </div>
+
+  </div>
+</div>

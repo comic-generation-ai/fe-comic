@@ -1,7 +1,9 @@
 {
   "COMMON": {
     "LOGO": "ComicAI",
-    "AND": "and"
+    "AND": "and",
+    "EDIT": "Edit",
+    "DELETE": "Delete"
   },
   "HERO": {
     "TITLE_START": "Bring your ",
@@ -176,8 +178,13 @@
     "SUBTITLE": "Manage and review your generated comic projects.",
     "DRAFT": "Draft",
     "PAGE": "page",
-    "PAGES": "pages",
+    "PAGES": "frames",
     "GRID_VIEW": "Grid view",
+    "LIST_VIEW": "List view",
+    "DELETE_CONFIRM_TITLE": "Confirm Delete Project?",
+    "DELETE_CONFIRM_MESSAGE": "Are you sure you want to delete the comic project \"{{title}}\"? This action cannot be undone.",
+    "CONFIRM_DELETE_LABEL": "Delete permanently",
+    "CANCEL_DELETE_LABEL": "Cancel",
     "FILTERS": {
       "ALL_DATES": "All dates",
       "TODAY": "Today",
