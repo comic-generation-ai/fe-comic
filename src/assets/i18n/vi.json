@@ -3,7 +3,9 @@
     "LOGO": "ComicAI",
     "AND": "và",
     "EDIT": "Chỉnh sửa",
-    "DELETE": "Xóa"
+    "DELETE": "Xóa",
+    "ENGLISH": "Tiếng Anh",
+    "VIETNAMESE": "Tiếng Việt"
   },
   "HERO": {
     "TITLE_START": "Biến ",
@@ -190,6 +192,56 @@
       "TODAY": "Hôm nay",
       "THIS_WEEK": "Tuần này",
       "ALL_GENRES": "Tất cả thể loại"
+    }
+  },
+  "PROFILE": {
+    "TITLE": "Trang cá nhân",
+    "EDIT_PROFILE": "Chỉnh sửa cá nhân",
+    "SUB_PLAN": "Creator Pro",
+    "RENEWS_ON": "Gia hạn vào: {{date}}",
+    "CURRENT_SUB": "Gói đăng ký hiện tại",
+    "TOKENS_USED": "{{used}} / {{total}} Token",
+    "PERCENT_USED": "Đã dùng {{percent}}%",
+    "UPGRADE_PLAN": "Nâng cấp gói",
+    "TOP_UP_CREDITS": "Nạp thêm Credits",
+    "TOTAL_PROJECTS": "TỔNG SỐ DỰ ÁN",
+    "PAGES_PUBLISHED": "TRANG ĐÃ XUẤT BẢN",
+    "CHARACTERS_CREATED": "NHÂN VẬT ĐÃ TẠO",
+    "TRANSACTION_HISTORY": "Lịch sử giao dịch",
+    "DOWNLOAD_ALL": "Tải xuống tất cả",
+    "COL_DESC": "NỘI DUNG GIAO DỊCH",
+    "COL_DATE": "NGÀY GIAO DỊCH",
+    "COL_AMOUNT": "SỐ TIỀN",
+    "COL_STATUS": "TRẠNG THÁI",
+    "STATUS_SUCCESS": "thành công",
+    "PREFERENCES": "Tùy chọn hiển thị",
+    "DARK_MODE": "Chế độ tối",
+    "DARK_MODE_DESC": "Điều chỉnh giao diện",
+    "LANGUAGE": "Ngôn ngữ hiển thị",
+    "LANGUAGE_DESC": "Chọn ngôn ngữ giao diện",
+    "NOTIFICATIONS": "Thông báo trong app",
+    "NOTIFICATIONS_DESC": "Cập nhật về các dự án truyện",
+    "SECURITY": "Bảo mật tài khoản",
+    "NEW_PASSWORD": "Mật khẩu mới",
+    "CONFIRM_PASSWORD": "Xác nhận mật khẩu",
+    "UPDATE_PASSWORD": "Cập nhật mật khẩu",
+    "PASSWORD_UPDATED_SUCCESS": "Cập nhật mật khẩu thành công.",
+    "PASSWORD_MISMATCH": "Mật khẩu không trùng khớp.",
+    "DANGER_ZONE": "Thông báo nguy hiểm",
+    "DANGER_ZONE_DESC": "Xóa tài khoản vĩnh viễn cùng tất cả các dự án. Hành động này không thể hoàn tác.",
+    "DELETE_ACCOUNT": "Xóa tài khoản",
+    "DELETE_CONFIRM": "Bạn có chắc chắn muốn xóa tài khoản? Thao tác này sẽ xóa vĩnh viễn toàn bộ dữ liệu của bạn.",
+    "EDIT_MODAL": {
+      "TITLE": "Chỉnh sửa trang cá nhân",
+      "CHANGE_PHOTO": "Thay đổi ảnh",
+      "REMOVE": "Gỡ bỏ",
+      "FULL_NAME": "Họ và tên",
+      "USERNAME": "Tên người dùng",
+      "EMAIL": "Email",
+      "BIO": "Giới thiệu bản thân",
+      "BIO_PLACEHOLDER": "Giới thiệu ngắn về bản thân bạn...",
+      "CANCEL": "Hủy bỏ",
+      "SAVE": "Lưu thay đổi"
     }
   }
 }

@@ -27,9 +27,11 @@
 
     <!-- Khu vực nút hành động (Footer) -->
     <div class="modal-footer">
-      <button class="btn-cancel" (click)="onCancel()">
-        {{ cancelLabel }}
-      </button>
+      @if (cancelLabel) {
+        <button class="btn-cancel" (click)="onCancel()">
+          {{ cancelLabel }}
+        </button>
+      }
       <button class="btn-confirm" (click)="onConfirm()">
         {{ confirmLabel }}
       </button>

@@ -51,7 +51,7 @@
       <!-- Dropdown Menu -->
       <div class="dropdown-menu" *ngIf="showDropdown" (click)="$event.stopPropagation()">
         <!-- User Info Section -->
-        <div class="dropdown-user-info">
+        <div class="dropdown-user-info" (click)="navigateToProfile()">
           <div class="avatar-circle avatar-large">A</div>
           <div class="user-details">
             <span class="user-name">{{ 'LAYOUT.SIDEBAR.USER_NAME' | translate }}</span>
@@ -108,7 +108,7 @@
 <!-- Mobile Navigation Drawer Overlay (Mobile Only) -->
 <div class="mobile-drawer" *ngIf="showMobileMenu" (click)="$event.stopPropagation()">
   <!-- User Profile Section -->
-  <div class="drawer-user-info">
+  <div class="drawer-user-info" (click)="navigateToProfile()">
     <div class="avatar-circle avatar-large">A</div>
     <div class="user-details">
       <span class="user-name">{{ 'LAYOUT.SIDEBAR.USER_NAME' | translate }}</span>

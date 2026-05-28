@@ -177,5 +177,12 @@ export class Header {
     this.showNotifications = false;
     this.router.navigate(['/auth/login']);
   }
+
+  // Navigate to profile page
+  navigateToProfile() {
+    this.showDropdown = false;
+    this.showMobileMenu = false;
+    this.router.navigate(['/app/profile']);
+  }
 }
 

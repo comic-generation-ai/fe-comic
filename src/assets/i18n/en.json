@@ -3,7 +3,9 @@
     "LOGO": "ComicAI",
     "AND": "and",
     "EDIT": "Edit",
-    "DELETE": "Delete"
+    "DELETE": "Delete",
+    "ENGLISH": "English",
+    "VIETNAMESE": "Vietnamese"
   },
   "HERO": {
     "TITLE_START": "Bring your ",
@@ -190,6 +192,56 @@
       "TODAY": "Today",
       "THIS_WEEK": "This week",
       "ALL_GENRES": "All genres"
+    }
+  },
+  "PROFILE": {
+    "TITLE": "Profile",
+    "EDIT_PROFILE": "Edit Profile",
+    "SUB_PLAN": "Creator Pro",
+    "RENEWS_ON": "Renews: {{date}}",
+    "CURRENT_SUB": "Current Subscription",
+    "TOKENS_USED": "{{used}} / {{total}} Tokens",
+    "PERCENT_USED": "{{percent}}% Used",
+    "UPGRADE_PLAN": "Upgrade Plan",
+    "TOP_UP_CREDITS": "Top Up Credits",
+    "TOTAL_PROJECTS": "TOTAL PROJECTS",
+    "PAGES_PUBLISHED": "PAGES PUBLISHED",
+    "CHARACTERS_CREATED": "CHARACTERS CREATED",
+    "TRANSACTION_HISTORY": "Transaction History",
+    "DOWNLOAD_ALL": "Download All",
+    "COL_DESC": "DESCRIPTION",
+    "COL_DATE": "DATE",
+    "COL_AMOUNT": "AMOUNT",
+    "COL_STATUS": "STATUS",
+    "STATUS_SUCCESS": "success",
+    "PREFERENCES": "Preferences",
+    "DARK_MODE": "Dark Mode",
+    "DARK_MODE_DESC": "Adjust appearance",
+    "LANGUAGE": "Language",
+    "LANGUAGE_DESC": "Select interface language",
+    "NOTIFICATIONS": "In-app Notifications",
+    "NOTIFICATIONS_DESC": "Updates about projects",
+    "SECURITY": "Security",
+    "NEW_PASSWORD": "New Password",
+    "CONFIRM_PASSWORD": "Confirm Password",
+    "UPDATE_PASSWORD": "Update Password",
+    "PASSWORD_UPDATED_SUCCESS": "Password updated successfully.",
+    "PASSWORD_MISMATCH": "Passwords do not match.",
+    "DANGER_ZONE": "Danger Zone",
+    "DANGER_ZONE_DESC": "Permanently delete your account and all projects. This action cannot be undone.",
+    "DELETE_ACCOUNT": "Delete Account",
+    "DELETE_CONFIRM": "Are you sure you want to delete your account? This action is permanent and cannot be undone.",
+    "EDIT_MODAL": {
+      "TITLE": "Edit Profile",
+      "CHANGE_PHOTO": "Change Photo",
+      "REMOVE": "Remove",
+      "FULL_NAME": "Full Name",
+      "USERNAME": "Username",
+      "EMAIL": "Email",
+      "BIO": "Bio",
+      "BIO_PLACEHOLDER": "Tell us about yourself...",
+      "CANCEL": "Cancel",
+      "SAVE": "Save Changes"
     }
   }
 }

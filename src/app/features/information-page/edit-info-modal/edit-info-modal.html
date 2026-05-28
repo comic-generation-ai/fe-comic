@@ -1,0 +1,87 @@
+<div class="modal-backdrop" (click)="cancel()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <!-- Modal Header -->
+    <header class="modal-header">
+      <h3 class="modal-title">{{ 'PROFILE.EDIT_MODAL.TITLE' | translate }}</h3>
+      <button class="btn-close-modal" (click)="cancel()" aria-label="Close">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="icon-close">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </header>
+
+    <!-- Modal Content -->
+    <div class="modal-content">
+      <!-- Photo Editor -->
+      <section class="photo-editor-section">
+        <div class="modal-avatar-wrapper" (click)="triggerFileInput(fileInput)">
+          <img *ngIf="hasCustomAvatar; else fallbackAvatar" [src]="localProfile.avatar" alt="Preview Avatar" class="avatar-preview-img" />
+          <ng-template #fallbackAvatar>
+            <div class="fallback-avatar-container">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="fallback-icon">
+                <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd" />
+              </svg>
+            </div>
+          </ng-template>
+          <!-- Hover camera icon badge overlay -->
+          <div class="avatar-edit-overlay">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="icon-camera">
+              <path d="M12 9a3.75 3.75 0 1 0 0 7.5A3.75 3.75 0 0 0 12 9Z" />
+              <path fill-rule="evenodd" d="M9.344 3.071a.75.75 0 0 1 .695.467l.375.938a.75.75 0 0 0 .695.467h5.776a.75.75 0 0 0 .695-.467l.375-.938a.75.75 0 0 1 .695-.467h1.925A3 3 0 0 1 23 6v12a3 3 0 0 1-3 3H4a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3h1.925ZM12 7.5a5.25 5.25 0 1 0 0 10.5 5.25 5.25 0 0 0 0-10.5Z" clip-rule="evenodd" />
+            </svg>
+          </div>
+        </div>
+
+        <div class="photo-controls-row">
+          <button class="btn-text-action btn-change" (click)="triggerFileInput(fileInput)">
+            {{ 'PROFILE.EDIT_MODAL.CHANGE_PHOTO' | translate }}
+          </button>
+          <button class="btn-text-action btn-remove" (click)="removePhoto()">
+            {{ 'PROFILE.EDIT_MODAL.REMOVE' | translate }}
+          </button>
+        </div>
+
+        <!-- Hidden input for file picking -->
+        <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" class="hidden-file-input" />
+      </section>
+
+      <!-- Edit Form Grid -->
+      <form class="modal-form" (ngSubmit)="$event.preventDefault()">
+        <!-- Full Name -->
+        <div class="form-group">
+          <label class="form-label">{{ 'PROFILE.EDIT_MODAL.FULL_NAME' | translate }}</label>
+          <input type="text" class="form-input" [(ngModel)]="localProfile.name" name="name" required />
+        </div>
+
+        <!-- Username -->
+        <div class="form-group">
+          <label class="form-label">{{ 'PROFILE.EDIT_MODAL.USERNAME' | translate }}</label>
+          <input type="text" class="form-input" [(ngModel)]="localProfile.handle" name="handle" />
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label class="form-label">{{ 'PROFILE.EDIT_MODAL.EMAIL' | translate }}</label>
+          <input type="email" class="form-input" [(ngModel)]="localProfile.email" name="email" required />
+        </div>
+
+        <!-- Bio -->
+        <div class="form-group">
+          <label class="form-label">{{ 'PROFILE.EDIT_MODAL.BIO' | translate }}</label>
+          <textarea class="form-textarea" [(ngModel)]="localProfile.bio" name="bio" [placeholder]="'PROFILE.EDIT_MODAL.BIO_PLACEHOLDER' | translate" rows="3"></textarea>
+        </div>
+      </form>
+    </div>
+
+    <!-- Modal Footer Actions -->
+    <footer class="modal-footer">
+      <button type="button" class="btn-footer btn-cancel" (click)="cancel()">
+        {{ 'PROFILE.EDIT_MODAL.CANCEL' | translate }}
+      </button>
+      <button type="button" class="btn-footer btn-save" (click)="save()">
+        {{ 'PROFILE.EDIT_MODAL.SAVE' | translate }}
+      </button>
+    </footer>
+  </div>
+</div>
