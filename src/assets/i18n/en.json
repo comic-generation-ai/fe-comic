@@ -78,7 +78,8 @@
       "STORY_BOARD": "Story Board",
       "USER_NAME": "Admin Creator",
       "USER_ROLE": "Administrator",
-      "PROFILE": "Profile"
+      "PROFILE": "Profile",
+      "PRICING": "Pricing"
     },
     "HEADER": {
       "TITLE": "Studio Console",
@@ -242,6 +243,77 @@
       "BIO_PLACEHOLDER": "Tell us about yourself...",
       "CANCEL": "Cancel",
       "SAVE": "Save Changes"
+    }
+  },
+  "PRICING": {
+    "TITLE": "Choose Your Power Level",
+    "SUBTITLE": "Unlock the full potential of AI-driven comic creation. Whether you're a hobbyist or a professional studio, we have a plan for you.",
+    "BILLING": {
+      "MONTHLY": "Monthly",
+      "YEARLY": "Yearly",
+      "DISCOUNT": "-20%"
+    },
+    "PLANS": {
+      "FREE": {
+        "NAME": "Free",
+        "DESC": "Perfect for exploring the creative possibilities.",
+        "PRICE_MO": "$0",
+        "PRICE_YR": "$0",
+        "PER": "/month",
+        "CTA": "Current Plan"
+      },
+      "PRO": {
+        "NAME": "Pro",
+        "DESC": "For dedicated creators ready to publish.",
+        "POPULAR": "POPULAR",
+        "PRICE_MO": "$30",
+        "PRICE_YR": "$24",
+        "PER": "/month",
+        "CTA": "Upgrade to Pro"
+      },
+      "MAX": {
+        "NAME": "Max",
+        "DESC": "Uncapped power for professional teams.",
+        "PRICE_MO": "$120",
+        "PRICE_YR": "$99",
+        "PER": "/month",
+        "CTA": "Contact Sales"
+      }
+    },
+    "FEATURES": {
+      "FREE": [
+        "100 Credits / month",
+        "Standard Resolution Outputs",
+        "Basic Comic Styles"
+      ],
+      "FREE_DISABLED": [
+        "ComicAI Watermark"
+      ],
+      "PRO": [
+        "1,500 Credits / month",
+        "High Resolution (4K) Outputs",
+        "Unlock All Premium Styles",
+        "No Watermark",
+        "Full Commercial Rights",
+        "Fast Queue Priority"
+      ],
+      "STUDIO": [
+        "Unlimited Credits",
+        "Team Collaboration (up to 5)",
+        "Custom API Access",
+        "Dedicated Support"
+      ]
+    },
+    "FAQ_TITLE": "Frequently Asked Questions",
+    "FAQ": {
+      "Q1": "What happens when I run out of credits?",
+      "A1": "You can top up credits at any time from your profile page, or wait until your monthly cycle refreshes for your standard plan allocation.",
+      "Q2": "Can I use the images for commercial purposes?",
+      "A2": "Yes, if you are on the Pro or Studio plan, you retain full commercial rights to all artwork generated using our platform. Free tier users are restricted to personal, non-commercial use only.",
+      "Q3": "Can I cancel my subscription at any time?",
+      "A3": "Yes, you can cancel your subscription at any time through your account preferences. Your plan features will remain active until the end of the billing period.",
+      "Q4": "What is the difference between standard and high resolution?",
+      "A4": "Standard resolution is ideal for web viewing and layout drafts, while high resolution outputs are exported in 4K, perfect for print and high-fidelity comic publications."
     }
   }
 }

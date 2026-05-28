@@ -1,0 +1,89 @@
+<div class="pricing-container">
+  <!-- Header Section -->
+  <div class="pricing-header">
+    <h1 class="pricing-title">{{ 'PRICING.TITLE' | translate }}</h1>
+    <p class="pricing-subtitle">{{ 'PRICING.SUBTITLE' | translate }}</p>
+  </div>
+
+  <!-- Billing Toggle -->
+  <div class="billing-toggle-container">
+    <div class="billing-toggle-pill">
+      <button type="button" class="toggle-btn" [class.active]="!isYearly" (click)="setBilling(false)">
+        {{ 'PRICING.BILLING.MONTHLY' | translate }}
+      </button>
+      <button type="button" class="toggle-btn" [class.active]="isYearly" (click)="setBilling(true)">
+        {{ 'PRICING.BILLING.YEARLY' | translate }}
+        <span class="discount-badge">{{ 'PRICING.BILLING.DISCOUNT' | translate }}</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Plans Grid -->
+  <div class="plans-grid">
+    @for (plan of plans; track plan.nameKey) {
+    <div class="plan-card" [class.featured]="plan.nameKey === currentPlanNameKey" (click)="selectPlan(plan.nameKey)">
+      @if (plan.featured) {
+      <div class="popular-badge-wrapper">
+        <span class="popular-badge">{{ plan.popularKey | translate }}</span>
+      </div>
+      }
+
+      <div class="card-header">
+        <h2 class="plan-name">{{ plan.nameKey | translate }}</h2>
+        <p class="plan-desc">{{ plan.descKey | translate }}</p>
+      </div>
+
+      <div class="plan-price-wrapper">
+        <span class="price-symbol">$</span>
+        <span class="price-value">{{ isYearly ? plan.priceYearly : plan.priceMonthly }}</span>
+        <span class="price-period">{{ plan.perKey | translate }}</span>
+      </div>
+
+      <!-- Features List -->
+      <ul class="features-list">
+        @for (feat of plan.features; track feat.textKey) {
+        <li class="feature-item" [class.disabled]="feat.disabled">
+          <span class="material-symbols-outlined feature-icon">
+            {{ feat.disabled ? 'close' : 'check' }}
+          </span>
+          <span class="feature-text">{{ feat.textKey | translate }}</span>
+        </li>
+        }
+      </ul>
+
+      <div class="card-footer">
+        <button type="button" 
+          class="btn-pricing" 
+          [class]="plan.nameKey === currentPlanNameKey ? 'btn-gradient active-plan' : 'btn-outline'"
+          (click)="selectPlan(plan.nameKey); $event.stopPropagation()">
+          {{ (plan.nameKey === currentPlanNameKey ? 'PRICING.PLANS.FREE.CTA' : plan.ctaKey) | translate }}
+        </button>
+      </div>
+    </div>
+    }
+  </div>
+
+  <!-- FAQ Accordion Section -->
+  <div class="faq-container">
+    <h2 class="faq-section-title">{{ 'PRICING.FAQ_TITLE' | translate }}</h2>
+
+    <div class="faq-list">
+      @for (faq of faqs; track faq.questionKey; let i = $index) {
+      <div class="faq-item" [class.open]="faq.open">
+        <button type="button" class="faq-header" (click)="toggleFaq(i)">
+          <span class="faq-question">{{ faq.questionKey | translate }}</span>
+          <span class="material-symbols-outlined faq-chevron">
+            {{ faq.open ? 'expand_less' : 'expand_more' }}
+          </span>
+        </button>
+
+        @if (faq.open) {
+        <div class="faq-body">
+          <p class="faq-answer">{{ faq.answerKey | translate }}</p>
+        </div>
+        }
+      </div>
+      }
+    </div>
+  </div>
+</div>

@@ -78,7 +78,8 @@
       "STORY_BOARD": "Bảng phân cảnh",
       "USER_NAME": "Quản trị viên",
       "USER_ROLE": "Người sáng tạo",
-      "PROFILE": "Trang cá nhân"
+      "PROFILE": "Trang cá nhân",
+      "PRICING": "Gói dịch vụ"
     },
     "HEADER": {
       "TITLE": "Bảng Điều Khiển",
@@ -242,6 +243,77 @@
       "BIO_PLACEHOLDER": "Giới thiệu ngắn về bản thân bạn...",
       "CANCEL": "Hủy bỏ",
       "SAVE": "Lưu thay đổi"
+    }
+  },
+  "PRICING": {
+    "TITLE": "Nâng cấp gói trải nghiệm",
+    "SUBTITLE": "Khai phá toàn bộ tiềm năng của công nghệ tạo truyện tranh bằng AI. Dù bạn là người sáng tạo cá nhân hay studio chuyên nghiệp, luôn có gói phù hợp dành cho bạn.",
+    "BILLING": {
+      "MONTHLY": "Hàng tháng",
+      "YEARLY": "Hàng năm",
+      "DISCOUNT": "-20%"
+    },
+    "PLANS": {
+      "FREE": {
+        "NAME": "Miễn phí",
+        "DESC": "Hoàn hảo để khám phá các khả năng sáng tạo.",
+        "PRICE_MO": "$0",
+        "PRICE_YR": "$0",
+        "PER": "/tháng",
+        "CTA": "Gói Hiện Tại"
+      },
+      "PRO": {
+        "NAME": "Pro",
+        "DESC": "Dành cho các nhà sáng tạo tận tâm sẵn sàng xuất bản.",
+        "POPULAR": "PHỔ BIẾN NHẤT",
+        "PRICE_MO": "$30",
+        "PRICE_YR": "$24",
+        "PER": "/tháng",
+        "CTA": "Nâng cấp lên Pro"
+      },
+      "MAX": {
+        "NAME": "Max",
+        "DESC": "Sức mạnh không giới hạn cho các đội ngũ chuyên nghiệp.",
+        "PRICE_MO": "$120",
+        "PRICE_YR": "$99",
+        "PER": "/tháng",
+        "CTA": "Liên hệ kinh doanh"
+      }
+    },
+    "FEATURES": {
+      "FREE": [
+        "100 Credits / tháng",
+        "Đầu ra độ phân giải tiêu chuẩn",
+        "Phong cách truyện tranh cơ bản"
+      ],
+      "FREE_DISABLED": [
+        "Có Watermark ComicAI"
+      ],
+      "PRO": [
+        "1,500 Credits / tháng",
+        "Đầu ra độ phân giải cao (4K)",
+        "Mở khóa tất cả phong cách Premium",
+        "Không có Watermark",
+        "Toàn quyền thương mại",
+        "Ưu tiên hàng đợi nhanh"
+      ],
+      "STUDIO": [
+        "Credits không giới hạn",
+        "Cộng tác nhóm (lên đến 5 thành viên)",
+        "Truy cập API tùy chỉnh",
+        "Hỗ trợ tận tình"
+      ]
+    },
+    "FAQ_TITLE": "Các câu hỏi thường gặp",
+    "FAQ": {
+      "Q1": "Điều gì xảy ra khi tôi hết credits?",
+      "A1": "Bạn có thể nạp thêm credits bất kỳ lúc nào từ trang cá nhân của mình hoặc đợi đến chu kỳ tháng tiếp theo để nhận lại số lượng credits tiêu chuẩn.",
+      "Q2": "Tôi có thể sử dụng hình ảnh cho mục đích thương mại không?",
+      "A2": "Có, nếu bạn sử dụng gói Pro hoặc Studio, bạn giữ toàn quyền thương mại đối với tất cả các tác phẩm nghệ thuật được tạo bằng nền tảng của chúng tôi. Người dùng gói miễn phí chỉ được giới hạn ở mục đích cá nhân, phi thương mại.",
+      "Q3": "Tôi có thể hủy đăng ký của mình bất kỳ lúc nào không?",
+      "A3": "Có, bạn có thể hủy đăng ký bất kỳ lúc nào trong phần cài đặt tài khoản của mình. Các tính năng của gói sẽ vẫn hoạt động cho đến khi kết thúc chu kỳ thanh toán hiện tại.",
+      "Q4": "Sự khác biệt giữa độ phân giải tiêu chuẩn và độ phân giải cao là gì?",
+      "A4": "Độ phân giải tiêu chuẩn lý tưởng để xem trên web và tạo bản nháp bố cục, trong khi đầu ra độ phân giải cao được xuất ở chuẩn 4K, hoàn hảo để in ấn và xuất bản truyện tranh độ trung thực cao."
     }
   }
 }

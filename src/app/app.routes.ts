@@ -59,6 +59,13 @@ export const routes: Routes = [
             './features/information-page/information-page'
           ).then((m) => m.InformationPage),
       },
+      {
+        path: 'pricing',
+        loadComponent: () =>
+          import(
+            './features/pricing-page/pricing-page'
+          ).then((m) => m.PricingPage),
+      },
       // Redirect /app → /app/comic-editor
       { path: '', redirectTo: 'comic-editor', pathMatch: 'full' },
     ],

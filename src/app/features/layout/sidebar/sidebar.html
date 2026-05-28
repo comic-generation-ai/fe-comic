@@ -29,6 +29,10 @@
       <i class="pi material-symbols-outlined">account_circle</i>
       <span class="nav-text">{{ 'LAYOUT.SIDEBAR.PROFILE' | translate }}</span>
     </a>
+    <a routerLink="/app/pricing" routerLinkActive="active" class="nav-item" [title]="(isCollapsed ? ('LAYOUT.SIDEBAR.PRICING' | translate) : '')">
+      <i class="pi material-symbols-outlined">payments</i>
+      <span class="nav-text">{{ 'LAYOUT.SIDEBAR.PRICING' | translate }}</span>
+    </a>
   </nav>
 
   <!-- Sidebar Footer with Collapse Button at the bottom -->

@@ -1,7 +1,7 @@
 import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { TranslatePipe } from '../../core/i18n/translate.pipe';
 import { ThemeService } from '../../core/theme/theme.service';
 import { I18nService } from '../../core/i18n/i18n.service';
@@ -18,7 +18,7 @@ interface Transaction {
 @Component({
   selector: 'app-information-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslatePipe, EditInfoModal, PopUp],
+  imports: [CommonModule, FormsModule, TranslatePipe, EditInfoModal, PopUp, RouterLink],
   templateUrl: './information-page.html',
   styleUrl: './information-page.scss',
 })
