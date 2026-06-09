@@ -60,7 +60,7 @@ export const routes: Routes = [
           ).then((m) => m.InformationPage),
       },
       {
-        path: 'pricing',
+        path: 'pricing-page',
         loadComponent: () =>
           import(
             './features/pricing-page/pricing-page'
