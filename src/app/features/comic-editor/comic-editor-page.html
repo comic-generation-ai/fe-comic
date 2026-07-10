@@ -1,6 +1,9 @@
 <div class="editor-container">
   @if (viewMode === 'input') {
   <aside class="left-panel">
+    @if (generationError) {
+    <div class="generation-error-banner" role="alert">{{ generationError }}</div>
+    }
     <app-input-comic [storyTitle]="storyTitle" (storyTitleChange)="onInputChange('storyTitle', $event)"
       [storyScript]="storyScript" (storyScriptChange)="onInputChange('storyScript', $event)" [artStyle]="artStyle"
       (artStyleChange)="onInputChange('artStyle', $event)" [frameCount]="selectedFrames"

@@ -7,8 +7,6 @@ export const routes: Routes = [
     redirectTo: 'auth/login',
     pathMatch: 'full',
   },
-
-  // ── Auth routes (không dùng MainLayout) ──────────────────────
   {
     path: 'auth',
     children: [
@@ -27,8 +25,6 @@ export const routes: Routes = [
       { path: '', redirectTo: 'login', pathMatch: 'full' },
     ],
   },
-
-  // ── App routes (bọc trong MainLayout: header + sidebar) ───────
   {
     path: 'app',
     loadComponent: () =>
@@ -71,7 +67,7 @@ export const routes: Routes = [
     ],
   },
 
-  // ── Wildcard ─────────────────────────────────────────────────
+    // ── Wildcard ─────────────────────────────────────────────────
   {
     path: '**',
     redirectTo: 'auth/login',
