@@ -53,9 +53,7 @@
 
       <!-- Subscription Action Buttons -->
       <div class="sub-card-actions">
-        <button class="btn-sub btn-upgrade" routerLink="/app/pricing-page">{{ 'PROFILE.UPGRADE_PLAN' | translate
-          }}</button>
-        <button class="btn-sub btn-topup">{{ 'PROFILE.TOP_UP_CREDITS' | translate }}</button>
+        <button class="btn-sub btn-upgrade" routerLink="/app/pricing-page">{{ 'PROFILE.UPGRADE_PLAN' | translate }}</button>
       </div>
 
       <!-- Artistic background vector overlay -->
@@ -208,7 +206,8 @@
           </div>
           <div class="selector-control custom-dropdown-wrapper">
             <button type="button" class="custom-dropdown-btn" (click)="toggleLangDropdown($event)">
-              <span>{{ currentLanguage === 'en' ? ( "COMMON.ENGLISH" | translate ) : ( "COMMON.VIETNAMESE" | translate) }}</span>
+              <span>{{ currentLanguage === 'en' ? ( "COMMON.ENGLISH" | translate ) : ( "COMMON.VIETNAMESE" | translate)
+                }}</span>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="icon-chevron"
                 [class.rotated]="showLangDropdown">
                 <path fill-rule="evenodd"

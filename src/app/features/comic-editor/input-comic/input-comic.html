@@ -18,16 +18,11 @@
                 <span class="label-text">{{ 'INPUT_COMIC.STORY_TITLE' | translate }}</span>
             </label>
             <div class="input-wrapper">
-        <input 
-          id="story-title-input" 
-          type="text" 
-          class="form-input" 
-          [placeholder]="'INPUT_COMIC.STORY_TITLE_PLACEHOLDER' | translate"
-          [(ngModel)]="storyTitle"
-          (ngModelChange)="storyTitleChange.emit($event)"
-          [disabled]="isGenerating"
-        />
-      </div>
+                <input id="story-title-input" type="text" class="form-input"
+                    [placeholder]="'INPUT_COMIC.STORY_TITLE_PLACEHOLDER' | translate" [(ngModel)]="storyTitle"
+                    (ngModelChange)="storyTitleChange.emit($event)" [disabled]="isGenerating"
+                    [maxlength]="titleMaxLength" />
+            </div>
         </div>
 
         <!-- Story Script Section -->
@@ -44,16 +39,14 @@
                 <span class="label-text">{{ 'INPUT_COMIC.STORY_SCRIPT' | translate }}</span>
             </label>
             <div class="textarea-wrapper">
-        <textarea 
-          id="story-script-textarea" 
-          class="form-textarea" 
-          [placeholder]="'INPUT_COMIC.STORY_SCRIPT_PLACEHOLDER' | translate"
-          [(ngModel)]="storyScript"
-          (ngModelChange)="storyScriptChange.emit($event)"
-          [disabled]="isGenerating"
-          rows="5"
-        ></textarea>
-      </div>
+                <textarea id="story-script-textarea" class="form-textarea"
+                    [placeholder]="'INPUT_COMIC.STORY_SCRIPT_PLACEHOLDER' | translate" [(ngModel)]="storyScript"
+                    (ngModelChange)="storyScriptChange.emit($event)" [disabled]="isGenerating"
+                    [maxlength]="scriptMaxLength" rows="5"></textarea>
+            </div>
+            <div class="char-counter" [class.char-counter-limit]="storyScript.length >= scriptMaxLength">
+                {{ storyScript.length }} / {{ scriptMaxLength }}
+            </div>
         </div>
 
         <!-- Art Style Section -->
@@ -69,15 +62,10 @@
                 <span class="label-text">{{ 'INPUT_COMIC.ART_STYLE' | translate }}</span>
             </label>
             <div class="select-wrapper">
-        <select 
-          id="art-style-select" 
-          class="form-select" 
-          [(ngModel)]="artStyle"
-          (ngModelChange)="artStyleChange.emit($event)"
-          [disabled]="isGenerating"
-        >
-          <option *ngFor="let s of styles" [value]="s">{{ s }}</option>
-        </select>
+                <select id="art-style-select" class="form-select" [(ngModel)]="artStyle"
+                    (ngModelChange)="artStyleChange.emit($event)" [disabled]="isGenerating">
+                    <option *ngFor="let s of styles" [value]="s">{{ s }}</option>
+                </select>
                 <span class="select-arrow">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -135,15 +123,9 @@
     </div>
 
     <!-- CTA Action Button -->
-  <div class="panel-action">
-    <button 
-      type="button" 
-      class="btn-generate" 
-      [class.generating]="isGenerating"
-      [disabled]="isGenerating || !isFormValid"
-      (click)="generateComic()"
-      id="btn-generate-comic"
-    >
+    <div class="panel-action">
+        <button type="button" class="btn-generate" [class.generating]="isGenerating"
+            [disabled]="isGenerating || !isFormValid" (click)="generateComic()" id="btn-generate-comic">
             <ng-container *ngIf="!isGenerating">
                 <svg class="btn-icon star-sparkle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

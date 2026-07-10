@@ -27,6 +27,9 @@ export class InputComic implements OnInit {
   styles: string[] = ['Manga', 'Webtoon', 'Comic (Marvel style)', 'Cyberpunk', 'Ghibli style'];
   frames: number[] = [3, 4, 5, 6];
 
+  readonly titleMaxLength = 150;
+  readonly scriptMaxLength = 1000;
+
   ngOnInit(): void {
     // Notify parent of initial layout selection on init
     this.onFrameCountChange.emit(this.frameCount);
