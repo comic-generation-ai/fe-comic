@@ -64,7 +64,9 @@
             <div class="select-wrapper">
                 <select id="art-style-select" class="form-select" [(ngModel)]="artStyle"
                     (ngModelChange)="artStyleChange.emit($event)" [disabled]="isGenerating">
-                    <option *ngFor="let s of styles" [value]="s">{{ s }}</option>
+                    @for (s of styles; track s) {
+                        <option [value]="s">{{ s }}</option>
+                    }
                 </select>
                 <span class="select-arrow">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
@@ -88,36 +90,46 @@
             </label>
             <!-- Segmented Control with Illustrative Layouts -->
             <div class="segmented-control frame-layouts">
-                <button *ngFor="let f of frames" type="button" class="segment-item frame-item"
-                    [class.active]="frameCount === f" (click)="setFrameCount(f)" [disabled]="isGenerating"
-                    [attr.aria-label]="f + ' frames'">
-                    <div class="frame-layout-icon">
-                        <svg *ngIf="f === 3" viewBox="0 0 24 20" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <rect x="1" y="1" width="22" height="18" rx="1.5" />
-                            <line x1="8" y1="1" x2="8" y2="19" />
-                            <line x1="16" y1="1" x2="16" y2="19" />
-                        </svg>
-                        <svg *ngIf="f === 4" viewBox="0 0 24 20" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <rect x="1" y="1" width="22" height="18" rx="1.5" />
-                            <line x1="1" y1="10" x2="23" y2="10" />
-                            <line x1="12" y1="1" x2="12" y2="19" />
-                        </svg>
-                        <svg *ngIf="f === 5" viewBox="0 0 24 20" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <rect x="1" y="1" width="22" height="18" rx="1.5" />
-                            <line x1="1" y1="10" x2="23" y2="10" />
-                            <line x1="12" y1="1" x2="12" y2="10" />
-                            <line x1="8" y1="10" x2="8" y2="19" />
-                            <line x1="16" y1="10" x2="16" y2="19" />
-                        </svg>
-                        <svg *ngIf="f === 6" viewBox="0 0 24 20" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <rect x="1" y="1" width="22" height="18" rx="1.5" />
-                            <line x1="1" y1="10" x2="23" y2="10" />
-                            <line x1="8" y1="1" x2="8" y2="19" />
-                            <line x1="16" y1="1" x2="16" y2="19" />
-                        </svg>
-                    </div>
-                    <span class="frame-label-text">{{ f }} {{ 'INPUT_COMIC.FRAMES_SUFFIX' | translate }}</span>
-                </button>
+                @for (f of frames; track f) {
+                    <button type="button" class="segment-item frame-item"
+                        [class.active]="frameCount === f" (click)="setFrameCount(f)" [disabled]="isGenerating"
+                        [attr.aria-label]="f + ' frames'">
+                        <div class="frame-layout-icon">
+                            @if (f === 3) {
+                                <svg viewBox="0 0 24 20" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <rect x="1" y="1" width="22" height="18" rx="1.5" />
+                                    <line x1="8" y1="1" x2="8" y2="19" />
+                                    <line x1="16" y1="1" x2="16" y2="19" />
+                                </svg>
+                            }
+                            @if (f === 4) {
+                                <svg viewBox="0 0 24 20" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <rect x="1" y="1" width="22" height="18" rx="1.5" />
+                                    <line x1="1" y1="10" x2="23" y2="10" />
+                                    <line x1="12" y1="1" x2="12" y2="19" />
+                                </svg>
+                            }
+                            @if (f === 5) {
+                                <svg viewBox="0 0 24 20" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <rect x="1" y="1" width="22" height="18" rx="1.5" />
+                                    <line x1="1" y1="10" x2="23" y2="10" />
+                                    <line x1="12" y1="1" x2="12" y2="10" />
+                                    <line x1="8" y1="10" x2="8" y2="19" />
+                                    <line x1="16" y1="10" x2="16" y2="19" />
+                                </svg>
+                            }
+                            @if (f === 6) {
+                                <svg viewBox="0 0 24 20" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <rect x="1" y="1" width="22" height="18" rx="1.5" />
+                                    <line x1="1" y1="10" x2="23" y2="10" />
+                                    <line x1="8" y1="1" x2="8" y2="19" />
+                                    <line x1="16" y1="1" x2="16" y2="19" />
+                                </svg>
+                            }
+                        </div>
+                        <span class="frame-label-text">{{ f }} {{ 'INPUT_COMIC.FRAMES_SUFFIX' | translate }}</span>
+                    </button>
+                }
             </div>
         </div>
     </div>
@@ -126,7 +138,7 @@
     <div class="panel-action">
         <button type="button" class="btn-generate" [class.generating]="isGenerating"
             [disabled]="isGenerating || !isFormValid" (click)="generateComic()" id="btn-generate-comic">
-            <ng-container *ngIf="!isGenerating">
+            @if (!isGenerating) {
                 <svg class="btn-icon star-sparkle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path
@@ -134,11 +146,10 @@
                     </path>
                 </svg>
                 <span class="btn-text">{{ 'INPUT_COMIC.GENERATE_BUTTON' | translate }}</span>
-            </ng-container>
-            <ng-container *ngIf="isGenerating">
+            } @else {
                 <span class="spinner"></span>
                 <span class="btn-text">{{ 'INPUT_COMIC.GENERATING' | translate }}</span>
-            </ng-container>
+            }
         </button>
     </div>
 </div>
