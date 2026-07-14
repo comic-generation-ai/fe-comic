@@ -9,7 +9,6 @@ export interface UserProfileInfo {
   joinDate: string;
   email: string;
   avatar: string;
-  bio?: string;
 }
 
 @Component({
@@ -34,7 +33,6 @@ export class EditInfoModal implements OnInit {
     // Deep copy initial profile details
     this.localProfile = {
       ...this.userProfile,
-      bio: this.userProfile.bio || ''
     };
     this.hasCustomAvatar = !!this.localProfile.avatar && !this.localProfile.avatar.includes('default-avatar');
   }

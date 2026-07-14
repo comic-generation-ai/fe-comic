@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PricingPage } from './pricing-page';
+import { EditPasswordModal } from './edit-password-modal';
 
-describe('PricingPage', () => {
-  let component: PricingPage;
-  let fixture: ComponentFixture<PricingPage>;
+describe('EditPasswordModal', () => {
+  let component: EditPasswordModal;
+  let fixture: ComponentFixture<EditPasswordModal>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PricingPage],
+      imports: [EditPasswordModal],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(PricingPage);
+    fixture = TestBed.createComponent(EditPasswordModal);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

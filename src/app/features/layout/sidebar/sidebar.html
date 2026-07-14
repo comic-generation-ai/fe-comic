@@ -3,11 +3,11 @@
   <div class="sidebar-logo">
     <div class="logo-content">
       <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 2L14.8 9.2L22 12L14.8 14.8L12 22L9.2 14.8L2 12L9.2 9.2L12 2Z" fill="url(#sidebar-logo-grad)"/>
+        <path d="M12 2L14.8 9.2L22 12L14.8 14.8L12 22L9.2 14.8L2 12L9.2 9.2L12 2Z" fill="url(#sidebar-logo-grad)" />
         <defs>
           <linearGradient id="sidebar-logo-grad" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stop-color="#a855f7"/>
-            <stop offset="100%" stop-color="#3b82f6"/>
+            <stop offset="0%" stop-color="#a855f7" />
+            <stop offset="100%" stop-color="#3b82f6" />
           </linearGradient>
         </defs>
       </svg>
@@ -17,21 +17,20 @@
 
   <!-- Navigation Menu -->
   <nav class="sidebar-nav">
-    <a routerLink="/app/comic-editor" routerLinkActive="active" class="nav-item" [title]="(isCollapsed ? ('LAYOUT.SIDEBAR.COMIC_EDITOR' | translate) : '')">
+    <a routerLink="/app/comic-editor" routerLinkActive="active" class="nav-item"
+      [title]="(isCollapsed ? ('LAYOUT.SIDEBAR.COMIC_EDITOR' | translate) : '')">
       <i class="pi material-symbols-outlined">palette</i>
       <span class="nav-text">{{ 'LAYOUT.SIDEBAR.COMIC_EDITOR' | translate }}</span>
     </a>
-    <a routerLink="/app/story-board" routerLinkActive="active" class="nav-item" [title]="(isCollapsed ? ('LAYOUT.SIDEBAR.STORY_BOARD' | translate) : '')">
+    <a routerLink="/app/story-board" routerLinkActive="active" class="nav-item"
+      [title]="(isCollapsed ? ('LAYOUT.SIDEBAR.STORY_BOARD' | translate) : '')">
       <i class="pi material-symbols-outlined">grid_view</i>
       <span class="nav-text">{{ 'LAYOUT.SIDEBAR.STORY_BOARD' | translate }}</span>
     </a>
-    <a routerLink="/app/profile" routerLinkActive="active" class="nav-item" [title]="(isCollapsed ? ('LAYOUT.SIDEBAR.PROFILE' | translate) : '')">
+    <a routerLink="/app/profile" routerLinkActive="active" class="nav-item"
+      [title]="(isCollapsed ? ('LAYOUT.SIDEBAR.PROFILE' | translate) : '')">
       <i class="pi material-symbols-outlined">account_circle</i>
       <span class="nav-text">{{ 'LAYOUT.SIDEBAR.PROFILE' | translate }}</span>
-    </a>
-    <a routerLink="/app/pricing-page" routerLinkActive="active" class="nav-item" [title]="(isCollapsed ? ('LAYOUT.SIDEBAR.PRICING' | translate) : '')">
-      <i class="pi material-symbols-outlined">payments</i>
-      <span class="nav-text">{{ 'LAYOUT.SIDEBAR.PRICING' | translate }}</span>
     </a>
   </nav>
 

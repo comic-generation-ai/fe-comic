@@ -6,6 +6,7 @@ import { TranslatePipe } from '../../core/i18n/translate.pipe';
 import { ThemeService } from '../../core/theme/theme.service';
 import { I18nService } from '../../core/i18n/i18n.service';
 import { EditInfoModal } from './edit-info-modal/edit-info-modal';
+import { EditPasswordModal } from './edit-password-modal/edit-password-modal';
 import { PopUp } from '../../shared/ui/pop-up/pop-up';
 
 interface Transaction {
@@ -18,13 +19,16 @@ interface Transaction {
 @Component({
   selector: 'app-information-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslatePipe, EditInfoModal, PopUp, RouterLink],
+  imports: [CommonModule, FormsModule, TranslatePipe, EditInfoModal, EditPasswordModal, PopUp, RouterLink],
   templateUrl: './information-page.html',
   styleUrl: './information-page.scss',
 })
 export class InformationPage {
   // Toggle for Edit Modal
   showEditModal = false;
+
+  // Toggle for Password Modal
+  showPasswordModal = false;
 
   // Toggle for custom language dropdown
   showLangDropdown = false;
@@ -36,7 +40,7 @@ export class InformationPage {
   popUpMessage = '';
   popUpConfirmLabel = 'OK';
   popUpCancelLabel = 'Cancel';
-  popUpAction: () => void = () => {};
+  popUpAction: () => void = () => { };
 
   // User Profile details
   user = {
@@ -60,31 +64,7 @@ export class InformationPage {
   // Stats Details
   stats = {
     projects: 24,
-    pages: 148,
-    characters: 86
   };
-
-  // Mock Transactions
-  transactions: Transaction[] = [
-    {
-      description: 'Creator Pro - Monthly Renewal',
-      date: 'Mar 12, 2026',
-      amount: '$29.00',
-      status: 'success'
-    },
-    {
-      description: '500 Credits Top-up',
-      date: 'Feb 28, 2026',
-      amount: '$15.00',
-      status: 'success'
-    },
-    {
-      description: 'Creator Pro - Monthly Renewal',
-      date: 'Feb 12, 2026',
-      amount: '$29.00',
-      status: 'success'
-    }
-  ];
 
   // Preferences bindings
   notificationsEnabled = true;
@@ -99,7 +79,7 @@ export class InformationPage {
     private themeService: ThemeService,
     private i18nService: I18nService,
     private router: Router
-  ) {}
+  ) { }
 
   // Getter for dark mode setting
   get isDarkTheme(): boolean {
@@ -122,27 +102,9 @@ export class InformationPage {
   }
 
   // Trigger password update
-  updatePassword() {
-    if (!this.newPassword || !this.confirmPassword) {
-      this.showFeedback('Please fill out all password fields.', 'error');
-      return;
-    }
-
-    if (this.newPassword.length < 6) {
-      this.showFeedback('Password must be at least 6 characters.', 'error');
-      return;
-    }
-
-    if (this.newPassword !== this.confirmPassword) {
-      const errorMsg = this.i18nService.translate('PROFILE.PASSWORD_MISMATCH');
-      this.showFeedback(errorMsg, 'error');
-      return;
-    }
-
+  updatePassword(newPassword: string) {
     const successMsg = this.i18nService.translate('PROFILE.PASSWORD_UPDATED_SUCCESS');
-    this.newPassword = '';
-    this.confirmPassword = '';
-    
+
     // Open password update success popup
     this.openPopUp(
       'primary',
@@ -150,7 +112,10 @@ export class InformationPage {
       successMsg,
       'OK',
       '',
-      () => this.showPopUp = false
+      () => {
+        this.showPopUp = false;
+        this.showPasswordModal = false;
+      }
     );
   }
 
@@ -217,8 +182,8 @@ export class InformationPage {
 
     // Trigger success notification popup instantly
     const profileTitle = this.i18nService.translate('PROFILE.EDIT_MODAL.TITLE');
-    const profileSuccessMsg = this.i18nService.lang === 'vi' 
-      ? 'Cập nhật trang cá nhân thành công.' 
+    const profileSuccessMsg = this.i18nService.lang === 'vi'
+      ? 'Cập nhật trang cá nhân thành công.'
       : 'Profile updated successfully.';
 
     this.openPopUp(

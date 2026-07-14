@@ -223,6 +223,7 @@
     "NOTIFICATIONS": "Thông báo trong app",
     "NOTIFICATIONS_DESC": "Cập nhật về các dự án truyện",
     "SECURITY": "Bảo mật tài khoản",
+    "CHANGE_PASSWORD_DESC": "Cập nhật mật khẩu tài khoản của bạn",
     "NEW_PASSWORD": "Mật khẩu mới",
     "CONFIRM_PASSWORD": "Xác nhận mật khẩu",
     "UPDATE_PASSWORD": "Cập nhật mật khẩu",

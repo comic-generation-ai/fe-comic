@@ -223,6 +223,7 @@
     "NOTIFICATIONS": "In-app Notifications",
     "NOTIFICATIONS_DESC": "Updates about projects",
     "SECURITY": "Security",
+    "CHANGE_PASSWORD_DESC": "Update your account password",
     "NEW_PASSWORD": "New Password",
     "CONFIRM_PASSWORD": "Confirm Password",
     "UPDATE_PASSWORD": "Update Password",
