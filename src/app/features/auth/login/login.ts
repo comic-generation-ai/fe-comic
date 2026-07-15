@@ -22,9 +22,6 @@ import { AuthSessionService } from '../../../core/auth/auth-session.service';
 export class Login {
   loginForm: FormGroup;
   showPassword = false;
-  // Signal thay vì property thường: app dùng provideZonelessChangeDetection(),
-  // set property trong callback subscribe() (ngoài event Angular theo dõi) sẽ
-  // không tự vẽ lại view — phải dùng signal để Angular biết mà re-render.
   isSubmitting = signal(false);
   errorMessage = signal('');
   successMessage = signal('');
@@ -43,7 +40,6 @@ export class Login {
       rememberMe: [false],
     });
 
-    // Vừa đăng ký xong ở /auth/register thì hiển thị banner báo thành công.
     if (this.route.snapshot.queryParamMap.get('registered') === '1') {
       this.successMessage.set(this.i18n.translate('AUTH.LOGIN.REGISTER_SUCCESS_BANNER'));
     }

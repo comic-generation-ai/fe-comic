@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, inject } from '@angular/core';
+import { Component, ElementRef, HostListener, inject, OnInit } from '@angular/core';
 import { Router, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { I18nService } from '../../../core/i18n/i18n.service';
@@ -6,6 +6,7 @@ import { TranslatePipe } from '../../../core/i18n/translate.pipe';
 import { Modal } from '../../../shared/ui/modal/modal';
 import { ThemeService } from '../../../core/theme/theme.service';
 import { AuthSessionService } from '../../../core/auth/auth-session.service';
+import { CurrentUserService } from '../../../core/auth/current-user.service';
 
 @Component({
   selector: 'app-header',
@@ -13,9 +14,10 @@ import { AuthSessionService } from '../../../core/auth/auth-session.service';
   templateUrl: './header.html',
   styleUrl: './header.scss',
 })
-export class Header {
+export class Header implements OnInit {
   private readonly themeService = inject(ThemeService);
   private readonly authSession = inject(AuthSessionService);
+  private readonly currentUser = inject(CurrentUserService);
 
   showDropdown = false;
   showMobileMenu = false;
@@ -25,38 +27,32 @@ export class Header {
     return this.themeService.isDark;
   }
 
+  get profile() {
+    return this.currentUser.profile();
+  }
+
+  get displayName(): string {
+    const profile = this.profile;
+    return profile?.fullName || profile?.username || profile?.email || '';
+  }
+
+  get avatarInitial(): string {
+    return this.displayName ? this.displayName.charAt(0).toUpperCase() : '?';
+  }
+
   mockNotifications = [
-    {
-      id: 1,
-      type: 'feature',
-      title: 'Truyện đã sẵn sàng!',
-      content: 'Bộ truyện "Vũ trụ AI" đã được render thành công.',
-      timestamp: '5 phút trước',
-      isRead: false
-    },
-    {
-      id: 2,
-      type: 'billing',
-      title: 'Gói VIP sắp hết hạn',
-      content: 'Gói Pro của bạn sẽ hết hạn vào ngày 25/05/2026.',
-      timestamp: '1 giờ trước',
-      isRead: false
-    },
-    {
-      id: 3,
-      type: 'update',
-      title: 'Tính năng mới',
-      content: 'Đã cập nhật phong cách Manga vào bộ lọc của bạn!',
-      timestamp: '2 ngày trước',
-      isRead: true
-    }
+    
   ];
 
   constructor(
-    public i18n: I18nService, 
+    public i18n: I18nService,
     private router: Router,
     private elementRef: ElementRef
   ) {}
+
+  ngOnInit() {
+    this.currentUser.load();
+  }
 
   toggleTheme(event?: MouseEvent) {
     const newIsDark = !this.isDark;
@@ -155,25 +151,9 @@ export class Header {
     }
   }
 
-  hasUnreadNotifications(): boolean {
-    return this.mockNotifications.some(n => !n.isRead);
-  }
-
-  markAllNotificationsAsRead() {
-    this.mockNotifications = this.mockNotifications.map(n => ({
-      ...n,
-      isRead: true
-    }));
-  }
-
-  markNotificationAsRead(id: number) {
-    this.mockNotifications = this.mockNotifications.map(n => 
-      n.id === id ? { ...n, isRead: true } : n
-    );
-  }
-
   logout() {
     this.authSession.clearSession();
+    this.currentUser.clear();
     this.showDropdown = false;
     this.showMobileMenu = false;
     this.showNotifications = false;

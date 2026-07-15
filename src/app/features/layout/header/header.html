@@ -21,41 +21,32 @@
 
   <!-- Right Side: Controls and Actions (Desktop Only) -->
   <div class="header-actions">
-    <!-- Credits Pill (Token) -->
-    <div class="credits-pill">
-      <i class="pi material-symbols-outlined">confirmation_number</i>
-      <span class="credits-text">120/500 Credits</span>
-    </div>
-
     <!-- Notification Bell -->
     <div class="notification-container">
       <button type="button" class="btn-action btn-notification" aria-label="Notifications" (click)="toggleNotifications($event)">
         <i class="pi material-symbols-outlined">notifications</i>
-        <span class="badge-dot" *ngIf="hasUnreadNotifications()"></span>
       </button>
       <app-modal
         [isOpen]="showNotifications"
         [notifications]="mockNotifications"
         (close)="showNotifications = false"
-        (markAllAsRead)="markAllNotificationsAsRead()"
-        (markAsRead)="markNotificationAsRead($event)"
       ></app-modal>
     </div>
 
     <!-- User Profile Avatar & Dropdown -->
     <div class="user-profile-menu">
       <button type="button" class="btn-avatar" (click)="toggleDropdown($event)" aria-label="User profile menu">
-        <div class="avatar-circle">A</div>
+        <div class="avatar-circle">{{ avatarInitial }}</div>
       </button>
 
       <!-- Dropdown Menu -->
       <div class="dropdown-menu" *ngIf="showDropdown" (click)="$event.stopPropagation()">
         <!-- User Info Section -->
         <div class="dropdown-user-info" (click)="navigateToProfile()">
-          <div class="avatar-circle avatar-large">A</div>
+          <div class="avatar-circle avatar-large">{{ avatarInitial }}</div>
           <div class="user-details">
-            <span class="user-name">{{ 'LAYOUT.SIDEBAR.USER_NAME' | translate }}</span>
-            <span class="user-email">admin@comicai.com</span>
+            <span class="user-name">{{ displayName || ('LAYOUT.SIDEBAR.USER_NAME' | translate) }}</span>
+            <span class="user-email">{{ profile?.email }}</span>
           </div>
         </div>
 
@@ -109,10 +100,10 @@
 <div class="mobile-drawer" *ngIf="showMobileMenu" (click)="$event.stopPropagation()">
   <!-- User Profile Section -->
   <div class="drawer-user-info" (click)="navigateToProfile()">
-    <div class="avatar-circle avatar-large">A</div>
+    <div class="avatar-circle avatar-large">{{ avatarInitial }}</div>
     <div class="user-details">
-      <span class="user-name">{{ 'LAYOUT.SIDEBAR.USER_NAME' | translate }}</span>
-      <span class="user-email">admin@comicai.com</span>
+      <span class="user-name">{{ displayName || ('LAYOUT.SIDEBAR.USER_NAME' | translate) }}</span>
+      <span class="user-email">{{ profile?.email }}</span>
     </div>
   </div>
 
@@ -140,7 +131,7 @@
         <i class="pi material-symbols-outlined">confirmation_number</i>
         <span>Credits</span>
       </div>
-      <span class="credits-value">120/500</span>
+      <span class="credits-value">{{ profile?.credits_balance ?? '...' }}</span>
     </div>
 
     <!-- Notifications Toggle -->
@@ -150,15 +141,12 @@
           <i class="pi material-symbols-outlined">notifications</i>
           <span>{{ 'LAYOUT.HEADER.TITLE' | translate }} (Thông báo)</span>
         </div>
-        <span class="badge-dot-glow" *ngIf="hasUnreadNotifications()"></span>
       </button>
       <app-modal
         [isOpen]="showNotifications"
         [notifications]="mockNotifications"
-        (close)="showNotifications = false"
-        (markAllAsRead)="markAllNotificationsAsRead()"
-        (markAsRead)="markNotificationAsRead($event)"
-      ></app-modal>
+        (close)="showNotifications = false">
+      </app-modal>
     </div>
 
     <!-- Theme Toggler -->
