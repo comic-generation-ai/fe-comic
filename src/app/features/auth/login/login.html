@@ -59,6 +59,13 @@
       <!-- Login Form (Native HTML) -->
       <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
 
+        @if (successMessage()) {
+          <div class="form-banner form-banner-success">{{ successMessage() }}</div>
+        }
+        @if (errorMessage()) {
+          <div class="form-banner form-banner-error">{{ errorMessage() }}</div>
+        }
+
         <!-- Email Field -->
         <div class="form-field">
           <label for="email" class="field-label">{{ 'AUTH.LOGIN.EMAIL_LABEL' | translate }}</label>
@@ -117,8 +124,9 @@
         <button
           type="submit"
           class="btn-submit w-full"
+          [disabled]="isSubmitting()"
         >
-          <span>{{ 'AUTH.LOGIN.ENTER_STUDIO' | translate }}</span>
+          <span>{{ (isSubmitting() ? 'AUTH.LOGIN.SIGNING_IN' : 'AUTH.LOGIN.ENTER_STUDIO') | translate }}</span>
           <i class="pi material-symbols-outlined">arrow_forward</i>
         </button>
 

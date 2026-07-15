@@ -59,6 +59,10 @@
       <!-- Registration Form (Native HTML) -->
       <form class="login-form" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
 
+        @if (errorMessage()) {
+          <div class="form-banner form-banner-error">{{ errorMessage() }}</div>
+        }
+
         <!-- Full Name Field -->
         <div class="form-field">
           <label for="name" class="field-label">{{ 'AUTH.REGISTER.NAME_LABEL' | translate }}</label>
@@ -164,8 +168,9 @@
         <button
           type="submit"
           class="btn-submit w-full"
+          [disabled]="isSubmitting()"
         >
-          <span>{{ 'AUTH.REGISTER.CREATE_ACCOUNT' | translate }}</span>
+          <span>{{ (isSubmitting() ? 'AUTH.REGISTER.SUBMITTING' : 'AUTH.REGISTER.CREATE_ACCOUNT') | translate }}</span>
           <i class="pi material-symbols-outlined">arrow_forward</i>
         </button>
 

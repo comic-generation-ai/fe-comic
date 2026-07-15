@@ -5,6 +5,7 @@ import { I18nService } from '../../../core/i18n/i18n.service';
 import { TranslatePipe } from '../../../core/i18n/translate.pipe';
 import { Modal } from '../../../shared/ui/modal/modal';
 import { ThemeService } from '../../../core/theme/theme.service';
+import { AuthSessionService } from '../../../core/auth/auth-session.service';
 
 @Component({
   selector: 'app-header',
@@ -14,6 +15,7 @@ import { ThemeService } from '../../../core/theme/theme.service';
 })
 export class Header {
   private readonly themeService = inject(ThemeService);
+  private readonly authSession = inject(AuthSessionService);
 
   showDropdown = false;
   showMobileMenu = false;
@@ -171,7 +173,7 @@ export class Header {
   }
 
   logout() {
-    console.log('Logging out user...');
+    this.authSession.clearSession();
     this.showDropdown = false;
     this.showMobileMenu = false;
     this.showNotifications = false;
