@@ -46,17 +46,11 @@
             (click)="setGenreFilter('All Genres')">
             {{ 'STORY_BOARD.FILTERS.ALL_GENRES' | translate }}
           </li>
-          <li class="dropdown-item" [class.active]="selectedGenreFilter === 'Sci-Fi'"
-            (click)="setGenreFilter('Sci-Fi')">
-            Sci-Fi
+          @for (genre of availableGenres; track genre) {
+          <li class="dropdown-item" [class.active]="selectedGenreFilter === genre" (click)="setGenreFilter(genre)">
+            {{ genre }}
           </li>
-          <li class="dropdown-item" [class.active]="selectedGenreFilter === 'Fantasy'"
-            (click)="setGenreFilter('Fantasy')">
-            Fantasy
-          </li>
-          <li class="dropdown-item" [class.active]="selectedGenreFilter === 'Drama'" (click)="setGenreFilter('Drama')">
-            Drama
-          </li>
+          }
         </ul>
         }
       </div>
@@ -70,10 +64,36 @@
     </div>
   </header>
 
+  <!-- Loading State -->
+  @if (loading) {
+  <div class="library-state">
+    <span class="material-symbols-outlined state-icon spin">progress_activity</span>
+  </div>
+  }
+
+  <!-- Empty State — user chưa có project nào -->
+  @if (!loading && comics.length === 0) {
+  <div class="library-state animate-fade-up">
+    <span class="material-symbols-outlined state-icon">auto_stories</span>
+    <h3 class="state-title">{{ 'STORY_BOARD.EMPTY_TITLE' | translate }}</h3>
+    <p class="state-subtitle">{{ 'STORY_BOARD.EMPTY_SUBTITLE' | translate }}</p>
+    <a routerLink="/app/comic-editor" class="btn-state-cta">{{ 'STORY_BOARD.EMPTY_CTA' | translate }}</a>
+  </div>
+  }
+
+  <!-- No Match State — có project nhưng bộ lọc hiện tại không khớp cái nào -->
+  @if (!loading && comics.length > 0 && filteredComics.length === 0) {
+  <div class="library-state animate-fade-up">
+    <span class="material-symbols-outlined state-icon">filter_alt_off</span>
+    <h3 class="state-title">{{ 'STORY_BOARD.NO_MATCH_TITLE' | translate }}</h3>
+    <p class="state-subtitle">{{ 'STORY_BOARD.NO_MATCH_SUBTITLE' | translate }}</p>
+  </div>
+  }
+
   <!-- Comic Cards Grid -->
+  @if (!loading && filteredComics.length > 0) {
   <div class="library-grid animate-fade-up">
-    @for (comic of filteredComics; track comic.title + '_' + selectedDateFilter + '_' + selectedGenreFilter; let idx =
-    $index) {
+    @for (comic of filteredComics; track comic.id; let idx = $index) {
     <div class="comic-card" [style.animation-delay.ms]="idx * 60">
       <!-- Actions Overlay (Edit & Delete) -->
       <div class="card-actions">
@@ -87,7 +107,13 @@
 
       <!-- Card Image -->
       <div class="card-image-wrapper">
+        @if (comic.coverImage) {
         <img [src]="comic.coverImage" [alt]="comic.title" class="comic-cover">
+        } @else {
+        <div class="comic-cover cover-fallback">
+          <span class="material-symbols-outlined">auto_stories</span>
+        </div>
+        }
 
         <!-- Draft Badge (if draft) -->
         @if (comic.isDraft) {
@@ -115,8 +141,7 @@
           <span class="meta-dot">•</span>
           <div class="meta-item">
             <span class="material-symbols-outlined meta-icon">auto_stories</span>
-            <span class="meta-text">{{ comic.pages }} {{ (comic.pages === 1 ? 'STORY_BOARD.PAGE' : 'STORY_BOARD.PAGES')
-              | translate }}</span>
+            <span class="meta-text">{{ ('STORY_BOARD.STATUS_' + comic.status) | translate }}</span>
           </div>
         </div>
       </div>
@@ -126,6 +151,7 @@
     </div>
     }
   </div>
+  }
 
   <!-- Reusable Confirmation PopUp for Deleting a Comic Project -->
   <app-pop-up

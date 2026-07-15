@@ -25,4 +25,9 @@ export class ProjectApiService {
   getMyProjects(): Observable<Project[]> {
     return this.http.get<Project[]>(this.baseUrl);
   }
+
+  // DELETE /api/projects/:id — guard JWT + kiểm tra chủ sở hữu ở BE
+  deleteProject(id: string): Observable<{ id: string; deleted: boolean }> {
+    return this.http.delete<{ id: string; deleted: boolean }>(`${this.baseUrl}/${id}`);
+  }
 }

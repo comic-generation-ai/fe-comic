@@ -1,59 +1,65 @@
-<div class="notification-popup" *ngIf="isOpen" (click)="$event.stopPropagation()">
-  <!-- Header -->
-  <div class="popup-header">
-    <span class="popup-title">Thông báo</span>
-    <button 
-      type="button" 
-      class="btn-mark-all" 
-      (click)="onMarkAllAsRead($event)"
-      *ngIf="notifications.length > 0"
-    >
-      Đánh dấu đã đọc tất cả
-    </button>
-  </div>
+@if (isOpen) {
+  <div class="notification-popup" (click)="$event.stopPropagation()">
+    <!-- Header -->
+    <div class="popup-header">
+      <span class="popup-title">{{ 'NOTIFICATION_MODAL.TITLE' | translate }}</span>
+      @if (notifications.length > 0) {
+        <button 
+          type="button" 
+          class="btn-mark-all" 
+          (click)="onMarkAllAsRead($event)"
+        >
+          {{ 'NOTIFICATION_MODAL.MARK_ALL_READ' | translate }}
+        </button>
+      }
+    </div>
 
-  <!-- Divider -->
-  <div class="popup-divider"></div>
+    <!-- Divider -->
+    <div class="popup-divider"></div>
 
-  <!-- Scrollable Notification List -->
-  <div class="popup-body">
-    <div 
-      *ngFor="let notif of notifications" 
-      class="notification-item"
-      [class.unread]="!notif.isRead"
-      (click)="onMarkAsRead(notif.id, $event)"
-    >
-      <!-- Left: Icon Circle -->
-      <div class="icon-circle" [ngClass]="notif.type">
-        <i class="pi material-symbols-outlined">{{ getIconName(notif.type) }}</i>
-      </div>
+    <!-- Scrollable Notification List -->
+    <div class="popup-body">
+      @for (notif of notifications; track notif.id) {
+        <div 
+          class="notification-item"
+          [class.unread]="!notif.isRead"
+          (click)="onMarkAsRead(notif.id, $event)"
+        >
+          <!-- Left: Icon Circle -->
+          <div class="icon-circle" [ngClass]="notif.type">
+            <i class="pi material-symbols-outlined">{{ getIconName(notif.type) }}</i>
+          </div>
 
-      <!-- Center: Text Info -->
-      <div class="notification-content">
-        <div class="notification-title-row">
-          <span class="notification-title">{{ notif.title }}</span>
-          <!-- Dynamic Red Unread Dot Badge -->
-          <span class="unread-dot" *ngIf="!notif.isRead"></span>
+          <!-- Center: Text Info -->
+          <div class="notification-content">
+            <div class="notification-title-row">
+              <span class="notification-title">{{ notif.title }}</span>
+              <!-- Dynamic Red Unread Dot Badge -->
+              @if (!notif.isRead) {
+                <span class="unread-dot"></span>
+              }
+            </div>
+            <p class="notification-desc">{{ notif.content }}</p>
+            <span class="notification-time">{{ notif.timestamp }}</span>
+          </div>
         </div>
-        <p class="notification-desc">{{ notif.content }}</p>
-        <span class="notification-time">{{ notif.timestamp }}</span>
-      </div>
+      } @empty {
+        <!-- Empty State -->
+        <div class="empty-state">
+          <i class="pi material-symbols-outlined empty-icon">notifications_off</i>
+          <span class="empty-text">{{ 'NOTIFICATION_MODAL.EMPTY' | translate }}</span>
+        </div>
+      }
     </div>
 
-    <!-- Empty State -->
-    <div class="empty-state" *ngIf="notifications.length === 0">
-      <i class="pi material-symbols-outlined empty-icon">notifications_off</i>
-      <span class="empty-text">Không có thông báo nào</span>
+    <!-- Divider -->
+    <div class="popup-divider"></div>
+
+    <!-- Footer -->
+    <div class="popup-footer">
+      <button type="button" class="btn-view-all">
+        {{ 'NOTIFICATION_MODAL.VIEW_ALL' | translate }}
+      </button>
     </div>
   </div>
-
-  <!-- Divider -->
-  <div class="popup-divider"></div>
-
-  <!-- Footer -->
-  <div class="popup-footer">
-    <button type="button" class="btn-view-all">
-      Xem tất cả thông báo
-    </button>
-  </div>
-</div>
+}

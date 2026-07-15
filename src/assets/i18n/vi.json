@@ -196,6 +196,16 @@
     "DELETE_CONFIRM_MESSAGE": "Bạn có chắc chắn muốn xóa dự án truyện tranh \"{{title}}\" không? Hành động này không thể hoàn tác.",
     "CONFIRM_DELETE_LABEL": "Xóa vĩnh viễn",
     "CANCEL_DELETE_LABEL": "Hủy bỏ",
+    "EMPTY_TITLE": "Bạn chưa có dự án nào",
+    "EMPTY_SUBTITLE": "Bắt đầu tạo truyện tranh đầu tiên bằng AI ngay bây giờ.",
+    "EMPTY_CTA": "Tạo truyện mới",
+    "NO_MATCH_TITLE": "Không tìm thấy dự án phù hợp",
+    "NO_MATCH_SUBTITLE": "Thử đổi bộ lọc ngày hoặc thể loại.",
+    "STATUS_DRAFT": "Bản nháp",
+    "STATUS_PROCESSING": "Đang xử lý",
+    "STATUS_COMPLETED": "Hoàn thành",
+    "STATUS_FAILED": "Thất bại",
+    "STATUS_ARCHIVED": "Đã lưu trữ",
     "FILTERS": {
       "ALL_DATES": "Tất cả ngày",
       "TODAY": "Hôm nay",
@@ -325,5 +335,11 @@
       "Q4": "Sự khác biệt giữa độ phân giải tiêu chuẩn và độ phân giải cao là gì?",
       "A4": "Độ phân giải tiêu chuẩn lý tưởng để xem trên web và tạo bản nháp bố cục, trong khi đầu ra độ phân giải cao được xuất ở chuẩn 4K, hoàn hảo để in ấn và xuất bản truyện tranh độ trung thực cao."
     }
+  },
+  "NOTIFICATION_MODAL": {
+    "TITLE": "Thông báo",
+    "MARK_ALL_READ": "Đánh dấu đã đọc tất cả",
+    "EMPTY": "Không có thông báo nào",
+    "VIEW_ALL": "Xem tất cả thông báo"
   }
 }

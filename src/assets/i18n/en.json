@@ -196,6 +196,16 @@
     "DELETE_CONFIRM_MESSAGE": "Are you sure you want to delete the comic project \"{{title}}\"? This action cannot be undone.",
     "CONFIRM_DELETE_LABEL": "Delete permanently",
     "CANCEL_DELETE_LABEL": "Cancel",
+    "EMPTY_TITLE": "You don't have any projects yet",
+    "EMPTY_SUBTITLE": "Start creating your first AI-generated comic now.",
+    "EMPTY_CTA": "Create new comic",
+    "NO_MATCH_TITLE": "No matching projects found",
+    "NO_MATCH_SUBTITLE": "Try changing the date or genre filter.",
+    "STATUS_DRAFT": "Draft",
+    "STATUS_PROCESSING": "Processing",
+    "STATUS_COMPLETED": "Completed",
+    "STATUS_FAILED": "Failed",
+    "STATUS_ARCHIVED": "Archived",
     "FILTERS": {
       "ALL_DATES": "All dates",
       "TODAY": "Today",
@@ -325,5 +335,11 @@
       "Q4": "What is the difference between standard and high resolution?",
       "A4": "Standard resolution is ideal for web viewing and layout drafts, while high resolution outputs are exported in 4K, perfect for print and high-fidelity comic publications."
     }
+  },
+  "NOTIFICATION_MODAL": {
+    "TITLE": "Notifications",
+    "MARK_ALL_READ": "Mark all as read",
+    "EMPTY": "No notifications yet",
+    "VIEW_ALL": "View all notifications"
   }
 }
