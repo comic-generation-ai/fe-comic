@@ -2,7 +2,8 @@
   <!-- User Banner/Header Card -->
   <div class="profile-header-card">
     <div class="avatar-wrapper" (click)="showEditModal = true">
-      <img [src]="user.avatar ? user.avatar : 'assets/images/default-avatar.png'" alt="Avatar" class="avatar-img" />
+      <img *ngIf="user.avatar" [src]="user.avatar" alt="Avatar" class="avatar-img" />
+      <div *ngIf="!user.avatar" class="avatar-img avatar-fallback">{{ avatarInitial }}</div>
       <div class="avatar-edit-badge" [title]="'PROFILE.EDIT_PROFILE' | translate">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="icon-camera">
           <path d="M12 9a3.75 3.75 0 1 0 0 7.5A3.75 3.75 0 0 0 12 9Z" />

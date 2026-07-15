@@ -7,6 +7,7 @@ import { Modal } from '../../../shared/ui/modal/modal';
 import { ThemeService } from '../../../core/theme/theme.service';
 import { AuthSessionService } from '../../../core/auth/auth-session.service';
 import { CurrentUserService } from '../../../core/auth/current-user.service';
+import { getAvatarInitial } from '../../../core/utils/avatar.util';
 
 @Component({
   selector: 'app-header',
@@ -37,7 +38,7 @@ export class Header implements OnInit {
   }
 
   get avatarInitial(): string {
-    return this.displayName ? this.displayName.charAt(0).toUpperCase() : '?';
+    return getAvatarInitial(this.displayName);
   }
 
   mockNotifications = [

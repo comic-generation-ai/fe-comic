@@ -1,5 +1,5 @@
-import { Component, HostListener } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { ChangeDetectorRef, Component, HostListener, Inject, OnInit, PLATFORM_ID, effect } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { TranslatePipe } from '../../core/i18n/translate.pipe';
@@ -8,6 +8,10 @@ import { I18nService } from '../../core/i18n/i18n.service';
 import { EditInfoModal } from './edit-info-modal/edit-info-modal';
 import { EditPasswordModal } from './edit-password-modal/edit-password-modal';
 import { PopUp } from '../../shared/ui/pop-up/pop-up';
+import { CurrentUserService } from '../../core/auth/current-user.service';
+import { ProjectApiService } from '../../core/api/project-api.service';
+import { getAvatarInitial } from '../../core/utils/avatar.util';
+import { UserProfileInfo } from './edit-info-modal/edit-info-modal';
 
 interface Transaction {
   description: string;
@@ -23,7 +27,7 @@ interface Transaction {
   templateUrl: './information-page.html',
   styleUrl: './information-page.scss',
 })
-export class InformationPage {
+export class InformationPage implements OnInit {
   // Toggle for Edit Modal
   showEditModal = false;
 
@@ -42,14 +46,13 @@ export class InformationPage {
   popUpCancelLabel = 'Cancel';
   popUpAction: () => void = () => { };
 
-  // User Profile details
+  // User Profile details — điền từ /api/users/me khi profile load xong (xem constructor)
   user = {
-    name: 'Felix Vane',
-    handle: '@felix_creations',
-    joinDate: 'March 2024',
-    email: 'felix.vane@comical.studio',
-    avatar: 'assets/images/avatar.png',
-    bio: 'Passionate storyteller and digital artist exploring the boundaries of AI-powered comics.'
+    name: '',
+    handle: '',
+    joinDate: '',
+    email: '',
+    avatar: '',
   };
 
   // Subscription Details
@@ -61,9 +64,9 @@ export class InformationPage {
     percentUsed: 54
   };
 
-  // Stats Details
+  // Stats Details — điền từ /api/projects (số project thật của user, xem ngOnInit)
   stats = {
-    projects: 24,
+    projects: 0,
   };
 
   // Preferences bindings
@@ -78,8 +81,55 @@ export class InformationPage {
   constructor(
     private themeService: ThemeService,
     private i18nService: I18nService,
-    private router: Router
-  ) { }
+    private router: Router,
+    private currentUserService: CurrentUserService,
+    private projectApi: ProjectApiService,
+    private cdr: ChangeDetectorRef,
+    @Inject(PLATFORM_ID) private platformId: Object,
+  ) {
+    // effect() cần injection context — đặt trong constructor thay vì ngOnInit
+    effect(() => {
+      const profile = this.currentUserService.profile();
+      if (!profile) return;
+      this.user = {
+        name: profile.fullName || profile.username || profile.email,
+        handle: profile.username ? `@${profile.username}` : '',
+        joinDate: this.formatJoinDate(profile.created_at),
+        email: profile.email,
+        avatar: profile.avatarUrl || '',
+      };
+      // App chạy zoneless — mutate this.user (plain object, không phải signal) bên
+      // trong effect() không tự khiến template vẽ lại, phải báo cho scheduler.
+      this.cdr.markForCheck();
+      this.cdr.detectChanges();
+    });
+  }
+
+  ngOnInit() {
+    // Chặn gọi API lúc SSR/prerender — URL tương đối không có origin trên server
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    this.currentUserService.load();
+
+    this.projectApi.getMyProjects().subscribe({
+      next: (projects) => {
+        this.stats.projects = projects.length;
+        this.cdr.markForCheck();
+        this.cdr.detectChanges();
+      },
+      error: () => {},
+    });
+  }
+
+  // "March 2024" / "Tháng 3 2024" tùy ngôn ngữ hiện tại
+  private formatJoinDate(iso: string): string {
+    const locale = this.i18nService.lang === 'vi' ? 'vi-VN' : 'en-US';
+    return new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric' }).format(new Date(iso));
+  }
+
+  get avatarInitial(): string {
+    return getAvatarInitial(this.user.name);
+  }
 
   // Getter for dark mode setting
   get isDarkTheme(): boolean {
@@ -172,28 +222,36 @@ export class InformationPage {
     alert('Simulating download of all transactions in CSV format...');
   }
 
-  // Update profile information from modal save
-  saveProfile(updatedInfo: any) {
-    this.user = {
-      ...this.user,
-      ...updatedInfo
-    };
-    this.showEditModal = false;
-
-    // Trigger success notification popup instantly
+  // Update profile information from modal save — lưu thật lên BE (PATCH /users/me),
+  // this.user sẽ tự cập nhật qua effect() khi currentUserService.profile() đổi
+  saveProfile(updatedInfo: UserProfileInfo) {
     const profileTitle = this.i18nService.translate('PROFILE.EDIT_MODAL.TITLE');
-    const profileSuccessMsg = this.i18nService.lang === 'vi'
-      ? 'Cập nhật trang cá nhân thành công.'
-      : 'Profile updated successfully.';
 
-    this.openPopUp(
-      'primary',
-      profileTitle,
-      profileSuccessMsg,
-      'OK',
-      '',
-      () => this.showPopUp = false
-    );
+    this.currentUserService
+      .updateProfile({
+        fullName: updatedInfo.name,
+        username: updatedInfo.handle.replace(/^@/, '') || undefined,
+        avatarUrl: updatedInfo.avatar || undefined,
+      })
+      .subscribe({
+        next: () => {
+          this.showEditModal = false;
+          const successMsg = this.i18nService.lang === 'vi'
+            ? 'Cập nhật trang cá nhân thành công.'
+            : 'Profile updated successfully.';
+          this.openPopUp('primary', profileTitle, successMsg, 'OK', '', () => (this.showPopUp = false));
+          this.cdr.markForCheck();
+          this.cdr.detectChanges();
+        },
+        error: () => {
+          const errorMsg = this.i18nService.lang === 'vi'
+            ? 'Cập nhật thất bại, vui lòng thử lại.'
+            : 'Update failed, please try again.';
+          this.openPopUp('danger', profileTitle, errorMsg, 'OK', '', () => (this.showPopUp = false));
+          this.cdr.markForCheck();
+          this.cdr.detectChanges();
+        },
+      });
   }
 
   // Toggle custom language dropdown list

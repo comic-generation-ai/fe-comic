@@ -36,14 +36,20 @@
     <!-- User Profile Avatar & Dropdown -->
     <div class="user-profile-menu">
       <button type="button" class="btn-avatar" (click)="toggleDropdown($event)" aria-label="User profile menu">
-        <div class="avatar-circle">{{ avatarInitial }}</div>
+        <div class="avatar-circle">
+          <img *ngIf="profile?.avatarUrl" [src]="profile?.avatarUrl" alt="Avatar" class="avatar-img" />
+          <span *ngIf="!profile?.avatarUrl">{{ avatarInitial }}</span>
+        </div>
       </button>
 
       <!-- Dropdown Menu -->
       <div class="dropdown-menu" *ngIf="showDropdown" (click)="$event.stopPropagation()">
         <!-- User Info Section -->
         <div class="dropdown-user-info" (click)="navigateToProfile()">
-          <div class="avatar-circle avatar-large">{{ avatarInitial }}</div>
+          <div class="avatar-circle avatar-large">
+            <img *ngIf="profile?.avatarUrl" [src]="profile?.avatarUrl" alt="Avatar" class="avatar-img" />
+            <span *ngIf="!profile?.avatarUrl">{{ avatarInitial }}</span>
+          </div>
           <div class="user-details">
             <span class="user-name">{{ displayName || ('LAYOUT.SIDEBAR.USER_NAME' | translate) }}</span>
             <span class="user-email">{{ profile?.email }}</span>
@@ -100,7 +106,10 @@
 <div class="mobile-drawer" *ngIf="showMobileMenu" (click)="$event.stopPropagation()">
   <!-- User Profile Section -->
   <div class="drawer-user-info" (click)="navigateToProfile()">
-    <div class="avatar-circle avatar-large">{{ avatarInitial }}</div>
+    <div class="avatar-circle avatar-large">
+      <img *ngIf="profile?.avatarUrl" [src]="profile?.avatarUrl" alt="Avatar" class="avatar-img" />
+      <span *ngIf="!profile?.avatarUrl">{{ avatarInitial }}</span>
+    </div>
     <div class="user-details">
       <span class="user-name">{{ displayName || ('LAYOUT.SIDEBAR.USER_NAME' | translate) }}</span>
       <span class="user-email">{{ profile?.email }}</span>

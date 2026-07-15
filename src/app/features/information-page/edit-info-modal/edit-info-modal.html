@@ -16,13 +16,9 @@
       <!-- Photo Editor -->
       <section class="photo-editor-section">
         <div class="modal-avatar-wrapper" (click)="triggerFileInput(fileInput)">
-          <img *ngIf="hasCustomAvatar; else fallbackAvatar" [src]="localProfile.avatar" alt="Preview Avatar" class="avatar-preview-img" />
+          <img *ngIf="localProfile.avatar; else fallbackAvatar" [src]="localProfile.avatar" alt="Preview Avatar" class="avatar-preview-img" />
           <ng-template #fallbackAvatar>
-            <div class="fallback-avatar-container">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="fallback-icon">
-                <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd" />
-              </svg>
-            </div>
+            <div class="fallback-avatar-container">{{ avatarInitial }}</div>
           </ng-template>
           <!-- Hover camera icon badge overlay -->
           <div class="avatar-edit-overlay">
@@ -44,6 +40,22 @@
 
         <!-- Hidden input for file picking -->
         <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" class="hidden-file-input" />
+
+        <!-- Preset avatar picker — ẩn tự động nếu file chưa tồn tại trong assets/images/avatars/ -->
+        <div class="preset-avatar-row">
+          <span class="preset-avatar-label">{{ 'PROFILE.EDIT_MODAL.CHOOSE_DEFAULT' | translate }}</span>
+          <div class="preset-avatar-grid">
+            <button
+              type="button"
+              class="preset-avatar-btn"
+              *ngFor="let preset of presetAvatars"
+              [class.selected]="localProfile.avatar === preset"
+              (click)="selectPreset(preset)"
+            >
+              <img [src]="preset" alt="Preset avatar" (error)="onPresetError($event)" />
+            </button>
+          </div>
+        </div>
       </section>
 
       <!-- Edit Form Grid -->

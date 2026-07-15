@@ -13,6 +13,12 @@ export interface UserProfile {
   created_at: string;
 }
 
+export interface UpdateProfilePayload {
+  fullName?: string;
+  username?: string;
+  avatarUrl?: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -24,5 +30,9 @@ export class UserApiService {
 
   getMe(): Observable<UserProfile> {
     return this.http.get<UserProfile>(`${this.baseUrl}/me`);
+  }
+
+  updateMe(payload: UpdateProfilePayload): Observable<UserProfile> {
+    return this.http.patch<UserProfile>(`${this.baseUrl}/me`, payload);
   }
 }

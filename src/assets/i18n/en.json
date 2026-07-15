@@ -250,6 +250,7 @@
       "EMAIL": "Email",
       "BIO": "Bio",
       "BIO_PLACEHOLDER": "Tell us about yourself...",
+      "CHOOSE_DEFAULT": "Or pick a default avatar",
       "CANCEL": "Cancel",
       "SAVE": "Save Changes"
     }

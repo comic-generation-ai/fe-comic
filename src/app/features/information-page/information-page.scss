@@ -64,6 +64,18 @@
       background-color: var(--bg-primary);
     }
 
+    // Không có ảnh — chữ cái đầu tên trên nền gradient (đồng bộ với header)
+    .avatar-fallback {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--avatar-gradient);
+      color: var(--avatar-text);
+      font-weight: 700;
+      font-size: 2rem;
+      user-select: none;
+    }
+
     .avatar-edit-badge {
       position: absolute;
       bottom: 0;
