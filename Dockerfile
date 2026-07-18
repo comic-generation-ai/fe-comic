@@ -17,7 +17,10 @@ COPY . .
 RUN npm run build --configuration=production
 
 FROM nginx:alpine AS production
-# Thay 'fe-comic' bằng tên thư mục build thực tế trong folder dist/ của bạn
-COPY --from=builder /app/dist/fe-comic /usr/share/nginx/html
+# @angular/build:application (Angular 17+) xuất ra dist/fe-comic/browser/, không
+# phải thẳng dist/fe-comic/ — thiếu "/browser" thì index.html thật nằm lạc 1 cấp,
+# COPY vào thư mục đã có sẵn index.html mặc định của nginx (không tự xoá trước)
+# nên nginx vẫn phục vụ trang "Welcome to nginx!" gốc thay vì app Angular.
+COPY --from=builder /app/dist/fe-comic/browser /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
