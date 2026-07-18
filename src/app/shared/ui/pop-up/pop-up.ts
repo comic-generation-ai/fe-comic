@@ -1,6 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TranslatePipe } from '../../../core/i18n/translate.pipe';
 
 export interface ModalData {
   iconUrl?: string;
@@ -15,7 +14,7 @@ export interface ModalData {
 @Component({
   selector: 'app-pop-up',
   standalone: true,
-  imports: [CommonModule, TranslatePipe],
+  imports: [CommonModule],
   templateUrl: './pop-up.html',
   styleUrl: './pop-up.scss'
 })

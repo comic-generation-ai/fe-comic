@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '../../../core/i18n/translate.pipe';
@@ -16,11 +16,19 @@ export class EditorComic implements OnInit, OnDestroy {
   @Input() comicData: any = null;
 
   editorService = inject(ComicEditorService);
+  private cdr = inject(ChangeDetectorRef);
   editorState!: EditorState;
   private sub = new Subscription();
 
   // Active control panel tab
   activeTab: 'frame' | 'bubble' | 'text' = 'frame';
+
+  // Save-to-backend state for the sticky footer Save button — hiện thông báo
+  // ngay phía trên nút Lưu thay vì dùng modal PopUp (backdrop full-screen của
+  // PopUp từng che mất thao tác chỉnh bong bóng dù "ẩn").
+  isSaving = false;
+  saveStatus: 'idle' | 'success' | 'error' = 'idle';
+  private saveStatusTimeout: any;
 
   // Get active panel index from service
   get targetPanelIndex(): number {
@@ -33,6 +41,46 @@ export class EditorComic implements OnInit, OnDestroy {
 
   exportComic() {
     this.editorService.triggerExport();
+  }
+
+  // Persist bubble positions/sizes/shapes/text to BE so re-opening this project
+  // from story-board loads exactly what was edited here, instead of the
+  // original auto-generated layout.
+  saveProject() {
+    if (this.isSaving) return;
+    this.isSaving = true;
+    this.saveStatus = 'idle';
+    clearTimeout(this.saveStatusTimeout);
+    this.refreshView();
+
+    this.editorService.saveBubbles().subscribe({
+      next: () => {
+        this.isSaving = false;
+        this.saveStatus = 'success';
+        this.refreshView();
+        this.saveStatusTimeout = setTimeout(() => {
+          this.saveStatus = 'idle';
+          this.refreshView();
+        }, 3500);
+      },
+      error: (err) => {
+        this.isSaving = false;
+        this.saveStatus = 'error';
+        console.error('[EditorComic] saveProject failed:', err);
+        this.refreshView();
+        this.saveStatusTimeout = setTimeout(() => {
+          this.saveStatus = 'idle';
+          this.refreshView();
+        }, 4500);
+      },
+    });
+  }
+
+  // App chạy zoneless — cập nhật state trong subscribe()/setTimeout() không tự vẽ
+  // lại view, phải ép change detection thủ công thì thông báo mới thật sự hiện ra.
+  private refreshView() {
+    this.cdr.markForCheck();
+    this.cdr.detectChanges();
   }
 
   // Preset list of professional comic fonts
@@ -68,12 +116,16 @@ export class EditorComic implements OnInit, OnDestroy {
         if (state.selectedBubbleId && state.selectedBubbleId !== prevSelectedId) {
           this.activeTab = 'text';
         }
+
+        // App chạy zoneless — subscribe() ngoài event DOM không tự trigger CD.
+        this.refreshView();
       })
     );
   }
 
   ngOnDestroy() {
     this.sub.unsubscribe();
+    clearTimeout(this.saveStatusTimeout);
   }
 
   get panelsCount(): number[] {
@@ -129,6 +181,12 @@ export class EditorComic implements OnInit, OnDestroy {
 
   deleteSelectedBubble() {
     this.editorService.deleteBubblesOnPanel(this.targetPanelIndex);
+  }
+
+  // Change the shape of the currently selected bubble (round/square/cloud)
+  // — distinct from addBubble(), which always creates a brand new bubble.
+  changeSelectedBubbleShape(type: 'round' | 'square' | 'cloud') {
+    this.updateSelectedBubble({ type });
   }
 
   // Text details modifiers

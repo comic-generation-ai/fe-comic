@@ -38,6 +38,10 @@
     </div>
   </header>
 
+  @if (generationError) {
+  <div class="generation-error-banner" role="alert">{{ generationError }}</div>
+  }
+
   <!-- Comic Panel Grid -->
   <div class="comic-grid-layout" [attr.data-frames]="selectedFrames" [style.gap.px]="editorState.gutterSize">
     @for (panelNum of panels; track panelNum; let idx = $index) {
@@ -48,16 +52,11 @@
       [style.border-radius.px]="editorState.borderRadius" [style.border-color]="editorState.borderColor"
       [style.border-style]="editorState.borderWidth > 0 ? 'solid' : 'dashed'">
 
-      <!-- Panel Number Badge -->
-      <div class="panel-header-num">
-        <span class="panel-number">#{{ panelNum }}</span>
-      </div>
-
       <div class="panel-content-area">
         @if (comicData) {
-        <!-- Generated panel image state with simulated premium fallback -->
-        <img [src]="'https://picsum.photos/seed/comic_panel_' + idx + '_seed/600/400'" class="panel-image"
-          alt="Comic Panel Image">
+        @if (getPanelData(idx)?.imageUrl) {
+        <!-- Ảnh thật do image-ai vẽ, lấy qua liveStatus.panels[idx].imageUrl khi polling job -->
+        <img [src]="getPanelData(idx)!.imageUrl" class="panel-image" alt="Comic Panel Image">
 
         <!-- Hover quick panel overlay to add speech bubbles easily -->
         <div class="panel-action-overlay">
@@ -71,6 +70,18 @@
               {{ 'WORKSPACE_COMIC.BUBBLE_CLOUD' | translate }}</button>
           </div>
         </div>
+        } @else if (getPanelData(idx)?.status === 'FAILED') {
+        <!-- Panel này lỗi khi sinh ảnh — không chặn hiển thị các panel khác -->
+        <div class="panel-error-state">
+          <span>⚠️ {{ getPanelData(idx)?.errorMessage || ('WORKSPACE_COMIC.PANEL_FAILED' | translate) }}</span>
+        </div>
+        } @else {
+        <!-- Đang chờ story-ai/image-ai sinh xong panel này -->
+        <div class="panel-loading-state">
+          <span class="panel-spinner"></span>
+          <span>{{ 'WORKSPACE_COMIC.PANEL_GENERATING' | translate }}</span>
+        </div>
+        }
         } @else {
         <!-- Empty draft state -->
         <div class="draft-placeholder">
@@ -134,6 +145,7 @@
               class="bubble-body-shape" (mousedown)="startDrag($event, bubble, 'move')" />
 
             <!-- Tail is represented by 3 circles of decreasing size towards the pointer target -->
+            @if (bubble.hasTail !== false) {
             <g class="cloud-tail">
               <circle [attr.cx]="bubble.w/2 + bubble.tailX * 0.3" [attr.cy]="bubble.h/2 + bubble.tailY * 0.3" r="9"
                 fill="#ffffff" stroke="#000000" stroke-width="3" />
@@ -142,6 +154,7 @@
               <circle [attr.cx]="bubble.w/2 + bubble.tailX * 0.9" [attr.cy]="bubble.h/2 + bubble.tailY * 0.9" r="4"
                 fill="#ffffff" stroke="#000000" stroke-width="3" />
             </g>
+            }
             }
 
             <!-- Inner text overlay via foreignObject for seamless native HTML layout -->
@@ -177,10 +190,12 @@
               </g>
 
               <!-- Tail direct manipulation target knob with expanded click target -->
+              @if (bubble.hasTail !== false) {
               <g class="tail-handle-group" (mousedown)="startDrag($event, bubble, 'tail')" style="cursor: pointer; pointer-events: auto;">
                 <circle [attr.cx]="bubble.w/2 + bubble.tailX" [attr.cy]="bubble.h/2 + bubble.tailY" r="16" fill="transparent" />
                 <circle [attr.cx]="bubble.w/2 + bubble.tailX" [attr.cy]="bubble.h/2 + bubble.tailY" r="7" class="handle-knob tail-knob" style="pointer-events: none;" />
               </g>
+              }
 
               <!-- Deletion action quick button -->
               <g class="btn-delete-bubble" (click)="deleteBubble(bubble.id, $event)"

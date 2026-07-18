@@ -138,6 +138,7 @@
         </div>
 
       <!-- Speech bubble shapes selectors buttons -->
+      <label class="control-label">{{ 'EDITOR_COMIC.ADD_NEW_BUBBLE_LABEL' | translate }}</label>
       <div class="bubble-shapes-grid">
         <button class="shape-card" (click)="addBubble('round')">
           <span class="shape-icon">💬</span>
@@ -163,6 +164,32 @@
         <p class="bubble-meta">
           {{ 'EDITOR_COMIC.POSITION_SIZE' | translate:{x: (selectedBubble.x | number:'1.0-0'), y: (selectedBubble.y | number:'1.0-0'), w: selectedBubble.w, h: selectedBubble.h} }}
         </p>
+
+        <!-- Change shape of the currently selected bubble -->
+        <label class="control-label">{{ 'EDITOR_COMIC.CHANGE_SHAPE_LABEL' | translate }}</label>
+        <div class="bubble-shapes-grid">
+          <button class="shape-card" [class.active]="selectedBubble.type === 'round'"
+            (click)="changeSelectedBubbleShape('round')">
+            <span class="shape-icon">💬</span>
+            <span class="shape-name">{{ 'EDITOR_COMIC.SHAPE_ROUND' | translate }}</span>
+          </button>
+          <button class="shape-card" [class.active]="selectedBubble.type === 'square'"
+            (click)="changeSelectedBubbleShape('square')">
+            <span class="shape-icon">🔲</span>
+            <span class="shape-name">{{ 'EDITOR_COMIC.SHAPE_SQUARE' | translate }}</span>
+          </button>
+          <button class="shape-card" [class.active]="selectedBubble.type === 'cloud'"
+            (click)="changeSelectedBubbleShape('cloud')">
+            <span class="shape-icon">💭</span>
+            <span class="shape-name">{{ 'EDITOR_COMIC.SHAPE_CLOUD' | translate }}</span>
+          </button>
+        </div>
+
+        <label class="control-label has-tail-toggle">
+          <input type="checkbox" [ngModel]="selectedBubble.hasTail !== false"
+            (ngModelChange)="updateSelectedBubble({ hasTail: $event })" />
+          {{ 'EDITOR_COMIC.HAS_TAIL_LABEL' | translate }}
+        </label>
         <button class="btn-delete-bubble-action" (click)="deleteSelectedBubble()">
            {{ 'EDITOR_COMIC.DELETE_BUBBLE_BTN' | translate }}
         </button>
@@ -276,16 +303,38 @@
 
   </div>
 
-  <!-- Premium Sticky Footer for Exporting -->
+  <!-- Premium Sticky Footer for Saving / Exporting -->
   <footer class="editor-sidebar-footer">
-    <button class="btn-export-full" (click)="exportComic()">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-        stroke-linecap="round" stroke-linejoin="round" class="btn-icon">
-        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-        <polyline points="7 10 12 15 17 10" />
-        <line x1="12" y1="15" x2="12" y2="3" />
-      </svg>
-      {{ 'EDITOR_COMIC.DOWNLOAD_BTN' | translate }}
-    </button>
+    @if (saveStatus === 'success') {
+      <p class="save-status-msg success">
+        <span class="material-symbols-outlined">check_circle</span>
+        {{ 'EDITOR_COMIC.SAVE_SUCCESS_MESSAGE' | translate }}
+      </p>
+    } @else if (saveStatus === 'error') {
+      <p class="save-status-msg error">
+        <span class="material-symbols-outlined">error</span>
+        {{ 'EDITOR_COMIC.SAVE_ERROR_MESSAGE' | translate }}
+      </p>
+    }
+    <div class="footer-btn-row">
+      <button class="btn-save-full" [disabled]="isSaving" (click)="saveProject()">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round" class="btn-icon">
+          <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z" />
+          <polyline points="17 21 17 13 7 13 7 21" />
+          <polyline points="7 3 7 8 15 8" />
+        </svg>
+        {{ (isSaving ? 'EDITOR_COMIC.SAVING_BTN' : 'EDITOR_COMIC.SAVE_BTN') | translate }}
+      </button>
+      <button class="btn-export-full" (click)="exportComic()">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round" class="btn-icon">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+          <polyline points="7 10 12 15 17 10" />
+          <line x1="12" y1="15" x2="12" y2="3" />
+        </svg>
+        {{ 'EDITOR_COMIC.DOWNLOAD_BTN' | translate }}
+      </button>
+    </div>
   </footer>
 </div>

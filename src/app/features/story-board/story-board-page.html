@@ -35,7 +35,7 @@
       <!-- Dropdown Filter 2 -->
       <div class="custom-dropdown">
         <button class="dropdown-trigger" (click)="toggleGenreDropdown($event)">
-          <span>{{ (selectedGenreFilter === 'All Genres' ? 'STORY_BOARD.FILTERS.ALL_GENRES' : selectedGenreFilter) |
+          <span>{{ (selectedGenreFilter === 'All Genres' ? 'STORY_BOARD.FILTERS.ALL_GENRES' : ('STYLES.' + selectedGenreFilter)) |
             translate }}</span>
           <span class="material-symbols-outlined dropdown-chevron">expand_more</span>
         </button>
@@ -48,7 +48,7 @@
           </li>
           @for (genre of availableGenres; track genre) {
           <li class="dropdown-item" [class.active]="selectedGenreFilter === genre" (click)="setGenreFilter(genre)">
-            {{ genre }}
+            {{ ('STYLES.' + genre) | translate }}
           </li>
           }
         </ul>
@@ -94,7 +94,7 @@
   @if (!loading && filteredComics.length > 0) {
   <div class="library-grid animate-fade-up">
     @for (comic of filteredComics; track comic.id; let idx = $index) {
-    <div class="comic-card" [style.animation-delay.ms]="idx * 60">
+    <div class="comic-card" [style.animation-delay.ms]="idx * 60" (click)="viewComic(comic)">
       <!-- Actions Overlay (Edit & Delete) -->
       <div class="card-actions">
         <button class="btn-action btn-edit" [title]="'COMMON.EDIT' | translate" (click)="editComic($event, comic)">

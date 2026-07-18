@@ -123,7 +123,9 @@
     "BUBBLE_ROUND": "Tròn",
     "BUBBLE_SQUARE": "Vuông",
     "BUBBLE_CLOUD": "Mây",
-    "DOUBLE_CLICK_EDIT": "Nhấp đúp để sửa..."
+    "DOUBLE_CLICK_EDIT": "Nhấp đúp để sửa...",
+    "PANEL_GENERATING": "Đang vẽ khung tranh...",
+    "PANEL_FAILED": "Vẽ khung tranh thất bại"
   },
   "EDITOR_COMIC": {
     "TITLE": "Studio Sáng Tạo",
@@ -149,6 +151,8 @@
     "SHAPE_ROUND": "Bóng Tròn",
     "SHAPE_SQUARE": "Bóng Vuông",
     "SHAPE_CLOUD": "Bóng Suy Nghĩ",
+    "ADD_NEW_BUBBLE_LABEL": "Thêm bóng thoại mới",
+    "CHANGE_SHAPE_LABEL": "Đổi hình dạng bóng đang chọn",
     "SELECTED_BUBBLE_PREFIX": "Đã chọn bóng thoại: ",
     "TYPES": {
       "ROUND": "Tròn",
@@ -156,6 +160,7 @@
       "CLOUD": "Mây suy nghĩ"
     },
     "POSITION_SIZE": "Vị trí: (X: {{x}}%, Y: {{y}}%) | Kích thước: {{w}}x{{h}}px",
+    "HAS_TAIL_LABEL": "Hiển thị đuôi bong bóng",
     "DELETE_BUBBLE_BTN": "Xóa tất cả bóng thoại của khung này",
     "NO_BUBBLE_SELECTED": "Chưa có bong bóng thoại nào được chọn.",
     "SELECT_BUBBLE_HINT": "Click chọn một bong bóng trên Canvas kịch bản để tùy biến nâng cao.",
@@ -176,6 +181,10 @@
     "NO_BUBBLE_TEXT_TITLE": "Chưa có bong bóng thoại nào được chọn!",
     "NO_BUBBLE_TEXT_HINT": "Vui lòng nhấp chọn một bong bóng thoại trên trang truyện hoặc thêm mới ở Tab Bong Bóng để định dạng văn bản.",
     "DOWNLOAD_BTN": "Tải Truyện Xuống",
+    "SAVE_BTN": "Lưu vị trí",
+    "SAVING_BTN": "Đang lưu...",
+    "SAVE_SUCCESS_MESSAGE": "Đã lưu vị trí bong bóng thành công!",
+    "SAVE_ERROR_MESSAGE": "Lưu thất bại. Vui lòng thử lại.",
     "FONTS": {
       "COMIC_NEUE": "Comic Neue",
       "BANGERS": "Bangers",
@@ -341,5 +350,12 @@
     "MARK_ALL_READ": "Đánh dấu đã đọc tất cả",
     "EMPTY": "Không có thông báo nào",
     "VIEW_ALL": "Xem tất cả thông báo"
+  },
+  "STYLES": {
+    "storybook": "Truyện tranh cổ tích",
+    "anime": "Hoạt hình Anime",
+    "manga": "Truyện tranh Manga",
+    "retro": "Cổ điển (Retro)",
+    "american_comic": "Truyện tranh Mỹ (Comic)"
   }
 }

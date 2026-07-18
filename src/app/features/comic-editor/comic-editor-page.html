@@ -13,7 +13,9 @@
   }
 
   <main class="right-panel" [class.split-view]="viewMode === 'edit'" [class.full-width]="viewMode === 'edit'">
-    <app-workspace-comic [selectedFrames]="selectedFrames" [comicData]="generatedResult" [showBackButton]="viewMode === 'edit'" (onBack)="goBack()"></app-workspace-comic>
+    <app-workspace-comic [selectedFrames]="selectedFrames" [comicData]="generatedResult"
+      [generationError]="viewMode === 'edit' ? generationError : null" [showBackButton]="viewMode === 'edit'"
+      (onBack)="goBack()"></app-workspace-comic>
 
     @if (viewMode === 'edit') {
     <section class="editor-panel">

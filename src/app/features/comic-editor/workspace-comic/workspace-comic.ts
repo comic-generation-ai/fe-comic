@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, ElementRef, inject } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, ElementRef, ChangeDetectorRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '../../../core/i18n/translate.pipe';
@@ -17,10 +17,12 @@ export class WorkspaceComic implements OnInit, OnDestroy {
   @Input() comicData: any = null;
   @Input() selectedFrames: number = 4;
   @Input() showBackButton: boolean = false;
+  @Input() generationError: string | null = null;
   @Output() onBack = new EventEmitter<void>();
 
   editorService = inject(ComicEditorService);
   el = inject(ElementRef);
+  private cdr = inject(ChangeDetectorRef);
 
   editorState!: EditorState;
   private sub = new Subscription();
@@ -44,6 +46,11 @@ export class WorkspaceComic implements OnInit, OnDestroy {
     this.sub.add(
       this.editorService.state$.subscribe((state) => {
         this.editorState = state;
+        // App chạy zoneless — subscribe() ngoài event DOM không tự trigger CD,
+        // nếu thiếu dòng này bong bóng vừa sinh xong (hydrateBubblesFromFrames)
+        // sẽ không tự hiện ra cho tới khi người dùng click vào đâu đó.
+        this.cdr.markForCheck();
+        this.cdr.detectChanges();
       })
     );
     this.sub.add(
@@ -63,6 +70,11 @@ export class WorkspaceComic implements OnInit, OnDestroy {
 
   get panels(): number[] {
     return Array.from({ length: this.selectedFrames }, (_, i) => i + 1);
+  }
+
+  // Panel thật (ảnh + trạng thái) do orchestrator/image-ai trả về qua polling job status
+  getPanelData(idx: number): { imageUrl?: string; status?: string; errorMessage?: string } | null {
+    return this.comicData?.panels?.[idx] ?? null;
   }
 
   getBubblesForPanel(panelIndex: number): SpeechBubble[] {
@@ -204,6 +216,8 @@ export class WorkspaceComic implements OnInit, OnDestroy {
   }
 
   onTextChange(id: string, text: string) {
+    // Tự động nới cao bong bóng khi chữ dài hơn chỗ chứa hiện có được xử lý tập
+    // trung trong ComicEditorService.updateBubble() — xem estimateBubbleHeight().
     this.editorService.updateBubble(id, { text }, true);
   }
 
@@ -243,6 +257,7 @@ export class WorkspaceComic implements OnInit, OnDestroy {
   }
 
   getTailPoints(b: SpeechBubble): string {
+    if (b.hasTail === false) return '';
     const cx = b.w / 2;
     const cy = b.h / 2;
     const angle = Math.atan2(b.tailY, b.tailX);
@@ -263,6 +278,7 @@ export class WorkspaceComic implements OnInit, OnDestroy {
   }
 
   getTailStroke(b: SpeechBubble): string {
+    if (b.hasTail === false) return '';
     const cx = b.w / 2;
     const cy = b.h / 2;
     const angle = Math.atan2(b.tailY, b.tailX);
@@ -403,7 +419,7 @@ export class WorkspaceComic implements OnInit, OnDestroy {
           ctx.fillStyle = '#ffffff';
 
           // 1. Draw Tail shapes
-          if (b.type !== 'cloud') {
+          if (b.type !== 'cloud' && b.hasTail !== false) {
             const angle = Math.atan2(b.tailY, b.tailX);
             const delta = 0.28;
             const rx = b.type === 'square' ? bw / 2 - 20 : bw / 2 - 8;
@@ -462,23 +478,25 @@ export class WorkspaceComic implements OnInit, OnDestroy {
             ctx.stroke();
 
             // Draw 3 small circles for cloud tail
-            const circles = [
-              { r: 20, d: 0.3 },
-              { r: 14, d: 0.6 },
-              { r: 8, d: 0.9 },
-            ];
-            circles.forEach((c) => {
-              const cx_circ = bx + b.tailX * 2 * c.d;
-              const cy_circ = by + b.tailY * 2 * c.d;
-              ctx.beginPath();
-              ctx.arc(cx_circ, cy_circ, c.r, 0, 2 * Math.PI);
-              ctx.fill();
-              ctx.stroke();
-            });
+            if (b.hasTail !== false) {
+              const circles = [
+                { r: 20, d: 0.3 },
+                { r: 14, d: 0.6 },
+                { r: 8, d: 0.9 },
+              ];
+              circles.forEach((c) => {
+                const cx_circ = bx + b.tailX * 2 * c.d;
+                const cy_circ = by + b.tailY * 2 * c.d;
+                ctx.beginPath();
+                ctx.arc(cx_circ, cy_circ, c.r, 0, 2 * Math.PI);
+                ctx.fill();
+                ctx.stroke();
+              });
+            }
           }
 
           // 3. Draw Tail Stroke overlay to hide baseline
-          if (b.type !== 'cloud') {
+          if (b.type !== 'cloud' && b.hasTail !== false) {
             const angle = Math.atan2(b.tailY, b.tailX);
             const delta = 0.28;
             const rx = b.type === 'square' ? bw / 2 - 20 : bw / 2 - 8;

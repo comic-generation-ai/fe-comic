@@ -123,7 +123,9 @@
     "BUBBLE_ROUND": "Round",
     "BUBBLE_SQUARE": "Square",
     "BUBBLE_CLOUD": "Cloud",
-    "DOUBLE_CLICK_EDIT": "Double-click to edit..."
+    "DOUBLE_CLICK_EDIT": "Double-click to edit...",
+    "PANEL_GENERATING": "Drawing panel...",
+    "PANEL_FAILED": "Panel generation failed"
   },
   "EDITOR_COMIC": {
     "TITLE": "Creative Studio",
@@ -149,6 +151,8 @@
     "SHAPE_ROUND": "Round",
     "SHAPE_SQUARE": "Square",
     "SHAPE_CLOUD": "Thought Cloud",
+    "ADD_NEW_BUBBLE_LABEL": "Add new bubble",
+    "CHANGE_SHAPE_LABEL": "Change shape of selected bubble",
     "SELECTED_BUBBLE_PREFIX": "Selected bubble: ",
     "TYPES": {
       "ROUND": "Round",
@@ -156,6 +160,7 @@
       "CLOUD": "Thought Cloud"
     },
     "POSITION_SIZE": "Position: (X: {{x}}%, Y: {{y}}%) | Size: {{w}}x{{h}}px",
+    "HAS_TAIL_LABEL": "Show bubble tail",
     "DELETE_BUBBLE_BTN": "Delete all bubbles on this frame",
     "NO_BUBBLE_SELECTED": "No speech bubble selected.",
     "SELECT_BUBBLE_HINT": "Select a bubble on the storyboard canvas for advanced customization.",
@@ -176,6 +181,10 @@
     "NO_BUBBLE_TEXT_TITLE": "No speech bubble selected!",
     "NO_BUBBLE_TEXT_HINT": "Please select a speech bubble on the canvas or add a new one in the Bubble Tab to format text.",
     "DOWNLOAD_BTN": "Download Comic",
+    "SAVE_BTN": "Save layout",
+    "SAVING_BTN": "Saving...",
+    "SAVE_SUCCESS_MESSAGE": "Bubble layout saved successfully!",
+    "SAVE_ERROR_MESSAGE": "Save failed. Please try again.",
     "FONTS": {
       "COMIC_NEUE": "Comic Neue",
       "BANGERS": "Bangers",
@@ -341,5 +350,12 @@
     "MARK_ALL_READ": "Mark all as read",
     "EMPTY": "No notifications yet",
     "VIEW_ALL": "View all notifications"
+  },
+  "STYLES": {
+    "storybook": "Storybook",
+    "anime": "Anime",
+    "manga": "Manga",
+    "retro": "Retro",
+    "american_comic": "American Comic"
   }
 }

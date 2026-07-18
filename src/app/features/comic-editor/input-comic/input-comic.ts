@@ -13,7 +13,7 @@ import { TranslatePipe } from '../../../core/i18n/translate.pipe';
 export class InputComic implements OnInit {
   @Input() storyTitle: string = '';
   @Input() storyScript: string = '';
-  @Input() artStyle: string = 'Manga';
+  @Input() artStyle: string = 'storybook';
   @Input() frameCount: number = 4;
   @Input() isGenerating: boolean = false;
   @Input() isFormValid: boolean = false;
@@ -24,7 +24,7 @@ export class InputComic implements OnInit {
   @Output() onFrameCountChange = new EventEmitter<number>();
   @Output() onGenerate = new EventEmitter<void>();
 
-  styles: string[] = ['Manga', 'Webtoon', 'Comic (Marvel style)', 'Cyberpunk', 'Ghibli style'];
+  styles: string[] = ['storybook', 'anime', 'manga', 'retro', 'american_comic'];
   frames: number[] = [3, 4, 5, 6];
 
   readonly titleMaxLength = 150;

@@ -65,7 +65,7 @@
                 <select id="art-style-select" class="form-select" [(ngModel)]="artStyle"
                     (ngModelChange)="artStyleChange.emit($event)" [disabled]="isGenerating">
                     @for (s of styles; track s) {
-                        <option [value]="s">{{ s }}</option>
+                        <option [value]="s">{{ ('STYLES.' + s) | translate }}</option>
                     }
                 </select>
                 <span class="select-arrow">

@@ -2,9 +2,12 @@ import { ChangeDetectorRef, Component, HostListener, HostBinding, Inject, OnInit
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { forkJoin, of } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { TranslatePipe } from '../../core/i18n/translate.pipe';
 import { PopUp } from '../../shared/ui/pop-up/pop-up';
 import { Project, ProjectApiService } from '../../core/api/project-api.service';
+import { FramesApiService } from '../../core/api/frames-api.service';
 
 export interface ComicProject {
   id: string;
@@ -16,7 +19,9 @@ export interface ComicProject {
   isDraft?: boolean;
 }
 
-const DEFAULT_GENRE_LABEL = 'Khác';
+// Phải là 1 trong 5 key STYLES (xem assets/i18n/*.json) — dùng làm fallback khi
+// project chưa có art_style (draft) để tránh 'STYLES.<label lạ>' không dịch được.
+const DEFAULT_STYLE_KEY = 'storybook';
 
 @Component({
   selector: 'app-story-board-page',
@@ -29,6 +34,7 @@ export class StoryBoardPage implements OnInit {
   constructor(
     private router: Router,
     private projectApi: ProjectApiService,
+    private framesApi: FramesApiService,
     private cdr: ChangeDetectorRef,
     @Inject(PLATFORM_ID) private platformId: Object,
   ) {}
@@ -50,6 +56,7 @@ export class StoryBoardPage implements OnInit {
         // App zoneless — mutate state trong .subscribe() không tự vẽ lại view
         this.cdr.markForCheck();
         this.cdr.detectChanges();
+        this.loadCoverImages();
       },
       error: () => {
         this.loading = false;
@@ -60,13 +67,45 @@ export class StoryBoardPage implements OnInit {
     });
   }
 
+  // Lấy ảnh của frame đầu tiên (order_index nhỏ nhất) đã sinh xong trong mỗi
+  // project để làm ảnh bìa card — thay vì luôn hiện icon fallback. Chạy sau khi
+  // danh sách project đã hiển thị nên không làm chậm lần render đầu.
+  private loadCoverImages() {
+    if (this.comics.length === 0) return;
+
+    const covers$ = this.comics.map((comic) =>
+      this.framesApi.getFramesByProject(comic.id).pipe(
+        map((frames) =>
+          [...frames].sort((a, b) => a.order_index - b.order_index).find((f) => !!f.image_url),
+        ),
+        switchMap((firstFrame) =>
+          firstFrame ? this.framesApi.getFrameImageUrl(firstFrame.id) : of(null),
+        ),
+        map((res) => ({ id: comic.id, url: res?.url ?? '' })),
+        // Project draft chưa có frame, hoặc lỗi lấy presigned URL — bỏ qua, giữ fallback icon
+        catchError(() => of({ id: comic.id, url: '' })),
+      ),
+    );
+
+    forkJoin(covers$).subscribe((results) => {
+      const urlById = new Map(results.map((r) => [r.id, r.url]));
+      this.comics = this.comics.map((c) =>
+        urlById.get(c.id) ? { ...c, coverImage: urlById.get(c.id)! } : c,
+      );
+      this.cdr.markForCheck();
+      this.cdr.detectChanges();
+    });
+  }
+
   private toComicProject(p: Project): ComicProject {
     return {
       id: p.id,
       title: p.title || 'Untitled',
       coverImage: '',
       createdAt: new Date(p.created_at),
-      style: p.genre || p.art_style || DEFAULT_GENRE_LABEL,
+      // style dùng để tra key 'STYLES.<style>' trong i18n — art_style luôn là 1 trong
+      // 5 key hợp lệ (đã validate ở be-comic), genre là text tự do nên không dùng ở đây.
+      style: p.art_style || DEFAULT_STYLE_KEY,
       status: p.status,
       isDraft: p.status === 'DRAFT',
     };
@@ -148,9 +187,14 @@ export class StoryBoardPage implements OnInit {
   showDeletePopup = false;
   comicToDelete?: ComicProject;
 
+  // Click vào card (xem chi tiết) — mở lại project trong comic-editor, hiển thị ảnh đã sinh ở workspace
+  viewComic(comic: ComicProject) {
+    this.router.navigate(['/app/comic-editor'], { queryParams: { projectId: comic.id } });
+  }
+
   editComic(event: Event, comic: ComicProject) {
     event.stopPropagation();
-    this.router.navigate(['/app/comic-editor']);
+    this.viewComic(comic);
   }
 
   deleteComic(event: Event, comic: ComicProject) {

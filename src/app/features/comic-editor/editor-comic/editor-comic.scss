@@ -333,6 +333,15 @@
         &:active {
           transform: translateY(0);
         }
+
+        &.active {
+          background: var(--primary);
+          border-color: var(--primary);
+
+          .shape-name {
+            color: var(--text-primary);
+          }
+        }
       }
     }
 
@@ -482,37 +491,95 @@
   padding-top: 16px;
   border-top: 1px solid var(--divider-color);
 
+  .save-status-msg {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.76rem;
+    font-weight: 600;
+    line-height: 1.4;
+    margin-bottom: 10px;
+    padding: 8px 10px;
+    border-radius: 8px;
+
+    .material-symbols-outlined {
+      font-size: 1.05rem;
+      flex-shrink: 0;
+    }
+
+    &.success {
+      color: #10b981;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+    }
+
+    &.error {
+      color: var(--error);
+      background: var(--error-bg-hover);
+      border: 1px solid var(--error-border-hover, rgba(239, 68, 68, 0.2));
+    }
+  }
+
+  .footer-btn-row {
+    display: flex;
+    gap: 8px;
+  }
+
+  .btn-save-full,
   .btn-export-full {
-    width: 100%;
+    flex: 1;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    padding: 12px 16px;
-    background: var(--submit-gradient);
+    gap: 8px;
+    padding: 12px 10px;
     border: none;
     border-radius: 10px;
     color: var(--text-primary);
     font-family: 'Outfit', sans-serif;
-    font-size: 0.88rem;
+    font-size: 0.82rem;
     font-weight: 700;
     cursor: pointer;
-    box-shadow: var(--submit-shadow);
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 
     .btn-icon {
       width: 18px;
       height: 18px;
+      flex-shrink: 0;
     }
+
+    &:active {
+      transform: translateY(0);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+  }
+
+  .btn-save-full {
+    background: var(--bg-surface);
+    border: 1px solid var(--primary);
+    color: var(--primary-light);
+    box-shadow: none;
+
+    &:hover:not(:disabled) {
+      background: rgba(var(--primary-rgb), 0.1);
+      transform: translateY(-2px);
+    }
+  }
+
+  .btn-export-full {
+    background: var(--submit-gradient);
+    box-shadow: var(--submit-shadow);
 
     &:hover {
       transform: translateY(-2px);
       box-shadow: var(--submit-shadow-hover);
       background: var(--submit-gradient-hover);
-    }
-
-    &:active {
-      transform: translateY(0);
     }
   }
 }
