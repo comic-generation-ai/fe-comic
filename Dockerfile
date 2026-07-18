@@ -27,5 +27,9 @@ COPY --from=builder /app/dist/fe-comic/browser /usr/share/nginx/html
 # đổi tên lại để nginx tự nhận đúng document mặc định thay vì phục vụ trang
 # "Welcome to nginx!" gốc (index.html cũ của base image không bị ghi đè).
 RUN mv /usr/share/nginx/html/index.csr.html /usr/share/nginx/html/index.html
+# proxy.conf.json chỉ có tác dụng lúc "ng serve" (giai đoạn dev) — bản nginx
+# tĩnh này cần config proxy /api riêng, không thì mọi gọi API từ FE bị chính
+# nginx trả 404 (đã xác nhận qua test thật: POST /api/auth/register → 404).
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
