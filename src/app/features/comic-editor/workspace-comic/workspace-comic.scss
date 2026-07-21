@@ -180,6 +180,17 @@
     padding: 4px;
 
     /* Responsive Grid setups with aspect ratio 1:1 */
+
+    /* 3- and 6-panel layouts have the most columns (3), so each square panel
+       is naturally the smallest of all layouts. Bleed slightly into the
+       surrounding panel padding here (only for these two counts) so panels
+       read a bit larger without changing the column arrangement. */
+    &[data-frames="3"],
+    &[data-frames="6"] {
+      margin: -12px;
+      width: calc(100% + 24px);
+    }
+
     &[data-frames="3"] {
       grid-template-columns: repeat(3, 1fr);
     }
@@ -621,6 +632,14 @@
       &[data-frames="6"] {
         grid-template-columns: 1fr;
         grid-template-rows: auto;
+      }
+
+      /* Reset the desktop-only size bleed — a single stacked column already
+         uses the full available width on small screens. */
+      &[data-frames="3"],
+      &[data-frames="6"] {
+        margin: 0;
+        width: 100%;
       }
 
       .comic-panel-card {

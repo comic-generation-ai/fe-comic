@@ -35,13 +35,16 @@
   <!-- Accordion/Tab selectors -->
   <nav class="sidebar-tabs">
     <button class="tab-btn" [class.active]="activeTab === 'frame'" (click)="setTab('frame')">
-       {{ 'EDITOR_COMIC.TAB_FRAME' | translate }}
+      <span class="material-symbols-outlined tab-icon">aspect_ratio</span>
+      <span class="tab-label">{{ 'EDITOR_COMIC.TAB_FRAME' | translate }}</span>
     </button>
     <button class="tab-btn" [class.active]="activeTab === 'bubble'" (click)="setTab('bubble')">
-       {{ 'EDITOR_COMIC.TAB_BUBBLE' | translate }}
+      <span class="material-symbols-outlined tab-icon">chat_bubble</span>
+      <span class="tab-label">{{ 'EDITOR_COMIC.TAB_BUBBLE' | translate }}</span>
     </button>
     <button class="tab-btn" [class.active]="activeTab === 'text'" (click)="setTab('text')">
-       {{ 'EDITOR_COMIC.TAB_TEXT' | translate }}
+      <span class="material-symbols-outlined tab-icon">text_fields</span>
+      <span class="tab-label">{{ 'EDITOR_COMIC.TAB_TEXT' | translate }}</span>
     </button>
   </nav>
 
@@ -75,21 +78,16 @@
 
       <!-- Border Color Control -->
       <div class="control-group">
-        <div class="control-label-row">
-          <span class="control-label">{{ 'EDITOR_COMIC.BORDER_COLOR' | translate }}</span>
-          <span class="control-val-badge">{{ editorState.borderColor }}</span>
-        </div>
-        <div class="color-picker-wrapper">
-          <input type="color" [ngModel]="editorState.borderColor" (ngModelChange)="onBorderColorChange($event)"
-            class="color-input">
-          <div class="color-swatches">
-            <span class="swatch" style="background-color: #000000;" (click)="onBorderColorChange('#000000')"></span>
-            <span class="swatch" style="background-color: #ffffff; border: 1px solid #ccc;"
-              (click)="onBorderColorChange('#ffffff')"></span>
-            <span class="swatch" style="background-color: #1e1e24;" (click)="onBorderColorChange('#1e1e24')"></span>
-            <span class="swatch" style="background-color: #ef4444;" (click)="onBorderColorChange('#ef4444')"></span>
-            <span class="swatch" style="background-color: #f59e0b;" (click)="onBorderColorChange('#f59e0b')"></span>
-          </div>
+        <span class="control-label">{{ 'EDITOR_COMIC.BORDER_COLOR' | translate }}</span>
+        <div class="swatch-grid">
+          @for (c of borderColorSwatches; track c) {
+          <button type="button" class="color-swatch" [class.active]="editorState.borderColor === c"
+            [style.background-color]="c" (click)="onBorderColorChange(c)" [attr.aria-label]="c"></button>
+          }
+          <label class="color-swatch custom-swatch" [title]="'EDITOR_COMIC.CUSTOM_COLOR' | translate">
+            <input type="color" [ngModel]="editorState.borderColor" (ngModelChange)="onBorderColorChange($event)">
+            <span class="material-symbols-outlined">palette</span>
+          </label>
         </div>
       </div>
 
@@ -110,91 +108,79 @@
     <div class="tab-panel animate-fade">
       <h4 class="panel-section-title">{{ 'EDITOR_COMIC.BUBBLE_SETTINGS_TITLE' | translate }}</h4>
 
-        <!-- Panel selection dropdown -->
-        <div class="control-group">
-          <label class="control-label">{{ 'EDITOR_COMIC.TARGET_PANEL_LABEL' | translate }}</label>
-          <select [ngModel]="targetPanelIndex" (ngModelChange)="onTargetPanelChange($event)" class="custom-select">
-            @for (pIdx of panelsCount; track pIdx) {
-              <option [value]="pIdx">{{ 'EDITOR_COMIC.FRAME_NUM' | translate:{num: pIdx + 1} }}</option>
-            }
-          </select>
+        <!-- Current active frame (switch by clicking a frame on the canvas) -->
+        <div class="active-frame-indicator">
+          <div class="active-frame-row">
+            <span class="material-symbols-outlined">aspect_ratio</span>
+            <span>{{ 'EDITOR_COMIC.FRAME_NUM' | translate:{num: targetPanelIndex + 1} }}</span>
+          </div>
+          <span class="hint">{{ 'EDITOR_COMIC.SWITCH_FRAME_HINT' | translate }}</span>
         </div>
 
-        <!-- Speech bubbles of active frame selection dropdown -->
+        <!-- Speech bubbles of the active frame, shown as a chip list -->
         <div class="control-group">
           <label class="control-label">{{ 'EDITOR_COMIC.BUBBLES_IN_FRAME_LABEL' | translate }}</label>
           @if (getBubblesForActiveFrame().length > 0) {
-            <select [ngModel]="editorState.selectedBubbleId" (ngModelChange)="selectBubble($event)" class="custom-select">
-              <option [value]="null">{{ 'EDITOR_COMIC.SELECT_BUBBLE_PLACEHOLDER' | translate }}</option>
-              @for (b of getBubblesForActiveFrame(); track b.id; let bIdx = $index) {
-                <option [value]="b.id">{{ 'EDITOR_COMIC.BUBBLE_NUM' | translate:{num: bIdx + 1} }} ({{ b.text | slice:0:15 }}{{ b.text.length > 15 ? '...' : '' }})</option>
+            <div class="bubble-chip-list">
+              @for (b of getBubblesForActiveFrame(); track b.id) {
+                <button type="button" class="bubble-chip" [class.active]="editorState.selectedBubbleId === b.id"
+                  (click)="selectBubble(b.id)">
+                  <span class="material-symbols-outlined">{{ shapeIcon(b.type) }}</span>
+                  <span class="bubble-chip-text">{{ b.text || ('EDITOR_COMIC.TEXT_CONTENT_PLACEHOLDER' | translate) }}</span>
+                </button>
               }
-            </select>
+            </div>
           } @else {
-            <p class="empty-subtext" style="font-size: 0.72rem; color: #64748b; margin: 2px 0 0 0;">
-              {{ 'EDITOR_COMIC.EMPTY_BUBBLES_HINT' | translate }}
-            </p>
+            <p class="empty-subtext">{{ 'EDITOR_COMIC.EMPTY_BUBBLES_HINT' | translate }}</p>
           }
         </div>
 
       <!-- Speech bubble shapes selectors buttons -->
       <label class="control-label">{{ 'EDITOR_COMIC.ADD_NEW_BUBBLE_LABEL' | translate }}</label>
       <div class="bubble-shapes-grid">
-        <button class="shape-card" (click)="addBubble('round')">
-          <span class="shape-icon">💬</span>
-          <span class="shape-name">{{ 'EDITOR_COMIC.SHAPE_ROUND' | translate }}</span>
+        @for (shape of bubbleShapes; track shape.type) {
+        <button class="shape-card" (click)="addBubble(shape.type)">
+          <span class="material-symbols-outlined shape-icon">{{ shape.icon }}</span>
+          <span class="shape-name">{{ shape.nameKey | translate }}</span>
         </button>
-        <button class="shape-card" (click)="addBubble('square')">
-          <span class="shape-icon">🔲</span>
-          <span class="shape-name">{{ 'EDITOR_COMIC.SHAPE_SQUARE' | translate }}</span>
-        </button>
-        <button class="shape-card" (click)="addBubble('cloud')">
-          <span class="shape-icon">💭</span>
-          <span class="shape-name">{{ 'EDITOR_COMIC.SHAPE_CLOUD' | translate }}</span>
-        </button>
+        }
       </div>
 
       <!-- Selection details -->
       <div class="bubble-selection-card">
         @if (selectedBubble) {
         <div class="selection-active-badge">
-          <span class="badge-dot"></span>
-          <span class="badge-text">{{ 'EDITOR_COMIC.SELECTED_BUBBLE_PREFIX' | translate }}{{ selectedBubble.type === 'round' ? ('EDITOR_COMIC.TYPES.ROUND' | translate) : selectedBubble.type === 'square' ? ('EDITOR_COMIC.TYPES.SQUARE' | translate) : ('EDITOR_COMIC.TYPES.CLOUD' | translate) }}</span>
+          <span class="material-symbols-outlined badge-icon">{{ shapeIcon(selectedBubble.type) }}</span>
+          <span class="badge-text">{{ 'EDITOR_COMIC.SELECTED_BUBBLE_PREFIX' | translate }}{{ bubbleTypeKey(selectedBubble.type) | translate }}</span>
         </div>
-        <p class="bubble-meta">
-          {{ 'EDITOR_COMIC.POSITION_SIZE' | translate:{x: (selectedBubble.x | number:'1.0-0'), y: (selectedBubble.y | number:'1.0-0'), w: selectedBubble.w, h: selectedBubble.h} }}
-        </p>
 
         <!-- Change shape of the currently selected bubble -->
         <label class="control-label">{{ 'EDITOR_COMIC.CHANGE_SHAPE_LABEL' | translate }}</label>
         <div class="bubble-shapes-grid">
-          <button class="shape-card" [class.active]="selectedBubble.type === 'round'"
-            (click)="changeSelectedBubbleShape('round')">
-            <span class="shape-icon">💬</span>
-            <span class="shape-name">{{ 'EDITOR_COMIC.SHAPE_ROUND' | translate }}</span>
+          @for (shape of bubbleShapes; track shape.type) {
+          <button class="shape-card" [class.active]="selectedBubble.type === shape.type"
+            (click)="changeSelectedBubbleShape(shape.type)">
+            <span class="material-symbols-outlined shape-icon">{{ shape.icon }}</span>
+            <span class="shape-name">{{ shape.nameKey | translate }}</span>
           </button>
-          <button class="shape-card" [class.active]="selectedBubble.type === 'square'"
-            (click)="changeSelectedBubbleShape('square')">
-            <span class="shape-icon">🔲</span>
-            <span class="shape-name">{{ 'EDITOR_COMIC.SHAPE_SQUARE' | translate }}</span>
-          </button>
-          <button class="shape-card" [class.active]="selectedBubble.type === 'cloud'"
-            (click)="changeSelectedBubbleShape('cloud')">
-            <span class="shape-icon">💭</span>
-            <span class="shape-name">{{ 'EDITOR_COMIC.SHAPE_CLOUD' | translate }}</span>
-          </button>
+          }
         </div>
 
-        <label class="control-label has-tail-toggle">
-          <input type="checkbox" [ngModel]="selectedBubble.hasTail !== false"
-            (ngModelChange)="updateSelectedBubble({ hasTail: $event })" />
-          {{ 'EDITOR_COMIC.HAS_TAIL_LABEL' | translate }}
+        <label class="toggle-row">
+          <span class="control-label">{{ 'EDITOR_COMIC.HAS_TAIL_LABEL' | translate }}</span>
+          <span class="toggle-switch-wrap">
+            <input type="checkbox" class="toggle-input" [ngModel]="selectedBubble.hasTail !== false"
+              (ngModelChange)="updateSelectedBubble({ hasTail: $event })" />
+            <span class="toggle-track"><span class="toggle-knob"></span></span>
+          </span>
         </label>
         <button class="btn-delete-bubble-action" (click)="deleteSelectedBubble()">
-           {{ 'EDITOR_COMIC.DELETE_BUBBLE_BTN' | translate }}
+          <span class="material-symbols-outlined">delete</span>
+          {{ 'EDITOR_COMIC.DELETE_BUBBLE_BTN' | translate }}
         </button>
         } @else {
         <div class="selection-empty-state">
+          <span class="material-symbols-outlined empty-icon">chat_bubble</span>
           <p class="empty-text">{{ 'EDITOR_COMIC.NO_BUBBLE_SELECTED' | translate }}</p>
           <p class="empty-subtext">{{ 'EDITOR_COMIC.SELECT_BUBBLE_HINT' | translate }}</p>
         </div>
@@ -237,63 +223,53 @@
           (ngModelChange)="updateSelectedBubble({ fontSize: $event })" class="range-slider">
       </div>
 
-      <!-- Line Height Selector slider -->
+      <!-- Line Height presets (friendly labels instead of a raw multiplier) -->
       <div class="control-group">
-        <div class="control-label-row">
-          <span class="control-label">{{ 'EDITOR_COMIC.LINE_HEIGHT_LABEL' | translate }}</span>
-          <span class="control-val-badge">{{ selectedBubble.lineHeight }}x</span>
+        <span class="control-label">{{ 'EDITOR_COMIC.LINE_HEIGHT_LABEL' | translate }}</span>
+        <div class="preset-btn-group">
+          @for (p of lineHeightPresets; track p.key) {
+          <button type="button" class="preset-btn"
+            [class.active]="activeLineHeightPreset(selectedBubble.lineHeight) === p.key"
+            (click)="updateSelectedBubble({ lineHeight: p.value })">
+            {{ p.labelKey | translate }}
+          </button>
+          }
         </div>
-        <input type="range" min="1" max="2" step="0.1" [ngModel]="selectedBubble.lineHeight"
-          (ngModelChange)="updateSelectedBubble({ lineHeight: $event })" class="range-slider">
       </div>
 
-      <!-- Text Align buttons toggles group -->
+      <!-- Text Align icon buttons group -->
       <div class="control-group">
         <span class="control-label">{{ 'EDITOR_COMIC.TEXT_ALIGN_LABEL' | translate }}</span>
         <div class="align-btn-group">
-          <button class="align-btn" [class.active]="selectedBubble.textAlign === 'left'"
-            (click)="updateSelectedBubble({ textAlign: 'left' })" [title]="'EDITOR_COMIC.ALIGN_LEFT_TITLE' | translate">
-             {{ 'EDITOR_COMIC.ALIGN_LEFT' | translate }}
+          @for (opt of alignOptions; track opt.value) {
+          <button class="align-btn" [class.active]="selectedBubble.textAlign === opt.value"
+            (click)="updateSelectedBubble({ textAlign: opt.value })" [title]="opt.titleKey | translate">
+            <span class="material-symbols-outlined">{{ opt.icon }}</span>
           </button>
-          <button class="align-btn" [class.active]="selectedBubble.textAlign === 'center'"
-            (click)="updateSelectedBubble({ textAlign: 'center' })" [title]="'EDITOR_COMIC.ALIGN_CENTER_TITLE' | translate">
-             {{ 'EDITOR_COMIC.ALIGN_CENTER' | translate }}
-          </button>
-          <button class="align-btn" [class.active]="selectedBubble.textAlign === 'right'"
-            (click)="updateSelectedBubble({ textAlign: 'right' })" [title]="'EDITOR_COMIC.ALIGN_RIGHT_TITLE' | translate">
-             {{ 'EDITOR_COMIC.ALIGN_RIGHT' | translate }}
-          </button>
+          }
         </div>
       </div>
 
-      <!-- Font Color input picker -->
+      <!-- Font Color swatches -->
       <div class="control-group">
-        <div class="control-label-row">
-          <span class="control-label">{{ 'EDITOR_COMIC.FONT_COLOR_LABEL' | translate }}</span>
-          <span class="control-val-badge">{{ selectedBubble.fontColor }}</span>
-        </div>
-        <div class="color-picker-wrapper">
-          <input type="color" [ngModel]="selectedBubble.fontColor"
-            (ngModelChange)="updateSelectedBubble({ fontColor: $event })" class="color-input">
-          <div class="color-swatches">
-            <span class="swatch" style="background-color: #000000;"
-              (click)="updateSelectedBubble({ fontColor: '#000000' })"></span>
-            <span class="swatch" style="background-color: #ef4444;"
-              (click)="updateSelectedBubble({ fontColor: '#ef4444' })"></span>
-            <span class="swatch" style="background-color: #2563eb;"
-              (click)="updateSelectedBubble({ fontColor: '#2563eb' })"></span>
-            <span class="swatch" style="background-color: #10b981;"
-              (click)="updateSelectedBubble({ fontColor: '#10b981' })"></span>
-            <span class="swatch" style="background-color: #f59e0b;"
-              (click)="updateSelectedBubble({ fontColor: '#f59e0b' })"></span>
-          </div>
+        <span class="control-label">{{ 'EDITOR_COMIC.FONT_COLOR_LABEL' | translate }}</span>
+        <div class="swatch-grid">
+          @for (c of fontColorSwatches; track c) {
+          <button type="button" class="color-swatch" [class.active]="selectedBubble.fontColor === c"
+            [style.background-color]="c" (click)="updateSelectedBubble({ fontColor: c })" [attr.aria-label]="c"></button>
+          }
+          <label class="color-swatch custom-swatch" [title]="'EDITOR_COMIC.CUSTOM_COLOR' | translate">
+            <input type="color" [ngModel]="selectedBubble.fontColor"
+              (ngModelChange)="updateSelectedBubble({ fontColor: $event })">
+            <span class="material-symbols-outlined">palette</span>
+          </label>
         </div>
       </div>
 
       } @else {
       <!-- Empty Text State placeholder -->
       <div class="selection-empty-state text-align-center">
-        <span class="empty-icon">📝</span>
+        <span class="material-symbols-outlined empty-icon">edit_note</span>
         <p class="empty-text">{{ 'EDITOR_COMIC.NO_BUBBLE_TEXT_TITLE' | translate }}</p>
         <p class="empty-subtext">{{ 'EDITOR_COMIC.NO_BUBBLE_TEXT_HINT' | translate }}</p>
       </div>

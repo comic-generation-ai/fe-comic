@@ -2,7 +2,6 @@ import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth-guard';
 
 export const routes: Routes = [
-  // Redirect mặc định về trang login
   {
     path: '',
     redirectTo: 'auth/login',
@@ -32,7 +31,6 @@ export const routes: Routes = [
       import('./features/layout/main-layout/main-layout').then(
         (m) => m.MainLayout,
       ),
-    // authGuard sẽ gắn vào đây sau khi có auth service
     canActivate: [authGuard],
     children: [
       {
@@ -56,12 +54,9 @@ export const routes: Routes = [
             './features/information-page/information-page'
           ).then((m) => m.InformationPage),
       },
-      // Redirect /app → /app/comic-editor
       { path: '', redirectTo: 'comic-editor', pathMatch: 'full' },
     ],
   },
-
-    // ── Wildcard ─────────────────────────────────────────────────
   {
     path: '**',
     redirectTo: 'auth/login',

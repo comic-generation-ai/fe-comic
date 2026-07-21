@@ -98,8 +98,8 @@ export class ComicEditorPage implements OnInit, OnDestroy {
           const imageUrls$ = sortedFrames.map((frame) =>
             frame.image_url
               ? this.framesApi.getFrameImageUrl(frame.id).pipe(
-                  catchError(() => of(null)),
-                )
+                catchError(() => of(null)),
+              )
               : of(null),
           );
           return (imageUrls$.length ? forkJoin(imageUrls$) : of([])).pipe(

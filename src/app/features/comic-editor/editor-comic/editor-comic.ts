@@ -92,6 +92,58 @@ export class EditorComic implements OnInit, OnDestroy {
     { name: 'EDITOR_COMIC.FONTS.OUTFIT', value: 'Outfit' }
   ];
 
+  // Bubble shape metadata (icon + label) shared by the "add" and "change shape" grids
+  bubbleShapes: { type: SpeechBubble['type']; icon: string; nameKey: string }[] = [
+    { type: 'round', icon: 'chat_bubble', nameKey: 'EDITOR_COMIC.SHAPE_ROUND' },
+    { type: 'square', icon: 'crop_square', nameKey: 'EDITOR_COMIC.SHAPE_SQUARE' },
+    { type: 'cloud', icon: 'cloud', nameKey: 'EDITOR_COMIC.SHAPE_CLOUD' },
+  ];
+
+  // Friendly line-height presets instead of a raw numeric multiplier
+  lineHeightPresets: { key: string; value: number; labelKey: string }[] = [
+    { key: 'compact', value: 1.0, labelKey: 'EDITOR_COMIC.LINE_HEIGHT_COMPACT' },
+    { key: 'normal', value: 1.3, labelKey: 'EDITOR_COMIC.LINE_HEIGHT_NORMAL' },
+    { key: 'relaxed', value: 1.6, labelKey: 'EDITOR_COMIC.LINE_HEIGHT_RELAXED' },
+  ];
+
+  // Text alignment options rendered as icon buttons
+  alignOptions: { value: 'left' | 'center' | 'right'; icon: string; titleKey: string }[] = [
+    { value: 'left', icon: 'format_align_left', titleKey: 'EDITOR_COMIC.ALIGN_LEFT_TITLE' },
+    { value: 'center', icon: 'format_align_center', titleKey: 'EDITOR_COMIC.ALIGN_CENTER_TITLE' },
+    { value: 'right', icon: 'format_align_right', titleKey: 'EDITOR_COMIC.ALIGN_RIGHT_TITLE' },
+  ];
+
+  borderColorSwatches = ['#000000', '#ffffff', '#1e1e24', '#ef4444', '#f59e0b'];
+  fontColorSwatches = ['#000000', '#ef4444', '#2563eb', '#10b981', '#f59e0b'];
+
+  shapeIcon(type: SpeechBubble['type']): string {
+    return this.bubbleShapes.find((s) => s.type === type)?.icon ?? 'chat_bubble';
+  }
+
+  bubbleTypeKey(type: SpeechBubble['type']): string {
+    return type === 'round'
+      ? 'EDITOR_COMIC.TYPES.ROUND'
+      : type === 'square'
+      ? 'EDITOR_COMIC.TYPES.SQUARE'
+      : 'EDITOR_COMIC.TYPES.CLOUD';
+  }
+
+  // Nearest line-height preset key for the currently selected bubble, used to
+  // highlight the active pill button without showing the raw multiplier value.
+  activeLineHeightPreset(lineHeight: number | undefined): string {
+    if (lineHeight === undefined) return 'normal';
+    let closest = this.lineHeightPresets[0];
+    let minDiff = Infinity;
+    for (const preset of this.lineHeightPresets) {
+      const diff = Math.abs(preset.value - lineHeight);
+      if (diff < minDiff) {
+        minDiff = diff;
+        closest = preset;
+      }
+    }
+    return closest.key;
+  }
+
   ngOnInit() {
     this.sub.add(
       this.editorService.state$.subscribe((state) => {

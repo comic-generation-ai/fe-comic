@@ -318,7 +318,7 @@ describe('EditorComic', () => {
       component.setTab('frame');
       fixture.detectChanges();
 
-      fixture.nativeElement.querySelector('.swatch[style*="#ef4444"]').click();
+      fixture.nativeElement.querySelector('.color-swatch[aria-label="#ef4444"]').click();
 
       expect(editorService.getState().borderColor).toBe('#ef4444');
     });
@@ -355,7 +355,7 @@ describe('EditorComic', () => {
       alignButtons[2].click(); // right
       expect(editorService.getState().bubbles[0].textAlign).toBe('right');
 
-      fixture.nativeElement.querySelector('.color-swatches .swatch[style*="#10b981"]').click();
+      fixture.nativeElement.querySelector('.swatch-grid .color-swatch[aria-label="#10b981"]').click();
       expect(editorService.getState().bubbles[0].fontColor).toBe('#10b981');
     });
 
