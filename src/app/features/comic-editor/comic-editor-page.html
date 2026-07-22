@@ -12,12 +12,14 @@
   </aside>
   }
 
-  <main class="right-panel" [class.split-view]="viewMode === 'edit'" [class.full-width]="viewMode === 'edit'">
+  <main class="right-panel" [class.split-view]="viewMode === 'edit' && isEditorPanelOpen"
+    [class.full-width]="viewMode === 'edit'">
     <app-workspace-comic [selectedFrames]="selectedFrames" [comicData]="generatedResult"
       [generationError]="viewMode === 'edit' ? generationError : null" [showBackButton]="viewMode === 'edit'"
-      (onBack)="goBack()"></app-workspace-comic>
+      [showEditorToggle]="viewMode === 'edit'" [isEditorOpen]="isEditorPanelOpen"
+      (onToggleEditor)="toggleEditorPanel()" (onBack)="goBack()"></app-workspace-comic>
 
-    @if (viewMode === 'edit') {
+    @if (viewMode === 'edit' && isEditorPanelOpen) {
     <section class="editor-panel">
       <app-editor-comic [comicData]="generatedResult"></app-editor-comic>
     </section>

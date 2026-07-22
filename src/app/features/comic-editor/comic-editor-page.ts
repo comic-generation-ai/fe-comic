@@ -49,6 +49,7 @@ export class ComicEditorPage implements OnInit, OnDestroy {
 
   // Page level state variables requested for step state management
   viewMode: 'input' | 'edit' = 'input'; // unified viewMode
+  isEditorPanelOpen: boolean = false; // editor-comic tab starts closed — workspace-comic fills the screen by default
   isFormValid: boolean = false; // to enable/disable generate button
   isGenerating: boolean = false; // loading state
   generatedResult: GeneratedResult | null = null; // result passed to editor and workspace
@@ -87,6 +88,7 @@ export class ComicEditorPage implements OnInit, OnDestroy {
   private loadExistingProject(projectId: string): void {
     this.isGenerating = true;
     this.generationError = null;
+    this.isEditorPanelOpen = false;
 
     this.pipelineSub = forkJoin({
       project: this.projectApi.getProject(projectId),
@@ -188,6 +190,7 @@ export class ComicEditorPage implements OnInit, OnDestroy {
 
     this.isGenerating = true;
     this.generationError = null;
+    this.isEditorPanelOpen = false;
     this.editorService.reset(); // Reset central editor state
 
     this.pipelineSub?.unsubscribe();
@@ -301,6 +304,11 @@ export class ComicEditorPage implements OnInit, OnDestroy {
     this.cdr.detectChanges();
   }
 
+  // Toggle the editor-comic tab open/closed above workspace-comic
+  toggleEditorPanel(): void {
+    this.isEditorPanelOpen = !this.isEditorPanelOpen;
+  }
+
   // Go back to input configuration panel
   goBack(): void {
     this.pipelineSub?.unsubscribe();
@@ -309,6 +317,7 @@ export class ComicEditorPage implements OnInit, OnDestroy {
     this.generatedResult = null; // reset to original state
     this.generationError = null;
     this.isGenerating = false;
+    this.isEditorPanelOpen = false;
     this.editorService.reset(); // reset central workspace state
     // Bỏ ?projectId khỏi URL — tránh load lại project cũ nếu người dùng F5 sau khi Back
     this.router.navigate([], { relativeTo: this.route, queryParams: {} });

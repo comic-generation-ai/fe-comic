@@ -125,7 +125,9 @@
     "BUBBLE_CLOUD": "Cloud",
     "DOUBLE_CLICK_EDIT": "Double-click to edit...",
     "PANEL_GENERATING": "Drawing panel...",
-    "PANEL_FAILED": "Panel generation failed"
+    "PANEL_FAILED": "Panel generation failed",
+    "OPEN_EDITOR": "Open Studio",
+    "CLOSE_EDITOR": "Close Studio"
   },
   "EDITOR_COMIC": {
     "TITLE": "Creative Studio",

@@ -112,6 +112,49 @@
           transform: translateY(0);
         }
       }
+
+      .btn-toggle-editor {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        background: var(--bg-surface);
+        border: 1px solid var(--glass-border);
+        border-radius: 8px;
+        color: var(--text-primary);
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(var(--black-rgb), 0.1);
+        transition: all 0.2s ease;
+
+        .toggle-icon {
+          width: 18px;
+          height: 18px;
+        }
+
+        &:hover {
+          background: var(--bg-surface-hover);
+          border-color: var(--glass-border-hover);
+          transform: translateY(-2px);
+        }
+
+        &:active {
+          transform: translateY(0);
+        }
+
+        &.active {
+          background: var(--submit-gradient);
+          border-color: transparent;
+          box-shadow: var(--submit-shadow);
+
+          &:hover {
+            background: var(--submit-gradient-hover);
+            box-shadow: var(--submit-shadow-hover);
+          }
+        }
+      }
     }
 
     /* Status Badge styling */

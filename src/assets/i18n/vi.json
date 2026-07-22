@@ -125,7 +125,9 @@
     "BUBBLE_CLOUD": "Mây",
     "DOUBLE_CLICK_EDIT": "Nhấp đúp để sửa...",
     "PANEL_GENERATING": "Đang vẽ khung tranh...",
-    "PANEL_FAILED": "Vẽ khung tranh thất bại"
+    "PANEL_FAILED": "Vẽ khung tranh thất bại",
+    "OPEN_EDITOR": "Mở Studio",
+    "CLOSE_EDITOR": "Đóng Studio"
   },
   "EDITOR_COMIC": {
     "TITLE": "Studio Sáng Tạo",

@@ -24,6 +24,18 @@
     </div>
 
     <div class="header-actions">
+      @if (showEditorToggle) {
+      <button class="btn-toggle-editor" [class.active]="isEditorOpen"
+        (click)="onToggleEditor.emit(); $event.stopPropagation();"
+        [title]="(isEditorOpen ? 'WORKSPACE_COMIC.CLOSE_EDITOR' : 'WORKSPACE_COMIC.OPEN_EDITOR') | translate">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round" class="toggle-icon">
+          <rect x="3" y="3" width="18" height="18" rx="3" />
+          <line x1="14.5" y1="3" x2="14.5" y2="21" />
+        </svg>
+        <span>{{ (isEditorOpen ? 'WORKSPACE_COMIC.CLOSE_EDITOR' : 'WORKSPACE_COMIC.OPEN_EDITOR') | translate }}</span>
+      </button>
+      }
       <!-- Status Badge -->
       <div class="status-badge" [class.generated]="!!comicData">
         <span class="badge-dot"></span>

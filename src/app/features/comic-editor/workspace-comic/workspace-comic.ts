@@ -18,7 +18,10 @@ export class WorkspaceComic implements OnInit, OnDestroy {
   @Input() selectedFrames: number = 4;
   @Input() showBackButton: boolean = false;
   @Input() generationError: string | null = null;
+  @Input() showEditorToggle: boolean = false;
+  @Input() isEditorOpen: boolean = false;
   @Output() onBack = new EventEmitter<void>();
+  @Output() onToggleEditor = new EventEmitter<void>();
 
   editorService = inject(ComicEditorService);
   el = inject(ElementRef);
