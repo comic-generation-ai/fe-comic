@@ -45,6 +45,14 @@ export class WorkspaceComic implements OnInit, OnDestroy {
   // Active text inline-editing bubble ID
   editingTextId: string | null = null;
 
+  // Hệ toạ độ tham chiếu cố định cho lớp SVG bong bóng thoại (viewBox="0 0 500 500").
+  // Panel luôn là hình vuông (aspect-ratio 1/1) nên dùng chung 1 giá trị cho cả 2 trục.
+  // Nhờ viewBox này, bubble.w/h/tailX/tailY (đơn vị "px tham chiếu") sẽ tự scale theo
+  // đúng tỉ lệ khi panel-card đổi kích thước thật trên màn hình (mở/đóng tab editor-comic,
+  // zoom trình duyệt, breakpoint responsive...) thay vì giữ nguyên số px tuyệt đối như
+  // trước đây (SVG không có viewBox => 1 unit = 1px thật, không co giãn theo panel).
+  readonly bubbleViewBoxSize = 500;
+
   ngOnInit() {
     this.sub.add(
       this.editorService.state$.subscribe((state) => {
@@ -168,13 +176,20 @@ export class WorkspaceComic implements OnInit, OnDestroy {
 
       this.editorService.updateBubble(this.activeBubbleId, { x: newX, y: newY }, true);
     } else if (this.activeDragType === 'resize') {
-      const newW = Math.max(80, Math.min(400, this.initialBubbleW + dx));
-      const newH = Math.max(50, Math.min(350, this.initialBubbleH + dy));
+      // dx/dy là px thật của chuột trên màn hình, còn bubble.w/h nằm trong hệ toạ độ
+      // tham chiếu (viewBox) của SVG — phải quy đổi theo tỉ lệ panel thật/viewBox thì
+      // thao tác kéo-resize mới bám đúng theo con trỏ chuột ở mọi kích cỡ panel.
+      const scaleX = this.bubbleViewBoxSize / panelWidth;
+      const scaleY = this.bubbleViewBoxSize / panelHeight;
+      const newW = Math.max(80, Math.min(400, this.initialBubbleW + dx * scaleX));
+      const newH = Math.max(50, Math.min(350, this.initialBubbleH + dy * scaleY));
 
       this.editorService.updateBubble(this.activeBubbleId, { w: newW, h: newH }, true);
     } else if (this.activeDragType === 'tail') {
-      const newTailX = this.initialTailX + dx;
-      const newTailY = this.initialTailY + dy;
+      const scaleX = this.bubbleViewBoxSize / panelWidth;
+      const scaleY = this.bubbleViewBoxSize / panelHeight;
+      const newTailX = this.initialTailX + dx * scaleX;
+      const newTailY = this.initialTailY + dy * scaleY;
 
       this.editorService.updateBubble(this.activeBubbleId, { tailX: newTailX, tailY: newTailY }, true);
     }
@@ -403,16 +418,20 @@ export class WorkspaceComic implements OnInit, OnDestroy {
         }
 
         // Draw speech bubbles for this panel
+        // Quy đổi từ hệ toạ độ tham chiếu (viewBox) của bubble sang px canvas thật —
+        // phải khớp với cách SVG hiển thị trên màn hình (xem bubbleViewBoxSize), nếu
+        // không bong bóng xuất ra ảnh sẽ lệch tỉ lệ so với những gì người dùng thấy khi edit.
         const bubbles = this.getBubblesForPanel(idx);
+        const scale = cw / this.bubbleViewBoxSize;
         bubbles.forEach((b) => {
           const bx = cx + (b.x / 100) * cw;
           const by = cy + (b.y / 100) * ch;
-          const bw = b.w * 2;
-          const bh = b.h * 2;
+          const bw = b.w * scale;
+          const bh = b.h * scale;
           const btl_x = bx - bw / 2;
           const btl_y = by - bh / 2;
-          const tx = bx + b.tailX * 2;
-          const ty = by + b.tailY * 2;
+          const tx = bx + b.tailX * scale;
+          const ty = by + b.tailY * scale;
 
           ctx.save();
 
@@ -488,8 +507,8 @@ export class WorkspaceComic implements OnInit, OnDestroy {
                 { r: 8, d: 0.9 },
               ];
               circles.forEach((c) => {
-                const cx_circ = bx + b.tailX * 2 * c.d;
-                const cy_circ = by + b.tailY * 2 * c.d;
+                const cx_circ = bx + b.tailX * scale * c.d;
+                const cy_circ = by + b.tailY * scale * c.d;
                 ctx.beginPath();
                 ctx.arc(cx_circ, cy_circ, c.r, 0, 2 * Math.PI);
                 ctx.fill();
@@ -534,7 +553,7 @@ export class WorkspaceComic implements OnInit, OnDestroy {
             ctx.fillStyle = b.fontColor;
             ctx.textAlign = b.textAlign;
             ctx.textBaseline = 'middle';
-            const fSize = b.fontSize * 2;
+            const fSize = b.fontSize * scale;
             // Map common font family fallbacks
             let fFamily = b.fontFamily;
             if (fFamily === 'Bangers') fFamily = 'Bangers, Impact, sans-serif';

@@ -110,7 +110,13 @@
 
       <!-- SVG Speech Bubble Vector Layer (Only when image is generated) -->
       @if (comicData) {
-      <svg class="vector-overlay-layer">
+      <!-- viewBox cố định 0 0 bubbleViewBoxSize bubbleViewBoxSize: bắt toàn bộ bong bóng
+           (w/h/tailX/tailY tính bằng đơn vị tham chiếu) tự co giãn đúng tỉ lệ theo kích
+           thước thật của panel-card (vuông, aspect-ratio 1/1), thay vì giữ nguyên px
+           tuyệt đối khi panel co lại lúc mở tab editor-comic. -->
+      <svg class="vector-overlay-layer"
+        [attr.viewBox]="'0 0 ' + bubbleViewBoxSize + ' ' + bubbleViewBoxSize"
+        preserveAspectRatio="none">
         @for (bubble of getBubblesForPanel(idx); track bubble.id) {
         <!-- Wrap in a translated <g> so coordinates x,y represent percentage of parent card size -->
         <g cdkDrag
