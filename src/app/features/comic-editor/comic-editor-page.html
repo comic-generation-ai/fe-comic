@@ -16,6 +16,7 @@
     [class.full-width]="viewMode === 'edit'">
     <app-workspace-comic [selectedFrames]="selectedFrames" [comicData]="generatedResult"
       [generationError]="viewMode === 'edit' ? generationError : null" [showBackButton]="viewMode === 'edit'"
+      [isGenerating]="isGenerating"
       [showEditorToggle]="viewMode === 'edit'" [isEditorOpen]="isEditorPanelOpen"
       (onToggleEditor)="toggleEditorPanel()" (onBack)="goBack()"></app-workspace-comic>
 

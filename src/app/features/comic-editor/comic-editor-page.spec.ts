@@ -324,6 +324,37 @@ describe('ComicEditorPage', () => {
   });
 
   describe('goBack()', () => {
+    it('gọi cancelJob() và deleteProject() khi đang sinh truyện (isGenerating = true)', () => {
+      const { component, fixture, fakeComicApi, fakeProjectApi } = setup({
+        comicApi: { cancelJob: vi.fn(() => of({ cancelled: true })) },
+        projectApi: { deleteProject: vi.fn(() => of({ id: 'proj-123', deleted: true })) },
+      });
+      fixture.detectChanges();
+
+      component.isGenerating = true;
+      (component as any).activeProjectId = 'proj-123';
+      component.generatedResult = {
+        jobId: 'job-123',
+        title: 'T',
+        script: 'S',
+        style: 'anime',
+        frameCount: 4,
+        generatedAt: new Date(),
+        panels: [],
+        currentStep: '',
+        progressCurrent: 0,
+        progressTotal: 4,
+      };
+
+      component.goBack();
+
+      expect(fakeComicApi.cancelJob).toHaveBeenCalledWith('job-123');
+      expect(fakeProjectApi.deleteProject).toHaveBeenCalledWith('proj-123');
+      expect(component.viewMode).toBe('input');
+      expect(component.generatedResult).toBeNull();
+      expect(component.isGenerating).toBe(false);
+    });
+
     it('reset toàn bộ trạng thái trang và điều hướng bỏ query param projectId', () => {
       const { component, fixture, fakeRouter } = setup();
       fixture.detectChanges();

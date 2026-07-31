@@ -309,15 +309,42 @@ export class ComicEditorPage implements OnInit, OnDestroy {
     this.isEditorPanelOpen = !this.isEditorPanelOpen;
   }
 
-  // Go back to input configuration panel
+  // Go back to input configuration panel (Hủy job & xóa project nếu đang vẽ mà chưa xong)
   goBack(): void {
+    if (this.isGenerating) {
+      if (this.generatedResult?.jobId) {
+        this.comicApi
+          .cancelJob(this.generatedResult.jobId)
+          .pipe(
+            catchError((err) => {
+              console.error('[ComicEditorPage] cancelJob failed:', err);
+              return of(null);
+            }),
+          )
+          .subscribe();
+      }
+
+      if (this.activeProjectId) {
+        this.projectApi
+          .deleteProject(this.activeProjectId)
+          .pipe(
+            catchError((err) => {
+              console.error('[ComicEditorPage] deleteProject failed:', err);
+              return of(null);
+            }),
+          )
+          .subscribe();
+      }
+    }
+
     this.pipelineSub?.unsubscribe();
     this.pollSub?.unsubscribe();
     this.viewMode = 'input';
-    this.generatedResult = null; // reset to original state
+    this.generatedResult = null; // reset to original state (không lưu job id)
     this.generationError = null;
     this.isGenerating = false;
     this.isEditorPanelOpen = false;
+    this.activeProjectId = '';
     this.editorService.reset(); // reset central workspace state
     // Bỏ ?projectId khỏi URL — tránh load lại project cũ nếu người dùng F5 sau khi Back
     this.router.navigate([], { relativeTo: this.route, queryParams: {} });

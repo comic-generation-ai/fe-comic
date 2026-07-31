@@ -119,6 +119,7 @@
     "STATUS_GENERATED": "AI Generated",
     "EMPTY_PANEL_HINT": "Waiting for script...",
     "BACK": "Back",
+    "CANCEL": "Cancel",
     "ADD_BUBBLE_TITLE": "Add Bubble",
     "BUBBLE_ROUND": "Round",
     "BUBBLE_SQUARE": "Square",
