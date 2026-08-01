@@ -128,7 +128,16 @@
     "PANEL_GENERATING": "Đang vẽ khung tranh...",
     "PANEL_FAILED": "Vẽ khung tranh thất bại",
     "OPEN_EDITOR": "Mở Studio",
-    "CLOSE_EDITOR": "Đóng Studio"
+    "CLOSE_EDITOR": "Đóng Studio",
+    "VIEW_JSON": "Xem JSON AI",
+    "JSON_MODAL_TITLE": "Dữ liệu JSONL từ Story AI",
+    "JSON_MODAL_SUBTITLE": "Chi tiết kịch bản và prompt của từng khung tranh",
+    "COPY_JSON": "Sao chép JSON",
+    "COPIED": "Đã sao chép!",
+    "FORMAT_JSONL": "JSONL (1 dòng/khung)",
+    "FORMAT_PRETTY": "JSON Đầy Đủ",
+    "FORMAT_LABEL": "Định dạng hiển thị",
+    "LOADING_JSONL": "Đang tải dữ liệu JSONL..."
   },
   "EDITOR_COMIC": {
     "TITLE": "Studio Sáng Tạo",
@@ -139,6 +148,7 @@
     "TAB_FRAME": "Khung Tranh",
     "TAB_BUBBLE": "Bong Bóng",
     "TAB_TEXT": "Văn Bản",
+    "TAB_JSON": "JSON AI",
     "FRAME_SETTINGS_TITLE": "Thiết Lập Khung Tranh",
     "BORDER_WIDTH": "Độ dày viền",
     "BORDER_RADIUS": "Góc bo tròn",

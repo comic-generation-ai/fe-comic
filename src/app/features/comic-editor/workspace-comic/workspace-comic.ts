@@ -23,6 +23,7 @@ export class WorkspaceComic implements OnInit, OnDestroy {
   @Input() isEditorOpen: boolean = false;
   @Output() onBack = new EventEmitter<void>();
   @Output() onToggleEditor = new EventEmitter<void>();
+  @Output() onOpenJson = new EventEmitter<void>();
 
   editorService = inject(ComicEditorService);
   el = inject(ElementRef);

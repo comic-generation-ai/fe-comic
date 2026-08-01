@@ -650,6 +650,199 @@
   }
 }
 
+  .btn-json-view {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: var(--bg-surface);
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(var(--black-rgb, 0, 0, 0), 0.1);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+
+    .json-icon {
+      width: 18px;
+      height: 18px;
+      color: var(--primary-light, #818cf8);
+      transition: transform 0.2s ease, color 0.2s ease;
+    }
+
+    &:hover {
+      background: var(--bg-surface-hover);
+      border-color: var(--primary, #6366f1);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(var(--primary-rgb, 99, 102, 241), 0.25);
+
+      .json-icon {
+        transform: scale(1.1);
+        color: var(--primary, #6366f1);
+      }
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+/* JSONL / Story AI Viewer Modal Styles */
+.json-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(8px);
+  animation: fadeIn 0.2s ease;
+}
+
+.json-modal-content {
+  width: 90%;
+  max-width: 800px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  background: #1e1e2e;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+
+  .json-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 20px 24px;
+    background: #181825;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+    .json-modal-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 4px 0;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #f5e0dc;
+
+      .modal-title-icon {
+        width: 22px;
+        height: 22px;
+        color: #cba6f7;
+      }
+    }
+
+    .json-modal-subtitle {
+      margin: 0;
+      font-size: 0.85rem;
+      color: #a6adc8;
+    }
+
+    .btn-close-json-modal {
+      background: transparent;
+      border: none;
+      color: #a6adc8;
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 6px;
+      transition: all 0.2s;
+
+      .close-icon {
+        width: 20px;
+        height: 20px;
+      }
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: #ffffff;
+      }
+    }
+  }
+
+  .json-modal-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 24px;
+    background: #181825;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+
+    .format-toggle-group {
+      display: flex;
+      gap: 4px;
+      background: #11111b;
+      padding: 4px;
+      border-radius: 8px;
+
+      .btn-format-toggle {
+        padding: 6px 14px;
+        background: transparent;
+        border: none;
+        border-radius: 6px;
+        color: #a6adc8;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+
+        &.active {
+          background: #cba6f7;
+          color: #11111b;
+        }
+      }
+    }
+
+    .btn-copy-json {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      background: rgba(203, 166, 247, 0.15);
+      border: 1px solid rgba(203, 166, 247, 0.3);
+      border-radius: 8px;
+      color: #cba6f7;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+
+      .copy-icon {
+        width: 15px;
+        height: 15px;
+      }
+
+      &:hover {
+        background: rgba(203, 166, 247, 0.25);
+        color: #ffffff;
+      }
+    }
+  }
+
+  .json-code-container {
+    padding: 20px 24px;
+    overflow-y: auto;
+    max-height: 60vh;
+    background: #11111b;
+
+    .json-code-block {
+      margin: 0;
+      font-family: 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: #a6e3a1;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+  }
+}
+
 @media (max-width: 1024px) {
   .workspace-container {
     .workspace-header {

@@ -18,11 +18,11 @@
       [generationError]="viewMode === 'edit' ? generationError : null" [showBackButton]="viewMode === 'edit'"
       [isGenerating]="isGenerating"
       [showEditorToggle]="viewMode === 'edit'" [isEditorOpen]="isEditorPanelOpen"
-      (onToggleEditor)="toggleEditorPanel()" (onBack)="goBack()"></app-workspace-comic>
+      (onToggleEditor)="toggleEditorPanel()" (onOpenJson)="openJsonTab()" (onBack)="goBack()"></app-workspace-comic>
 
     @if (viewMode === 'edit' && isEditorPanelOpen) {
     <section class="editor-panel">
-      <app-editor-comic [comicData]="generatedResult"></app-editor-comic>
+      <app-editor-comic [comicData]="generatedResult" [isGenerating]="isGenerating" [activeTab]="editorTab" (activeTabChange)="editorTab = $event"></app-editor-comic>
     </section>
     }
   </main>

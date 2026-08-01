@@ -128,7 +128,16 @@
     "PANEL_GENERATING": "Drawing panel...",
     "PANEL_FAILED": "Panel generation failed",
     "OPEN_EDITOR": "Open Studio",
-    "CLOSE_EDITOR": "Close Studio"
+    "CLOSE_EDITOR": "Close Studio",
+    "VIEW_JSON": "View AI JSON",
+    "JSON_MODAL_TITLE": "JSONL Payload from Story AI",
+    "JSON_MODAL_SUBTITLE": "Detailed panel script and image prompts",
+    "COPY_JSON": "Copy JSON",
+    "COPIED": "Copied!",
+    "FORMAT_JSONL": "JSONL (1 line/panel)",
+    "FORMAT_PRETTY": "Pretty JSON",
+    "FORMAT_LABEL": "Display Format",
+    "LOADING_JSONL": "Loading JSONL data..."
   },
   "EDITOR_COMIC": {
     "TITLE": "Creative Studio",
@@ -139,6 +148,7 @@
     "TAB_FRAME": "Frame",
     "TAB_BUBBLE": "Speech Bubble",
     "TAB_TEXT": "Text",
+    "TAB_JSON": "AI JSON",
     "FRAME_SETTINGS_TITLE": "Frame Settings",
     "BORDER_WIDTH": "Border Width",
     "BORDER_RADIUS": "Border Radius",

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy, inject, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '../../../core/i18n/translate.pipe';
@@ -14,14 +14,18 @@ import { Subscription } from 'rxjs';
 })
 export class EditorComic implements OnInit, OnDestroy {
   @Input() comicData: any = null;
+  @Input() isGenerating: boolean = false;
+  @Input() activeTab: 'frame' | 'bubble' | 'text' | 'json' = 'frame';
+  @Output() activeTabChange = new EventEmitter<'frame' | 'bubble' | 'text' | 'json'>();
 
   editorService = inject(ComicEditorService);
   private cdr = inject(ChangeDetectorRef);
   editorState!: EditorState;
   private sub = new Subscription();
 
-  // Active control panel tab
-  activeTab: 'frame' | 'bubble' | 'text' = 'frame';
+  // JSON viewer state
+  jsonMode: 'jsonl' | 'pretty' = 'jsonl';
+  isCopied: boolean = false;
 
   // Save-to-backend state for the sticky footer Save button — hiện thông báo
   // ngay phía trên nút Lưu thay vì dùng modal PopUp (backdrop full-screen của
@@ -124,8 +128,8 @@ export class EditorComic implements OnInit, OnDestroy {
     return type === 'round'
       ? 'EDITOR_COMIC.TYPES.ROUND'
       : type === 'square'
-      ? 'EDITOR_COMIC.TYPES.SQUARE'
-      : 'EDITOR_COMIC.TYPES.CLOUD';
+        ? 'EDITOR_COMIC.TYPES.SQUARE'
+        : 'EDITOR_COMIC.TYPES.CLOUD';
   }
 
   // Nearest line-height preset key for the currently selected bubble, used to
@@ -154,7 +158,7 @@ export class EditorComic implements OnInit, OnDestroy {
         // 1. If active panel index changed, focus 'frame' tab
         if (state.activePanelIndex !== undefined && state.activePanelIndex !== prevPanelIndex) {
           this.activeTab = 'frame';
-          
+
           // Tự động bỏ chọn bong bóng nếu nó không thuộc panel đang chọn
           if (state.selectedBubbleId) {
             const currentBubble = state.bubbles.find(b => b.id === state.selectedBubbleId);
@@ -204,8 +208,9 @@ export class EditorComic implements OnInit, OnDestroy {
   }
 
   // Set active sidebar tab
-  setTab(tab: 'frame' | 'bubble' | 'text') {
+  setTab(tab: 'frame' | 'bubble' | 'text' | 'json') {
     this.activeTab = tab;
+    this.activeTabChange.emit(tab);
   }
 
   // Frame modifiers (Save history first then update state)
@@ -263,6 +268,39 @@ export class EditorComic implements OnInit, OnDestroy {
 
   redo() {
     this.editorService.redo();
+  }
+
+  get hasJsonData(): boolean {
+    if (!this.comicData || !this.comicData.panels || this.comicData.panels.length === 0) {
+      return false;
+    }
+    return this.comicData.panels.some((p: any) => !!(p.promptEn || p.captionVi));
+  }
+
+  get jsonOutput(): string {
+    if (!this.hasJsonData) {
+      return '';
+    }
+
+    const payload = this.comicData.panels.map((p: any, i: number) => ({
+      panel_number: p.index ?? i + 1,
+      image_prompt: p.promptEn || '',
+      caption_vi: p.captionVi || '',
+      speaker: p.speaker || undefined,
+      status: p.status || 'DONE',
+      image_url: p.imageUrl || null,
+    }));
+
+    return JSON.stringify(
+      {
+        job_id: this.comicData.jobId || '',
+        story_title: this.comicData.title || '',
+        num_panels: payload.length,
+        panels: payload,
+      },
+      null,
+      2,
+    );
   }
 
   resetAll() {
