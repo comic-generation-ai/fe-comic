@@ -10,6 +10,7 @@ import { ProjectApiService } from '../../core/api/project-api.service';
 import { FrameDto, FramesApiService } from '../../core/api/frames-api.service';
 import { Subscription, interval, switchMap, takeWhile, forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { I18nService } from '../../core/i18n/i18n.service';
 
 // Frame.status (be-comic) -> Panel.status (dùng chung UI với luồng generate mới)
 const FRAME_STATUS_MAP: Record<FrameDto['status'], Panel['status']> = {
@@ -68,6 +69,7 @@ export class ComicEditorPage implements OnInit, OnDestroy {
     private framesApi: FramesApiService,
     private route: ActivatedRoute,
     private router: Router,
+    private i18nService: I18nService,
   ) {
     this.checkValidation();
   }
@@ -137,7 +139,7 @@ export class ComicEditorPage implements OnInit, OnDestroy {
             frameCount: this.selectedFrames,
             generatedAt: new Date(project.created_at),
             panels,
-            currentStep: 'Hoàn tất',
+            currentStep: this.i18nService.lang === 'vi' ? 'Hoàn tất' : 'Completed',
             progressCurrent: panels.length,
             progressTotal: panels.length,
           };
@@ -149,7 +151,9 @@ export class ComicEditorPage implements OnInit, OnDestroy {
         },
         error: (err) => {
           this.isGenerating = false;
-          this.generationError = 'Không thể tải lại truyện tranh này. Vui lòng thử lại.';
+          this.generationError = this.i18nService.lang === 'vi'
+            ? 'Không thể tải lại truyện tranh này. Vui lòng thử lại.'
+            : 'Failed to reload this comic. Please try again.';
           console.error('[ComicEditorPage] loadExistingProject failed:', err);
           this.cdr.markForCheck();
           this.cdr.detectChanges();
@@ -164,14 +168,6 @@ export class ComicEditorPage implements OnInit, OnDestroy {
       !!this.storyScript && this.storyScript.trim().length > 0 &&
       !!this.artStyle &&
       !!this.selectedFrames && this.selectedFrames > 0;
-
-    console.log('[ComicEditorPage] checkValidation:', {
-      storyTitle: this.storyTitle,
-      storyScript: this.storyScript,
-      artStyle: this.artStyle,
-      selectedFrames: this.selectedFrames,
-      isFormValid: this.isFormValid
-    });
   }
 
   // Handle changes in input fields
@@ -226,7 +222,7 @@ export class ComicEditorPage implements OnInit, OnDestroy {
             frameCount: this.selectedFrames,
             generatedAt: new Date(),
             panels: [],
-            currentStep: 'Đang khởi tạo...',
+            currentStep: this.i18nService.lang === 'vi' ? 'Đang khởi tạo...' : 'Initializing...',
             progressCurrent: 0,
             progressTotal: this.selectedFrames,
           };
@@ -236,7 +232,9 @@ export class ComicEditorPage implements OnInit, OnDestroy {
         },
         error: (err) => {
           this.isGenerating = false;
-          this.generationError = err?.error?.message || 'Không thể tạo truyện tranh. Vui lòng thử lại.';
+          this.generationError = err?.error?.message || (this.i18nService.lang === 'vi'
+            ? 'Không thể tạo truyện tranh. Vui lòng thử lại.'
+            : 'Failed to generate comic. Please try again.');
           console.error('[ComicEditorPage] generateComic failed:', err);
           this.cdr.markForCheck();
           this.cdr.detectChanges();
@@ -258,7 +256,9 @@ export class ComicEditorPage implements OnInit, OnDestroy {
         next: (res) => this.handleJobStatus(res),
         error: (err) => {
           this.isGenerating = false;
-          this.generationError = 'Mất kết nối khi theo dõi tiến trình sinh truyện.';
+          this.generationError = this.i18nService.lang === 'vi'
+            ? 'Mất kết nối khi theo dõi tiến trình sinh truyện.'
+            : 'Connection lost while tracking comic generation progress.';
           console.error('[ComicEditorPage] polling failed:', err);
           this.cdr.markForCheck();
           this.cdr.detectChanges();
@@ -280,7 +280,7 @@ export class ComicEditorPage implements OnInit, OnDestroy {
     switch (res.localJob.status) {
       case 'COMPLETED':
         this.isGenerating = false;
-        this.generatedResult.currentStep = 'Hoàn tất';
+        this.generatedResult.currentStep = this.i18nService.lang === 'vi' ? 'Hoàn tất' : 'Completed';
         // Callback này chạy async (sau khi HTTP response về), tức là SAU dòng
         // cdr.detectChanges() ở cuối hàm — nếu không tự ép CD lại ở đây thì bong
         // bóng vừa hydrate xong sẽ không tự hiện ra, phải chờ người dùng click.
@@ -293,11 +293,11 @@ export class ComicEditorPage implements OnInit, OnDestroy {
       case 'FAILED':
         this.isGenerating = false;
         this.generationError =
-          res.localJob.error_message || res.liveStatus?.errorMessage || res.error || 'Sinh truyện tranh thất bại.';
+          res.localJob.error_message || res.liveStatus?.errorMessage || res.error || (this.i18nService.lang === 'vi' ? 'Sinh truyện tranh thất bại.' : 'Comic generation failed.');
         break;
       case 'CANCELLED':
         this.isGenerating = false;
-        this.generationError = 'Job sinh truyện đã bị huỷ.';
+        this.generationError = this.i18nService.lang === 'vi' ? 'Job sinh truyện đã bị huỷ.' : 'Comic generation job has been cancelled.';
         break;
     }
 

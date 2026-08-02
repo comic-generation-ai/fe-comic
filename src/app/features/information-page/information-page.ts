@@ -10,15 +10,11 @@ import { EditPasswordModal } from './edit-password-modal/edit-password-modal';
 import { PopUp } from '../../shared/ui/pop-up/pop-up';
 import { CurrentUserService } from '../../core/auth/current-user.service';
 import { ProjectApiService } from '../../core/api/project-api.service';
+import { AuthApiService } from '../../core/api/auth-api.service';
+import { UserApiService } from '../../core/api/user-api.service';
+import { AuthSessionService } from '../../core/auth/auth-session.service';
 import { getAvatarInitial } from '../../core/utils/avatar.util';
 import { UserProfileInfo } from './edit-info-modal/edit-info-modal';
-
-interface Transaction {
-  description: string;
-  date: string;
-  amount: string;
-  status: string;
-}
 
 @Component({
   selector: 'app-information-page',
@@ -55,15 +51,6 @@ export class InformationPage implements OnInit {
     avatar: '',
   };
 
-  // Subscription Details
-  sub = {
-    plan: 'PROFILE.SUB_PLAN',
-    renewDate: 'April 12, 2026',
-    tokensUsed: 650,
-    tokensTotal: 1200,
-    percentUsed: 54
-  };
-
   // Stats Details — điền từ /api/projects (số project thật của user, xem ngOnInit)
   stats = {
     projects: 0,
@@ -84,6 +71,9 @@ export class InformationPage implements OnInit {
     private router: Router,
     private currentUserService: CurrentUserService,
     private projectApi: ProjectApiService,
+    private authApi: AuthApiService,
+    private userApi: UserApiService,
+    private authSession: AuthSessionService,
     private cdr: ChangeDetectorRef,
     @Inject(PLATFORM_ID) private platformId: Object,
   ) {
@@ -152,21 +142,35 @@ export class InformationPage implements OnInit {
   }
 
   // Trigger password update
-  updatePassword(newPassword: string) {
-    const successMsg = this.i18nService.translate('PROFILE.PASSWORD_UPDATED_SUCCESS');
-
-    // Open password update success popup
-    this.openPopUp(
-      'primary',
-      this.i18nService.translate('PROFILE.SECURITY'),
-      successMsg,
-      'OK',
-      '',
-      () => {
-        this.showPopUp = false;
-        this.showPasswordModal = false;
-      }
-    );
+  updatePassword(payload: { currentPassword: string; newPassword: string }) {
+    this.authApi.changePassword(payload).subscribe({
+      next: () => {
+        const successMsg = this.i18nService.translate('PROFILE.PASSWORD_UPDATED_SUCCESS');
+        this.openPopUp(
+          'primary',
+          this.i18nService.translate('PROFILE.SECURITY'),
+          successMsg,
+          'OK',
+          '',
+          () => {
+            this.showPopUp = false;
+            this.showPasswordModal = false;
+          }
+        );
+        this.cdr.markForCheck();
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        const errorMsg = err?.error?.message || (this.i18nService.lang === 'vi'
+          ? 'Đổi mật khẩu thất bại. Vui lòng kiểm tra lại mật khẩu hiện tại.'
+          : 'Failed to change password. Please check your current password.');
+        this.openPopUp('danger', this.i18nService.translate('PROFILE.SECURITY'), errorMsg, 'OK', '', () => {
+          this.showPopUp = false;
+        });
+        this.cdr.markForCheck();
+        this.cdr.detectChanges();
+      },
+    });
   }
 
   // Helper to show feedback messages
@@ -211,15 +215,25 @@ export class InformationPage implements OnInit {
       deleteLabel,
       cancelLabel,
       () => {
-        this.showPopUp = false;
-        this.router.navigate(['/auth/login']);
+        this.userApi.deleteMe().subscribe({
+          next: () => {
+            this.showPopUp = false;
+            this.authSession.clearSession();
+            this.currentUserService.clear();
+            this.router.navigate(['/auth/login']);
+          },
+          error: (err) => {
+            this.showPopUp = false;
+            const errorMsg = err?.error?.message || (this.i18nService.lang === 'vi'
+              ? 'Xóa tài khoản thất bại. Vui lòng thử lại.'
+              : 'Failed to delete account. Please try again.');
+            this.openPopUp('danger', deleteTitle, errorMsg, 'OK', '', () => (this.showPopUp = false));
+            this.cdr.markForCheck();
+            this.cdr.detectChanges();
+          },
+        });
       }
     );
-  }
-
-  // simulated download trigger
-  downloadTransactions() {
-    alert('Simulating download of all transactions in CSV format...');
   }
 
   // Update profile information from modal save — lưu thật lên BE (PATCH /users/me),

@@ -36,6 +36,11 @@ export interface LoginResult {
   refreshToken: string;
 }
 
+export interface ChangePasswordPayload {
+  currentPassword?: string;
+  newPassword?: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -51,5 +56,9 @@ export class AuthApiService {
 
   login(payload: LoginPayload): Observable<ApiEnvelope<LoginResult>> {
     return this.http.post<ApiEnvelope<LoginResult>>(`${this.baseUrl}/login`, payload);
+  }
+
+  changePassword(payload: ChangePasswordPayload): Observable<ApiEnvelope<void>> {
+    return this.http.patch<ApiEnvelope<void>>(`${this.baseUrl}/change-password`, payload);
   }
 }

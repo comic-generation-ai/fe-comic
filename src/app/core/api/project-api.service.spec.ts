@@ -19,7 +19,7 @@ describe('ProjectApiService', () => {
 
   it('createProject() gửi POST /api/projects với payload đầy đủ', () => {
     const project: Project = {
-      id: 'p1', title: 'Truyen 1', genre: null, art_style: null, status: 'DRAFT', credits_used: 0, created_at: '2026-01-01',
+      id: 'p1', title: 'Truyen 1', genre: null, art_style: null, status: 'DRAFT', created_at: '2026-01-01',
     };
 
     service
@@ -44,7 +44,7 @@ describe('ProjectApiService', () => {
 
   it('getProject() gửi GET /api/projects/:id', () => {
     const detail: ProjectDetail = {
-      id: 'p1', title: 'Truyen 1', genre: null, art_style: null, status: 'DRAFT', credits_used: 0, created_at: '2026-01-01', raw_prompt: 'tom tat',
+      id: 'p1', title: 'Truyen 1', genre: null, art_style: null, status: 'DRAFT', created_at: '2026-01-01', raw_prompt: 'tom tat',
     };
 
     service.getProject('p1').subscribe((res) => expect(res).toEqual(detail));

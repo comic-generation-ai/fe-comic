@@ -44,7 +44,7 @@ function setup(opts: {
 }
 
 const project = (over: Partial<Project> = {}): Project => ({
-  id: 'c1', title: 'Truyen 1', genre: null, art_style: 'anime', status: 'COMPLETED', credits_used: 0, created_at: new Date().toISOString(),
+  id: 'c1', title: 'Truyen 1', genre: null, art_style: 'anime', status: 'COMPLETED', created_at: new Date().toISOString(),
   ...over,
 });
 

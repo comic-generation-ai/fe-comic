@@ -48,6 +48,12 @@ export class StoryBoardPage implements OnInit {
   ngOnInit() {
     // Chặn gọi API lúc SSR/prerender — URL tương đối không có origin trên server
     if (!isPlatformBrowser(this.platformId)) return;
+    this.loadProjects();
+  }
+
+  loadProjects() {
+    this.loading = true;
+    this.loadError = false;
 
     this.projectApi.getMyProjects().subscribe({
       next: (projects) => {
@@ -65,6 +71,10 @@ export class StoryBoardPage implements OnInit {
         this.cdr.detectChanges();
       },
     });
+  }
+
+  retryLoad() {
+    this.loadProjects();
   }
 
   // Lấy ảnh của frame đầu tiên (order_index nhỏ nhất) đã sinh xong trong mỗi

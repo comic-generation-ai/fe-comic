@@ -9,7 +9,7 @@ describe('UserApiService', () => {
 
   const profile: UserProfile = {
     id: 'u1', email: 'a@test.dev', fullName: 'A', username: 'a', avatarUrl: null,
-    subscription_tier: 'free', credits_balance: 0, created_at: '2026-01-01',
+    created_at: '2026-01-01',
   };
 
   beforeEach(() => {

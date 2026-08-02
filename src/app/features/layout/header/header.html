@@ -134,15 +134,6 @@
 
   <!-- Header Features / Action List -->
   <div class="drawer-actions">
-    <!-- Credits info -->
-    <div class="drawer-credits-row">
-      <div class="credits-label">
-        <i class="pi material-symbols-outlined">confirmation_number</i>
-        <span>Credits</span>
-      </div>
-      <span class="credits-value">{{ profile?.credits_balance ?? '...' }}</span>
-    </div>
-
     <!-- Notifications Toggle -->
     <div class="drawer-notification-container">
       <button type="button" class="drawer-action-btn" aria-label="Notifications" (click)="toggleNotifications($event, true)">

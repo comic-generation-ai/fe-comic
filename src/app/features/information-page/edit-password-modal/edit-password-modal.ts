@@ -13,8 +13,9 @@ import { I18nService } from '../../../core/i18n/i18n.service';
 })
 export class EditPasswordModal {
   @Output() onClose = new EventEmitter<void>();
-  @Output() onSave = new EventEmitter<string>();
+  @Output() onSave = new EventEmitter<{ currentPassword: string; newPassword: string }>();
 
+  currentPassword = '';
   newPassword = '';
   confirmPassword = '';
   feedbackMessage = '';
@@ -27,7 +28,7 @@ export class EditPasswordModal {
   }
 
   save() {
-    if (!this.newPassword || !this.confirmPassword) {
+    if (!this.currentPassword || !this.newPassword || !this.confirmPassword) {
       this.showFeedback(
         this.i18nService.lang === 'vi' 
           ? 'Vui lòng điền đầy đủ các trường mật khẩu.' 
@@ -40,8 +41,8 @@ export class EditPasswordModal {
     if (this.newPassword.length < 6) {
       this.showFeedback(
         this.i18nService.lang === 'vi' 
-          ? 'Mật khẩu phải có ít nhất 6 ký tự.' 
-          : 'Password must be at least 6 characters.',
+          ? 'Mật khẩu mới phải có ít nhất 6 ký tự.' 
+          : 'New password must be at least 6 characters.',
         'error'
       );
       return;
@@ -53,7 +54,10 @@ export class EditPasswordModal {
       return;
     }
 
-    this.onSave.emit(this.newPassword);
+    this.onSave.emit({
+      currentPassword: this.currentPassword,
+      newPassword: this.newPassword,
+    });
   }
 
   private showFeedback(message: string, type: 'success' | 'error') {

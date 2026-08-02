@@ -8,8 +8,6 @@ export interface UserProfile {
   fullName: string | null;
   username: string | null;
   avatarUrl: string | null;
-  subscription_tier: string;
-  credits_balance: number;
   created_at: string;
 }
 
@@ -34,5 +32,9 @@ export class UserApiService {
 
   updateMe(payload: UpdateProfilePayload): Observable<UserProfile> {
     return this.http.patch<UserProfile>(`${this.baseUrl}/me`, payload);
+  }
+
+  deleteMe(): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/me`);
   }
 }

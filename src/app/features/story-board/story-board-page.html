@@ -71,8 +71,18 @@
   </div>
   }
 
+  <!-- Error State — không tải được dữ liệu -->
+  @if (!loading && loadError) {
+  <div class="library-state animate-fade-up">
+    <span class="material-symbols-outlined state-icon">error_outline</span>
+    <h3 class="state-title">{{ 'STORY_BOARD.LOAD_ERROR_TITLE' | translate }}</h3>
+    <p class="state-subtitle">{{ 'STORY_BOARD.LOAD_ERROR_SUBTITLE' | translate }}</p>
+    <button type="button" class="btn-state-cta" (click)="retryLoad()">{{ 'STORY_BOARD.RETRY' | translate }}</button>
+  </div>
+  }
+
   <!-- Empty State — user chưa có project nào -->
-  @if (!loading && comics.length === 0) {
+  @if (!loading && !loadError && comics.length === 0) {
   <div class="library-state animate-fade-up">
     <span class="material-symbols-outlined state-icon">auto_stories</span>
     <h3 class="state-title">{{ 'STORY_BOARD.EMPTY_TITLE' | translate }}</h3>

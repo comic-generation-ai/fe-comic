@@ -9,16 +9,23 @@ import { CurrentUserService } from '../../core/auth/current-user.service';
 import { UserApiService, UserProfile } from '../../core/api/user-api.service';
 import { ProjectApiService } from '../../core/api/project-api.service';
 
+import { AuthApiService } from '../../core/api/auth-api.service';
+
 const profile: UserProfile = {
   id: 'u1', email: 'a@test.dev', fullName: 'Nguyen Van A', username: 'nva',
-  avatarUrl: null, subscription_tier: 'free', credits_balance: 0, created_at: '2026-03-15T00:00:00.000Z',
+  avatarUrl: null, created_at: '2026-03-15T00:00:00.000Z',
 };
 
 function setup(opts: {
-  getMe?: any; getMyProjects?: any; updateMe?: any;
+  getMe?: any; getMyProjects?: any; updateMe?: any; changePassword?: any; deleteMe?: any;
 } = {}) {
-  const fakeUserApi = { getMe: vi.fn(opts.getMe ?? (() => of(profile))), updateMe: vi.fn(opts.updateMe ?? (() => of(profile))) };
+  const fakeUserApi = {
+    getMe: vi.fn(opts.getMe ?? (() => of(profile))),
+    updateMe: vi.fn(opts.updateMe ?? (() => of(profile))),
+    deleteMe: vi.fn(opts.deleteMe ?? (() => of(undefined))),
+  };
   const fakeProjectApi = { getMyProjects: vi.fn(opts.getMyProjects ?? (() => of([]))), getProject: vi.fn(), createProject: vi.fn(), deleteProject: vi.fn() };
+  const fakeAuthApi = { changePassword: vi.fn(opts.changePassword ?? (() => of({ success: true, code: 200, message: 'OK', data: null }))) };
 
   TestBed.configureTestingModule({
     imports: [InformationPage],
@@ -28,6 +35,7 @@ function setup(opts: {
       provideHttpClientTesting(),
       { provide: UserApiService, useValue: fakeUserApi },
       { provide: ProjectApiService, useValue: fakeProjectApi },
+      { provide: AuthApiService, useValue: fakeAuthApi },
     ],
   });
 
@@ -36,7 +44,7 @@ function setup(opts: {
   const router = TestBed.inject(Router);
   vi.spyOn(router, 'navigate').mockResolvedValue(true);
   const currentUser = TestBed.inject(CurrentUserService);
-  return { fixture, component, fakeUserApi, fakeProjectApi, router, currentUser };
+  return { fixture, component, fakeUserApi, fakeProjectApi, fakeAuthApi, router, currentUser };
 }
 
 describe('InformationPage', () => {
@@ -119,13 +127,14 @@ describe('InformationPage', () => {
   });
 
   describe('popup dùng chung (openPopUp) qua các luồng nghiệp vụ', () => {
-    it('updatePassword() mở popup thành công, action đóng cả 2 modal', () => {
-      const { fixture, component } = setup();
+    it('updatePassword() gọi authApi.changePassword và mở popup thành công', () => {
+      const { fixture, component, fakeAuthApi } = setup();
       fixture.detectChanges();
       component.showPasswordModal = true;
 
-      component.updatePassword('newpass123');
+      component.updatePassword({ currentPassword: 'old', newPassword: 'newpass123' });
 
+      expect(fakeAuthApi.changePassword).toHaveBeenCalledWith({ currentPassword: 'old', newPassword: 'newpass123' });
       expect(component.showPopUp).toBe(true);
       expect(component.popUpType).toBe('primary');
 
@@ -134,8 +143,8 @@ describe('InformationPage', () => {
       expect(component.showPasswordModal).toBe(false);
     });
 
-    it('deleteAccount() mở popup cảnh báo nguy hiểm, action điều hướng về trang login', () => {
-      const { fixture, component, router } = setup();
+    it('deleteAccount() mở popup cảnh báo nguy hiểm, action gọi userApi.deleteMe và điều hướng về trang login', () => {
+      const { fixture, component, fakeUserApi, router } = setup();
       fixture.detectChanges();
 
       component.deleteAccount();
@@ -144,18 +153,9 @@ describe('InformationPage', () => {
       expect(component.showPopUp).toBe(true);
 
       component.popUpAction();
+      expect(fakeUserApi.deleteMe).toHaveBeenCalled();
       expect(component.showPopUp).toBe(false);
       expect(router.navigate).toHaveBeenCalledWith(['/auth/login']);
-    });
-
-    it('downloadTransactions() gọi window.alert mô phỏng tải xuống', () => {
-      const { fixture, component } = setup();
-      fixture.detectChanges();
-      const alertSpy = vi.spyOn(window, 'alert').mockImplementation(() => {});
-
-      component.downloadTransactions();
-
-      expect(alertSpy).toHaveBeenCalled();
     });
   });
 

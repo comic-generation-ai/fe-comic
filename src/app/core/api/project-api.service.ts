@@ -8,7 +8,6 @@ export interface Project {
   genre: string | null;
   art_style: string | null;
   status: string;
-  credits_used: number;
   created_at: string;
 }
 

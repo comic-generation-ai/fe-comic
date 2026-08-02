@@ -101,7 +101,7 @@ describe('ComicEditorPage', () => {
 
     it('luồng thành công: tạo project rồi tạo job, cập nhật generatedResult và bắt đầu polling', () => {
       const project: Project = {
-        id: 'p1', title: 'T', genre: null, art_style: 'anime', status: 'DRAFT', credits_used: 0, created_at: '2026-01-01',
+        id: 'p1', title: 'T', genre: null, art_style: 'anime', status: 'DRAFT', created_at: '2026-01-01',
       };
       const jobRes: CreateJobResponse = { jobId: 'job-1', status: 'QUEUED' };
       const { component, fakeProjectApi, fakeComicApi } = setup({
@@ -156,7 +156,7 @@ describe('ComicEditorPage', () => {
 
     function setupPolling(statuses: JobStatusResponse[]) {
       const project: Project = {
-        id: 'p1', title: 'T', genre: null, art_style: 'manga', status: 'DRAFT', credits_used: 0, created_at: '2026-01-01',
+        id: 'p1', title: 'T', genre: null, art_style: 'manga', status: 'DRAFT', created_at: '2026-01-01',
       };
       const getJobStatus = vi.fn();
       statuses.forEach((s) => getJobStatus.mockReturnValueOnce(of(s)));
@@ -226,7 +226,7 @@ describe('ComicEditorPage', () => {
 
     it('mất kết nối khi polling: hiển thị thông báo lỗi tương ứng', () => {
       const project: Project = {
-        id: 'p1', title: 'T', genre: null, art_style: 'manga', status: 'DRAFT', credits_used: 0, created_at: '2026-01-01',
+        id: 'p1', title: 'T', genre: null, art_style: 'manga', status: 'DRAFT', created_at: '2026-01-01',
       };
       const { component } = setup({
         projectApi: { createProject: vi.fn(() => of(project)) },
@@ -249,7 +249,7 @@ describe('ComicEditorPage', () => {
   describe('mở lại project có sẵn (loadExistingProject qua ngOnInit + ?projectId=)', () => {
     it('nạp thành công: ánh xạ trạng thái frame, lấy URL ảnh từng khung, chuyển sang chế độ chỉnh sửa', () => {
       const project: ProjectDetail = {
-        id: 'p1', title: 'Truyen cu', genre: null, art_style: 'anime', status: 'DONE', credits_used: 1,
+        id: 'p1', title: 'Truyen cu', genre: null, art_style: 'anime', status: 'DONE',
         created_at: '2026-01-01', raw_prompt: 'Tom tat cu',
       };
       const frames: FrameDto[] = [
@@ -292,7 +292,7 @@ describe('ComicEditorPage', () => {
 
     it('lấy URL ảnh lỗi cho 1 khung không làm hỏng cả trang (catchError trả null)', () => {
       const project: ProjectDetail = {
-        id: 'p1', title: 'T', genre: null, art_style: 'anime', status: 'DONE', credits_used: 0,
+        id: 'p1', title: 'T', genre: null, art_style: 'anime', status: 'DONE',
         created_at: '2026-01-01', raw_prompt: 'S',
       };
       const frames: FrameDto[] = [

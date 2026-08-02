@@ -35,6 +35,7 @@ describe('EditPasswordModal', () => {
 
     it('mật khẩu dưới 6 ký tự: báo lỗi, không phát onSave', () => {
       fixture.detectChanges();
+      component.currentPassword = 'oldpassword';
       component.newPassword = '123';
       component.confirmPassword = '123';
       let saved = false;
@@ -48,6 +49,7 @@ describe('EditPasswordModal', () => {
 
     it('hai mật khẩu không khớp: báo lỗi lấy từ i18n, không phát onSave', () => {
       fixture.detectChanges();
+      component.currentPassword = 'oldpassword';
       component.newPassword = 'password1';
       component.confirmPassword = 'password2';
       let saved = false;
@@ -59,16 +61,17 @@ describe('EditPasswordModal', () => {
       expect(saved).toBe(false);
     });
 
-    it('hợp lệ: phát onSave kèm mật khẩu mới', () => {
+    it('hợp lệ: phát onSave kèm currentPassword và newPassword', () => {
       fixture.detectChanges();
+      component.currentPassword = 'oldpassword';
       component.newPassword = 'password123';
       component.confirmPassword = 'password123';
-      let saved: string | undefined;
+      let saved: { currentPassword: string; newPassword: string } | undefined;
       component.onSave.subscribe((v) => (saved = v));
 
       component.save();
 
-      expect(saved).toBe('password123');
+      expect(saved).toEqual({ currentPassword: 'oldpassword', newPassword: 'password123' });
     });
 
     it('thông báo lỗi tự biến mất sau 4 giây', () => {

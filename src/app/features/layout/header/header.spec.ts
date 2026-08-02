@@ -53,14 +53,14 @@ describe('Header', () => {
 
     it('ưu tiên fullName, sau đó username, sau đó email', () => {
       fixture.detectChanges();
-      currentUser.profile.set({ id: 'u1', email: 'a@test.dev', fullName: 'Nguyen Van A', username: 'nva', avatarUrl: null, subscription_tier: 'free', credits_balance: 0, created_at: '2026-01-01' });
+      currentUser.profile.set({ id: 'u1', email: 'a@test.dev', fullName: 'Nguyen Van A', username: 'nva', avatarUrl: null, created_at: '2026-01-01' });
       expect(component.displayName).toBe('Nguyen Van A');
       expect(component.avatarInitial).toBe('N');
 
-      currentUser.profile.set({ id: 'u1', email: 'a@test.dev', fullName: null, username: 'nva', avatarUrl: null, subscription_tier: 'free', credits_balance: 0, created_at: '2026-01-01' });
+      currentUser.profile.set({ id: 'u1', email: 'a@test.dev', fullName: null, username: 'nva', avatarUrl: null, created_at: '2026-01-01' });
       expect(component.displayName).toBe('nva');
 
-      currentUser.profile.set({ id: 'u1', email: 'a@test.dev', fullName: null, username: null, avatarUrl: null, subscription_tier: 'free', credits_balance: 0, created_at: '2026-01-01' });
+      currentUser.profile.set({ id: 'u1', email: 'a@test.dev', fullName: null, username: null, avatarUrl: null, created_at: '2026-01-01' });
       expect(component.displayName).toBe('a@test.dev');
     });
   });
@@ -171,7 +171,7 @@ describe('Header', () => {
 
     it('logout() xoá phiên đăng nhập, đóng toàn bộ menu và điều hướng về trang login', () => {
       authSession.setSession('token', 'a@test.dev');
-      currentUser.profile.set({ id: 'u1', email: 'a@test.dev', fullName: 'A', username: 'a', avatarUrl: null, subscription_tier: 'free', credits_balance: 0, created_at: '2026-01-01' });
+      currentUser.profile.set({ id: 'u1', email: 'a@test.dev', fullName: 'A', username: 'a', avatarUrl: null, created_at: '2026-01-01' });
       component.showDropdown = true;
       component.showMobileMenu = true;
 
