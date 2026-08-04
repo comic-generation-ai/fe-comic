@@ -163,9 +163,16 @@ export class ComicEditorPage implements OnInit, OnDestroy {
 
   // Check validation of all inputs
   checkValidation(): void {
+    const trimmedTitle = (this.storyTitle || '').trim();
+    const trimmedScript = (this.storyScript || '').trim();
+    const wordCount = trimmedScript ? trimmedScript.split(/\s+/).filter(Boolean).length : 0;
+
+    const isTitleValid = trimmedTitle.length >= 2;
+    const isScriptValid = trimmedScript.length >= 15 && wordCount >= 2;
+
     this.isFormValid =
-      !!this.storyTitle && this.storyTitle.trim().length > 0 &&
-      !!this.storyScript && this.storyScript.trim().length > 0 &&
+      isTitleValid &&
+      isScriptValid &&
       !!this.artStyle &&
       !!this.selectedFrames && this.selectedFrames > 0;
   }

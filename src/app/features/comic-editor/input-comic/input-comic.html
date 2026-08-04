@@ -19,10 +19,16 @@
             </label>
             <div class="input-wrapper">
                 <input id="story-title-input" type="text" class="form-input"
+                    [class.input-invalid]="isTitleInvalid"
                     [placeholder]="'INPUT_COMIC.STORY_TITLE_PLACEHOLDER' | translate" [(ngModel)]="storyTitle"
                     (ngModelChange)="storyTitleChange.emit($event)" [disabled]="isGenerating"
                     [maxlength]="titleMaxLength" />
             </div>
+            @if (isTitleInvalid) {
+                <div class="validation-error">
+                    {{ 'INPUT_COMIC.TITLE_MIN_HINT' | translate }}
+                </div>
+            }
         </div>
 
         <!-- Story Script Section -->
@@ -40,12 +46,24 @@
             </label>
             <div class="textarea-wrapper">
                 <textarea id="story-script-textarea" class="form-textarea"
+                    [class.input-invalid]="isScriptInvalid"
                     [placeholder]="'INPUT_COMIC.STORY_SCRIPT_PLACEHOLDER' | translate" [(ngModel)]="storyScript"
                     (ngModelChange)="storyScriptChange.emit($event)" [disabled]="isGenerating"
                     [maxlength]="scriptMaxLength" rows="5"></textarea>
             </div>
-            <div class="char-counter" [class.char-counter-limit]="storyScript.length >= scriptMaxLength">
-                {{ storyScript.length }} / {{ scriptMaxLength }}
+            <div class="script-footer">
+                @if (isScriptInvalid) {
+                    <div class="validation-error">
+                        {{ 'INPUT_COMIC.SCRIPT_MIN_HINT' | translate }}
+                    </div>
+                } @else {
+                    <div class="input-hint">
+                        {{ 'INPUT_COMIC.SCRIPT_RECOMMEND_HINT' | translate }}
+                    </div>
+                }
+                <div class="char-counter" [class.char-counter-limit]="storyScript.length >= scriptMaxLength" [class.char-counter-invalid]="isScriptInvalid">
+                    {{ storyScript.length }} / {{ scriptMaxLength }}
+                </div>
             </div>
         </div>
 

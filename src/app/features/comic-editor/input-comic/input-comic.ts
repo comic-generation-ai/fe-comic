@@ -29,6 +29,20 @@ export class InputComic implements OnInit {
 
   readonly titleMaxLength = 150;
   readonly scriptMaxLength = 1000;
+  readonly titleMinLength = 2;
+  readonly scriptMinLength = 15;
+
+  get isTitleInvalid(): boolean {
+    const trimmed = (this.storyTitle || '').trim();
+    return trimmed.length > 0 && trimmed.length < this.titleMinLength;
+  }
+
+  get isScriptInvalid(): boolean {
+    const trimmed = (this.storyScript || '').trim();
+    if (trimmed.length === 0) return false;
+    const wordCount = trimmed.split(/\s+/).filter(Boolean).length;
+    return trimmed.length < this.scriptMinLength || wordCount < 2;
+  }
 
   ngOnInit(): void {
     // Notify parent of initial layout selection on init
