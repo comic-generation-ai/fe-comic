@@ -3,6 +3,8 @@
   flex-direction: column;
   height: 100%;
   width: 100%;
+  min-width: 0;
+  overflow: hidden;
   color: var(--text-primary, #ffffff);
   font-family: 'Outfit', sans-serif;
   box-sizing: border-box;
@@ -900,6 +902,10 @@
       overflow: hidden;
       display: flex;
       flex-direction: column;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
 
       .code-box-header {
         display: flex;
@@ -938,6 +944,10 @@
         max-height: calc(100vh - 380px);
         overflow-y: auto;
         overflow-x: hidden;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
 
         &::-webkit-scrollbar {
           width: 6px;
@@ -957,6 +967,9 @@
           white-space: pre-wrap;
           word-break: break-all;
           overflow-wrap: anywhere;
+          width: 100%;
+          max-width: 100%;
+          box-sizing: border-box;
         }
       }
     }
