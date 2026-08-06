@@ -306,23 +306,57 @@
         <p class="json-loading-text">{{ 'WORKSPACE_COMIC.LOADING_JSONL' | translate }}</p>
       </div>
       } @else {
-      <!-- Code Viewer Container -->
-      <div class="json-code-box">
-        <div class="code-box-header">
-          <div class="mac-dots">
-            <span class="dot red"></span>
-            <span class="dot yellow"></span>
-            <span class="dot green"></span>
+      <!-- Story Meta Header -->
+      <div class="json-story-meta">
+        <span class="material-symbols-outlined json-story-icon">auto_stories</span>
+        <div class="json-story-info">
+          <span class="json-story-title">{{ comicData?.title || 'Untitled Story' }}</span>
+          <span class="json-story-sub">{{ comicData?.panels?.length || 0 }} panels · {{ comicData?.jobId?.slice(0, 8) }}...</span>
+        </div>
+      </div>
+
+      <!-- Panel Cards -->
+      <div class="json-panel-list">
+        @for (p of comicData?.panels; track p.index; let i = $index) {
+        <div class="json-panel-card">
+          <div class="json-card-header">
+            <span class="json-panel-badge">#{{ (p.index ?? i) + 1 }}</span>
+            <span class="json-status-chip" [class.success]="p.status === 'SUCCESS'" [class.pending]="p.status !== 'SUCCESS'">
+              <span class="material-symbols-outlined chip-icon">{{ p.status === 'SUCCESS' ? 'check_circle' : 'pending' }}</span>
+              {{ p.status || 'PENDING' }}
+            </span>
           </div>
-          <span class="code-box-filename">story_script.jsonl</span>
+          @if (p.captionVi) {
+          <div class="json-field">
+            <span class="json-field-label">
+              <span class="material-symbols-outlined field-icon">chat_bubble</span>Lời thoại
+            </span>
+            <p class="json-field-value caption-text">{{ p.captionVi }}</p>
+          </div>
+          }
+          @if (p.speaker) {
+          <div class="json-field">
+            <span class="json-field-label">
+              <span class="material-symbols-outlined field-icon">person</span>Nhân vật
+            </span>
+            <p class="json-field-value speaker-text">{{ p.speaker }}</p>
+          </div>
+          }
+          @if (p.promptEn) {
+          <div class="json-field">
+            <span class="json-field-label">
+              <span class="material-symbols-outlined field-icon">psychology</span>AI Prompt
+            </span>
+            <p class="json-field-value prompt-text">{{ p.promptEn }}</p>
+          </div>
+          }
         </div>
-        <div class="json-code-container">
-          <pre class="json-code-block"><code>{{ jsonOutput }}</code></pre>
-        </div>
+        }
       </div>
       }
     </div>
     }
+
 
   </div>
 
