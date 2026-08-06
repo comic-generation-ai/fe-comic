@@ -134,9 +134,11 @@
 
   /* Tab Content area classes */
   .sidebar-tab-content {
-    flex-grow: 1;
+    flex: 1;
+    min-height: 0;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
 
     .tab-panel {
       display: flex;
@@ -895,6 +897,14 @@
     }
 
     // ── JSON Tab: Code Block Viewer ─────────────────────────────────────
+    .json-tab-panel {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-height: 0;
+      gap: 12px;
+    }
+
     .json-code-box {
       background: #1e1e2e;
       border: 1px solid rgba(255, 255, 255, 0.1);
@@ -902,9 +912,10 @@
       overflow: hidden;
       display: flex;
       flex-direction: column;
+      flex: 1;
+      min-height: 0;
       width: 100%;
       max-width: 100%;
-      min-width: 0;
       box-sizing: border-box;
 
       .code-box-header {
@@ -914,6 +925,7 @@
         padding: 8px 12px;
         background: #181825;
         border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        flex-shrink: 0;
 
         .mac-dots {
           display: flex;
@@ -941,12 +953,13 @@
 
       .json-code-container {
         padding: 12px;
-        max-height: calc(100vh - 220px);
+        flex: 1;
+        min-height: 200px;
+        max-height: 65vh;
         overflow-y: auto;
         overflow-x: hidden;
         width: 100%;
         max-width: 100%;
-        min-width: 0;
         box-sizing: border-box;
 
         &::-webkit-scrollbar {
@@ -954,7 +967,7 @@
         }
 
         &::-webkit-scrollbar-thumb {
-          background: rgba(255, 255, 255, 0.15);
+          background: rgba(255, 255, 255, 0.25);
           border-radius: 4px;
         }
 
