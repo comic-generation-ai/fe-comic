@@ -32,6 +32,61 @@ export class WorkspaceComic implements OnInit, OnDestroy {
   editorState!: EditorState;
   private sub = new Subscription();
 
+  // JSON viewer state
+  jsonMode: 'jsonl' | 'pretty' = 'jsonl';
+  isCopied: boolean = false;
+
+  get hasJsonData(): boolean {
+    if (!this.comicData || !this.comicData.panels || this.comicData.panels.length === 0) {
+      return false;
+    }
+    return this.comicData.panels.some((p: any) => !!(p.promptEn || p.captionVi || p.imageUrl));
+  }
+
+  get jsonOutput(): string {
+    if (!this.hasJsonData) {
+      return '';
+    }
+
+    const payload = this.comicData.panels.map((p: any, i: number) => ({
+      panel_number: p.index ?? i + 1,
+      image_prompt: p.promptEn || '',
+      caption_vi: p.captionVi || '',
+      speaker: p.speaker || undefined,
+      status: p.status || 'DONE',
+      image_url: p.imageUrl || null,
+    }));
+
+    if (this.jsonMode === 'jsonl') {
+      return payload.map((item: any) => JSON.stringify(item)).join('\n');
+    }
+
+    return JSON.stringify(
+      {
+        job_id: this.comicData.jobId || '',
+        story_title: this.comicData.title || '',
+        num_panels: payload.length,
+        panels: payload,
+      },
+      null,
+      2,
+    );
+  }
+
+  copyJson() {
+    if (!this.jsonOutput) return;
+    navigator.clipboard.writeText(this.jsonOutput).then(() => {
+      this.isCopied = true;
+      this.cdr.markForCheck();
+      this.cdr.detectChanges();
+      setTimeout(() => {
+        this.isCopied = false;
+        this.cdr.markForCheck();
+        this.cdr.detectChanges();
+      }, 2000);
+    });
+  }
+
   // Active dragging state variables
   activeDragType: 'move' | 'resize' | 'tail' | null = null;
   activeBubbleId: string | null = null;

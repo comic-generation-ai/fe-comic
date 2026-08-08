@@ -15,17 +15,13 @@ import { Subscription } from 'rxjs';
 export class EditorComic implements OnInit, OnDestroy {
   @Input() comicData: any = null;
   @Input() isGenerating: boolean = false;
-  @Input() activeTab: 'frame' | 'bubble' | 'text' | 'json' = 'frame';
-  @Output() activeTabChange = new EventEmitter<'frame' | 'bubble' | 'text' | 'json'>();
+  @Input() activeTab: 'frame' | 'bubble' | 'text' = 'frame';
+  @Output() activeTabChange = new EventEmitter<'frame' | 'bubble' | 'text'>();
 
   editorService = inject(ComicEditorService);
   private cdr = inject(ChangeDetectorRef);
   editorState!: EditorState;
   private sub = new Subscription();
-
-  // JSON viewer state
-  jsonMode: 'jsonl' | 'pretty' = 'jsonl';
-  isCopied: boolean = false;
 
   // Save-to-backend state for the sticky footer Save button — hiện thông báo
   // ngay phía trên nút Lưu thay vì dùng modal PopUp (backdrop full-screen của
@@ -208,7 +204,7 @@ export class EditorComic implements OnInit, OnDestroy {
   }
 
   // Set active sidebar tab
-  setTab(tab: 'frame' | 'bubble' | 'text' | 'json') {
+  setTab(tab: 'frame' | 'bubble' | 'text') {
     this.activeTab = tab;
     this.activeTabChange.emit(tab);
   }
@@ -270,38 +266,7 @@ export class EditorComic implements OnInit, OnDestroy {
     this.editorService.redo();
   }
 
-  get hasJsonData(): boolean {
-    if (!this.comicData || !this.comicData.panels || this.comicData.panels.length === 0) {
-      return false;
-    }
-    return this.comicData.panels.some((p: any) => !!(p.promptEn || p.captionVi));
-  }
 
-  get jsonOutput(): string {
-    if (!this.hasJsonData) {
-      return '';
-    }
-
-    const payload = this.comicData.panels.map((p: any, i: number) => ({
-      panel_number: p.index ?? i + 1,
-      image_prompt: p.promptEn || '',
-      caption_vi: p.captionVi || '',
-      speaker: p.speaker || undefined,
-      status: p.status || 'DONE',
-      image_url: p.imageUrl || null,
-    }));
-
-    return JSON.stringify(
-      {
-        job_id: this.comicData.jobId || '',
-        story_title: this.comicData.title || '',
-        num_panels: payload.length,
-        panels: payload,
-      },
-      null,
-      2,
-    );
-  }
 
   resetAll() {
     if (confirm('Bạn có chắc chắn muốn xóa hết tất cả các bong bóng thoại và đặt lại khung hình về mặc định?')) {

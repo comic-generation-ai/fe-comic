@@ -234,4 +234,63 @@
     </div>
     }
   </div>
+
+  <!-- AI Story JSONL Section below panels grid -->
+  @if (comicData || isGenerating) {
+  <section class="workspace-json-section" id="workspace-json-section">
+    <div class="json-section-header">
+      <div class="json-header-left">
+        <div class="json-title-row">
+          <span class="material-symbols-outlined json-icon">data_object</span>
+          <h3 class="json-title">{{ 'WORKSPACE_COMIC.JSON_MODAL_TITLE' | translate }}</h3>
+          @if (hasJsonData) {
+          <span class="json-live-badge">
+            <span class="pulse-dot"></span>
+            LIVE AI
+          </span>
+          }
+        </div>
+        <p class="json-subtitle">{{ 'WORKSPACE_COMIC.JSON_MODAL_SUBTITLE' | translate }}</p>
+      </div>
+
+      <div class="json-header-actions">
+        <div class="json-format-selector">
+          <button type="button" class="format-btn" [class.active]="jsonMode === 'jsonl'" (click)="jsonMode = 'jsonl'">
+            {{ 'WORKSPACE_COMIC.FORMAT_JSONL' | translate }}
+          </button>
+          <button type="button" class="format-btn" [class.active]="jsonMode === 'pretty'" (click)="jsonMode = 'pretty'">
+            {{ 'WORKSPACE_COMIC.FORMAT_PRETTY' | translate }}
+          </button>
+        </div>
+
+        <button type="button" class="btn-copy-json" (click)="copyJson()" [disabled]="!hasJsonData">
+          <span class="material-symbols-outlined copy-icon">{{ isCopied ? 'check' : 'content_copy' }}</span>
+          <span>{{ (isCopied ? 'WORKSPACE_COMIC.COPIED' : 'WORKSPACE_COMIC.COPY_JSON') | translate }}</span>
+        </button>
+      </div>
+    </div>
+
+    @if (!hasJsonData) {
+    <div class="json-loading-container">
+      <div class="json-pulse-spinner"></div>
+      <p class="json-loading-text">{{ 'WORKSPACE_COMIC.LOADING_JSONL' | translate }}</p>
+    </div>
+    } @else {
+    <!-- Code Box Container -->
+    <div class="json-code-box">
+      <div class="code-box-header">
+        <div class="mac-dots">
+          <span class="dot red"></span>
+          <span class="dot yellow"></span>
+          <span class="dot green"></span>
+        </div>
+        <span class="code-box-filename">{{ jsonMode === 'jsonl' ? 'story_script.jsonl' : 'story_script.json' }}</span>
+      </div>
+      <div class="json-code-container">
+        <pre class="json-code-block"><code>{{ jsonOutput }}</code></pre>
+      </div>
+    </div>
+    }
+  </section>
+  }
 </div>

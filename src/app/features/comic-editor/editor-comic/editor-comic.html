@@ -46,10 +46,6 @@
       <span class="material-symbols-outlined tab-icon">text_fields</span>
       <span class="tab-label">{{ 'EDITOR_COMIC.TAB_TEXT' | translate }}</span>
     </button>
-    <button class="tab-btn" [class.active]="activeTab === 'json'" (click)="setTab('json')">
-      <span class="material-symbols-outlined tab-icon">data_object</span>
-      <span class="tab-label">{{ 'EDITOR_COMIC.TAB_JSON' | translate }}</span>
-    </button>
   </nav>
 
   <!-- Tab Content Area -->
@@ -283,48 +279,6 @@
       }
     </div>
     }
-
-    <!-- TAB 4: AI STORY JSON -->
-    @if (activeTab === 'json') {
-    <div class="tab-panel animate-fade json-tab-panel">
-      <div class="control-group">
-        <div class="control-label-row">
-          <span class="control-label">{{ 'WORKSPACE_COMIC.JSON_MODAL_TITLE' | translate }}</span>
-          @if (hasJsonData) {
-          <span class="json-live-badge">
-            <span class="pulse-dot"></span>
-            LIVE AI
-          </span>
-          }
-        </div>
-        <p class="panel-subtitle-hint">{{ 'WORKSPACE_COMIC.JSON_MODAL_SUBTITLE' | translate }}</p>
-      </div>
-
-      @if (!hasJsonData) {
-      <div class="json-loading-container">
-        <div class="json-pulse-spinner"></div>
-        <p class="json-loading-text">{{ 'WORKSPACE_COMIC.LOADING_JSONL' | translate }}</p>
-      </div>
-      } @else {
-      <!-- Code Viewer Container -->
-      <div class="json-code-box">
-        <div class="code-box-header">
-          <div class="mac-dots">
-            <span class="dot red"></span>
-            <span class="dot yellow"></span>
-            <span class="dot green"></span>
-          </div>
-          <span class="code-box-filename">story_script.json</span>
-        </div>
-        <div class="json-code-container">
-          <pre class="json-code-block"><code>{{ jsonOutput }}</code></pre>
-        </div>
-      </div>
-      }
-    </div>
-    }
-
-
   </div>
 
   <!-- Premium Sticky Footer for Saving / Exporting -->

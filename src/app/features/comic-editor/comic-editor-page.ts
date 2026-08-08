@@ -51,7 +51,7 @@ export class ComicEditorPage implements OnInit, OnDestroy {
   // Page level state variables requested for step state management
   viewMode: 'input' | 'edit' = 'input'; // unified viewMode
   isEditorPanelOpen: boolean = false; // editor-comic tab starts closed — workspace-comic fills the screen by default
-  editorTab: 'frame' | 'bubble' | 'text' | 'json' = 'frame';
+  editorTab: 'frame' | 'bubble' | 'text' = 'frame';
   isFormValid: boolean = false; // to enable/disable generate button
   isGenerating: boolean = false; // loading state
   generatedResult: GeneratedResult | null = null; // result passed to editor and workspace
@@ -317,12 +317,14 @@ export class ComicEditorPage implements OnInit, OnDestroy {
     this.isEditorPanelOpen = !this.isEditorPanelOpen;
   }
 
-  // Open editor-comic side panel and switch directly to the JSON tab
+  // Scroll down to the JSON section in workspace-comic
   openJsonTab(): void {
-    this.isEditorPanelOpen = true;
-    this.editorTab = 'json';
-    this.cdr.markForCheck();
-    this.cdr.detectChanges();
+    setTimeout(() => {
+      const jsonElem = document.getElementById('workspace-json-section');
+      if (jsonElem) {
+        jsonElem.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 50);
   }
 
   // Go back to input configuration panel (Hủy job & xóa project nếu đang vẽ mà chưa xong)
