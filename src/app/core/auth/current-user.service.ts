@@ -23,9 +23,6 @@ export class CurrentUserService {
     });
   }
 
-  // Cập nhật profile thật lên server; đồng bộ lại signal khi thành công
-  // để mọi nơi đang bind currentUser.profile() (header, information-page...)
-  // tự cập nhật theo.
   updateProfile(payload: UpdateProfilePayload): Observable<UserProfile> {
     return this.userApi.updateMe(payload).pipe(tap((profile) => this.profile.set(profile)));
   }

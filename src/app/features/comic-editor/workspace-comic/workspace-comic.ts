@@ -373,25 +373,20 @@ export class WorkspaceComic implements OnInit, OnDestroy {
     return `M ${ax} ${ay} L ${tx} ${ty} L ${bx} ${by}`;
   }
 
-  // Premium Canvas Export logic at 2x quality with custom layout padding
   exportComicAsImage() {
     const gridElement = this.el.nativeElement.querySelector('.comic-grid-layout');
     if (!gridElement) return;
 
     const rect = gridElement.getBoundingClientRect();
-    const outerPadding = 30; // 30px padding on all sides for premium comic book page layout
-
-    // Create 2x resolution canvas
+    const outerPadding = 30; 
     const canvas = document.createElement('canvas');
     canvas.width = (rect.width + outerPadding * 2) * 2;
     canvas.height = (rect.height + outerPadding * 2) * 2;
     const ctx = canvas.getContext('2d')!;
 
-    // Enable high quality scaling image smoothing
     ctx.imageSmoothingEnabled = true;
     ctx.imageSmoothingQuality = 'high';
 
-    // Draw solid white page background (incorporates margins & gutters)
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -405,7 +400,6 @@ export class WorkspaceComic implements OnInit, OnDestroy {
       const cw = cardRect.width * 2;
       const ch = cardRect.height * 2;
 
-      // Draw standard panel background and border-radius rounded corners on canvas
       ctx.save();
       ctx.beginPath();
       const radius = (this.editorState.borderRadius || 8) * 2;
@@ -427,7 +421,6 @@ export class WorkspaceComic implements OnInit, OnDestroy {
             resolve();
           };
           img.onerror = () => {
-            // Draw gradient fallback
             const grad = ctx.createLinearGradient(cx, cy, cx + cw, cy + ch);
             grad.addColorStop(0, '#f3f4f6');
             grad.addColorStop(1, '#e5e7eb');
@@ -438,7 +431,6 @@ export class WorkspaceComic implements OnInit, OnDestroy {
         });
         imagePromises.push(drawImgPromise);
       } else {
-        // Draw standard empty placeholder gradient
         const grad = ctx.createLinearGradient(cx, cy, cx + cw, cy + ch);
         grad.addColorStop(0, '#1e1b4b');
         grad.addColorStop(1, '#312e81');
@@ -474,10 +466,6 @@ export class WorkspaceComic implements OnInit, OnDestroy {
           ctx.restore();
         }
 
-        // Draw speech bubbles for this panel
-        // Quy đổi từ hệ toạ độ tham chiếu (viewBox) của bubble sang px canvas thật —
-        // phải khớp với cách SVG hiển thị trên màn hình (xem bubbleViewBoxSize), nếu
-        // không bong bóng xuất ra ảnh sẽ lệch tỉ lệ so với những gì người dùng thấy khi edit.
         const bubbles = this.getBubblesForPanel(idx);
         const scale = cw / this.bubbleViewBoxSize;
         bubbles.forEach((b) => {
@@ -492,12 +480,10 @@ export class WorkspaceComic implements OnInit, OnDestroy {
 
           ctx.save();
 
-          // Bubble outline styles
           ctx.lineWidth = 4;
           ctx.strokeStyle = '#000000';
           ctx.fillStyle = '#ffffff';
 
-          // 1. Draw Tail shapes
           if (b.type !== 'cloud' && b.hasTail !== false) {
             const angle = Math.atan2(b.tailY, b.tailX);
             const delta = 0.28;
@@ -509,7 +495,6 @@ export class WorkspaceComic implements OnInit, OnDestroy {
             const bx_pt = bx + rx * Math.cos(angle + delta);
             const by_pt = by + ry * Math.sin(angle + delta);
 
-            // Tail fill
             ctx.beginPath();
             ctx.moveTo(ax, ay);
             ctx.lineTo(tx, ty);
@@ -518,7 +503,6 @@ export class WorkspaceComic implements OnInit, OnDestroy {
             ctx.fill();
           }
 
-          // 2. Draw Bubble body shapes
           ctx.beginPath();
           if (b.type === 'round') {
             ctx.ellipse(bx, by, bw / 2, bh / 2, 0, 0, 2 * Math.PI);
@@ -529,7 +513,6 @@ export class WorkspaceComic implements OnInit, OnDestroy {
             ctx.fill();
             ctx.stroke();
           } else if (b.type === 'cloud') {
-            // Generate cloud path on canvas
             const rx = bw / 2 - 24;
             const ry = bh / 2 - 24;
             const steps = 10;
@@ -556,7 +539,6 @@ export class WorkspaceComic implements OnInit, OnDestroy {
             ctx.fill();
             ctx.stroke();
 
-            // Draw 3 small circles for cloud tail
             if (b.hasTail !== false) {
               const circles = [
                 { r: 20, d: 0.3 },
@@ -574,7 +556,6 @@ export class WorkspaceComic implements OnInit, OnDestroy {
             }
           }
 
-          // 3. Draw Tail Stroke overlay to hide baseline
           if (b.type !== 'cloud' && b.hasTail !== false) {
             const angle = Math.atan2(b.tailY, b.tailX);
             const delta = 0.28;
@@ -586,7 +567,6 @@ export class WorkspaceComic implements OnInit, OnDestroy {
             const bx_pt = bx + rx * Math.cos(angle + delta);
             const by_pt = by + ry * Math.sin(angle + delta);
 
-            // Re-fill white base of tail to cover bubble border segment
             ctx.beginPath();
             ctx.moveTo(ax, ay);
             ctx.lineTo(tx, ty);
@@ -595,7 +575,6 @@ export class WorkspaceComic implements OnInit, OnDestroy {
             ctx.fillStyle = '#ffffff';
             ctx.fill();
 
-            // Draw tail border lines
             ctx.beginPath();
             ctx.moveTo(ax, ay);
             ctx.lineTo(tx, ty);
@@ -605,13 +584,11 @@ export class WorkspaceComic implements OnInit, OnDestroy {
             ctx.stroke();
           }
 
-          // 4. Draw Text with custom fonts and wrap text correctly
           if (b.text) {
             ctx.fillStyle = b.fontColor;
             ctx.textAlign = b.textAlign;
             ctx.textBaseline = 'middle';
             const fSize = b.fontSize * scale;
-            // Map common font family fallbacks
             let fFamily = b.fontFamily;
             if (fFamily === 'Bangers') fFamily = 'Bangers, Impact, sans-serif';
             else if (fFamily === 'Comic Neue') fFamily = '"Comic Neue", "Comic Sans MS", sans-serif';
@@ -655,7 +632,6 @@ export class WorkspaceComic implements OnInit, OnDestroy {
         });
       });
 
-      // Trigger download
       const link = document.createElement('a');
       link.download = `comic_masterpiece_${Date.now()}.png`;
       link.href = canvas.toDataURL('image/png');

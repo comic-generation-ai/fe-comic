@@ -67,10 +67,8 @@
       <div class="panel-content-area">
         @if (comicData) {
         @if (getPanelData(idx)?.imageUrl) {
-        <!-- Ảnh thật do image-ai vẽ, lấy qua liveStatus.panels[idx].imageUrl khi polling job -->
         <img [src]="getPanelData(idx)!.imageUrl" class="panel-image" alt="Comic Panel Image">
 
-        <!-- Hover quick panel overlay to add speech bubbles easily -->
         <div class="panel-action-overlay">
           <span class="overlay-title">{{ 'WORKSPACE_COMIC.ADD_BUBBLE_TITLE' | translate }}</span>
           <div class="overlay-btn-group">
@@ -83,12 +81,10 @@
           </div>
         </div>
         } @else if (getPanelData(idx)?.status === 'FAILED') {
-        <!-- Panel này lỗi khi sinh ảnh — không chặn hiển thị các panel khác -->
         <div class="panel-error-state">
-          <span>⚠️ {{ getPanelData(idx)?.errorMessage || ('WORKSPACE_COMIC.PANEL_FAILED' | translate) }}</span>
+          <span>{{ getPanelData(idx)?.errorMessage || ('WORKSPACE_COMIC.PANEL_FAILED' | translate) }}</span>
         </div>
         } @else {
-        <!-- Đang chờ story-ai/image-ai sinh xong panel này -->
         <div class="panel-loading-state">
           <span class="panel-spinner"></span>
           <span>{{ 'WORKSPACE_COMIC.PANEL_GENERATING' | translate }}</span>

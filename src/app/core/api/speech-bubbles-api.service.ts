@@ -27,17 +27,12 @@ export class SpeechBubblesApiService {
 
   constructor(private http: HttpClient) {}
 
-  // POST /api/speech-bubbles — bong bóng vừa thêm ở FE (id tạm local) chưa tồn tại trong DB
   create(dto: CreateSpeechBubbleRequest): Observable<SpeechBubbleDto> {
     return this.http.post<SpeechBubbleDto>(this.baseUrl, dto);
   }
-
-  // PATCH /api/speech-bubbles/:id — bong bóng đã có sẵn trong DB (do BE sinh hoặc đã save trước đó)
   update(id: string, dto: UpdateSpeechBubbleRequest): Observable<SpeechBubbleDto> {
     return this.http.patch<SpeechBubbleDto>(`${this.baseUrl}/${id}`, dto);
   }
-
-  // DELETE /api/speech-bubbles/:id — bong bóng đã bị xoá ở FE nhưng vẫn còn tồn tại trong DB
   remove(id: string): Observable<SpeechBubbleDto> {
     return this.http.delete<SpeechBubbleDto>(`${this.baseUrl}/${id}`);
   }

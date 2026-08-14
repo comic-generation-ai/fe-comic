@@ -15,7 +15,7 @@
     <div class="modal-content">
       <!-- Photo Editor -->
       <section class="photo-editor-section">
-        <div class="modal-avatar-wrapper" (click)="triggerFileInput(fileInput)">
+        <div class="modal-avatar-wrapper">
           <img *ngIf="localProfile.avatar; else fallbackAvatar" [src]="localProfile.avatar" alt="Preview Avatar" class="avatar-preview-img" />
           <ng-template #fallbackAvatar>
             <div class="fallback-avatar-container">{{ avatarInitial }}</div>
@@ -30,31 +30,12 @@
         </div>
 
         <div class="photo-controls-row">
-          <button class="btn-text-action btn-change" (click)="triggerFileInput(fileInput)">
+          <button class="btn-text-action btn-change">
             {{ 'PROFILE.EDIT_MODAL.CHANGE_PHOTO' | translate }}
           </button>
           <button class="btn-text-action btn-remove" (click)="removePhoto()">
             {{ 'PROFILE.EDIT_MODAL.REMOVE' | translate }}
           </button>
-        </div>
-
-        <!-- Hidden input for file picking -->
-        <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" class="hidden-file-input" />
-
-        <!-- Preset avatar picker — ẩn tự động nếu file chưa tồn tại trong assets/images/avatars/ -->
-        <div class="preset-avatar-row">
-          <span class="preset-avatar-label">{{ 'PROFILE.EDIT_MODAL.CHOOSE_DEFAULT' | translate }}</span>
-          <div class="preset-avatar-grid">
-            <button
-              type="button"
-              class="preset-avatar-btn"
-              *ngFor="let preset of presetAvatars"
-              [class.selected]="localProfile.avatar === preset"
-              (click)="selectPreset(preset)"
-            >
-              <img [src]="preset" alt="Preset avatar" (error)="onPresetError($event)" />
-            </button>
-          </div>
         </div>
       </section>
 
