@@ -23,14 +23,10 @@ export class EditorComic implements OnInit, OnDestroy {
   editorState!: EditorState;
   private sub = new Subscription();
 
-  // Save-to-backend state for the sticky footer Save button — hiện thông báo
-  // ngay phía trên nút Lưu thay vì dùng modal PopUp (backdrop full-screen của
-  // PopUp từng che mất thao tác chỉnh bong bóng dù "ẩn").
   isSaving = false;
   saveStatus: 'idle' | 'success' | 'error' = 'idle';
   private saveStatusTimeout: any;
 
-  // Get active panel index from service
   get targetPanelIndex(): number {
     return this.editorState ? this.editorState.activePanelIndex : 0;
   }
@@ -43,9 +39,6 @@ export class EditorComic implements OnInit, OnDestroy {
     this.editorService.triggerExport();
   }
 
-  // Persist bubble positions/sizes/shapes/text to BE so re-opening this project
-  // from story-board loads exactly what was edited here, instead of the
-  // original auto-generated layout.
   saveProject() {
     if (this.isSaving) return;
     this.isSaving = true;
@@ -76,14 +69,11 @@ export class EditorComic implements OnInit, OnDestroy {
     });
   }
 
-  // App chạy zoneless — cập nhật state trong subscribe()/setTimeout() không tự vẽ
-  // lại view, phải ép change detection thủ công thì thông báo mới thật sự hiện ra.
   private refreshView() {
     this.cdr.markForCheck();
     this.cdr.detectChanges();
   }
 
-  // Preset list of professional comic fonts
   fontFamilies = [
     { name: 'EDITOR_COMIC.FONTS.COMIC_NEUE', value: 'Comic Neue' },
     { name: 'EDITOR_COMIC.FONTS.BANGERS', value: 'Bangers' },
@@ -92,21 +82,18 @@ export class EditorComic implements OnInit, OnDestroy {
     { name: 'EDITOR_COMIC.FONTS.OUTFIT', value: 'Outfit' }
   ];
 
-  // Bubble shape metadata (icon + label) shared by the "add" and "change shape" grids
   bubbleShapes: { type: SpeechBubble['type']; icon: string; nameKey: string }[] = [
     { type: 'round', icon: 'chat_bubble', nameKey: 'EDITOR_COMIC.SHAPE_ROUND' },
     { type: 'square', icon: 'crop_square', nameKey: 'EDITOR_COMIC.SHAPE_SQUARE' },
     { type: 'cloud', icon: 'cloud', nameKey: 'EDITOR_COMIC.SHAPE_CLOUD' },
   ];
 
-  // Friendly line-height presets instead of a raw numeric multiplier
   lineHeightPresets: { key: string; value: number; labelKey: string }[] = [
     { key: 'compact', value: 1.0, labelKey: 'EDITOR_COMIC.LINE_HEIGHT_COMPACT' },
     { key: 'normal', value: 1.3, labelKey: 'EDITOR_COMIC.LINE_HEIGHT_NORMAL' },
     { key: 'relaxed', value: 1.6, labelKey: 'EDITOR_COMIC.LINE_HEIGHT_RELAXED' },
   ];
 
-  // Text alignment options rendered as icon buttons
   alignOptions: { value: 'left' | 'center' | 'right'; icon: string; titleKey: string }[] = [
     { value: 'left', icon: 'format_align_left', titleKey: 'EDITOR_COMIC.ALIGN_LEFT_TITLE' },
     { value: 'center', icon: 'format_align_center', titleKey: 'EDITOR_COMIC.ALIGN_CENTER_TITLE' },
@@ -128,8 +115,6 @@ export class EditorComic implements OnInit, OnDestroy {
         : 'EDITOR_COMIC.TYPES.CLOUD';
   }
 
-  // Nearest line-height preset key for the currently selected bubble, used to
-  // highlight the active pill button without showing the raw multiplier value.
   activeLineHeightPreset(lineHeight: number | undefined): string {
     if (lineHeight === undefined) return 'normal';
     let closest = this.lineHeightPresets[0];
@@ -151,11 +136,9 @@ export class EditorComic implements OnInit, OnDestroy {
         const prevSelectedId = this.editorState?.selectedBubbleId;
         this.editorState = state;
 
-        // 1. If active panel index changed, focus 'frame' tab
         if (state.activePanelIndex !== undefined && state.activePanelIndex !== prevPanelIndex) {
           this.activeTab = 'frame';
 
-          // Tự động bỏ chọn bong bóng nếu nó không thuộc panel đang chọn
           if (state.selectedBubbleId) {
             const currentBubble = state.bubbles.find(b => b.id === state.selectedBubbleId);
             if (currentBubble && currentBubble.panelIndex !== state.activePanelIndex) {
@@ -164,12 +147,10 @@ export class EditorComic implements OnInit, OnDestroy {
           }
         }
 
-        // 2. If selected bubble ID changed (and is not null), focus 'text' tab
         if (state.selectedBubbleId && state.selectedBubbleId !== prevSelectedId) {
           this.activeTab = 'text';
         }
 
-        // App chạy zoneless — subscribe() ngoài event DOM không tự trigger CD.
         this.refreshView();
       })
     );
@@ -185,7 +166,6 @@ export class EditorComic implements OnInit, OnDestroy {
     return Array.from({ length: this.comicData.frameCount || 4 }, (_, i) => i);
   }
 
-  // Get currently selected speech bubble
   get selectedBubble(): SpeechBubble | null {
     if (!this.editorState || !this.editorState.selectedBubbleId) return null;
     return this.editorState.bubbles.find(b => b.id === this.editorState.selectedBubbleId) || null;
@@ -203,13 +183,11 @@ export class EditorComic implements OnInit, OnDestroy {
     }
   }
 
-  // Set active sidebar tab
   setTab(tab: 'frame' | 'bubble' | 'text') {
     this.activeTab = tab;
     this.activeTabChange.emit(tab);
   }
 
-  // Frame modifiers (Save history first then update state)
   onBorderWidthChange(value: number) {
     this.editorService.updateState({ borderWidth: value });
   }
@@ -226,23 +204,19 @@ export class EditorComic implements OnInit, OnDestroy {
     this.editorService.updateState({ gutterSize: value });
   }
 
-  // Bubble modifiers
   addBubble(type: 'round' | 'square' | 'cloud') {
     this.editorService.addBubble(this.targetPanelIndex, type);
-    this.activeTab = 'text'; // Auto focus text customization on add
+    this.activeTab = 'text';
   }
 
   deleteSelectedBubble() {
     this.editorService.deleteBubblesOnPanel(this.targetPanelIndex);
   }
 
-  // Change the shape of the currently selected bubble (round/square/cloud)
-  // — distinct from addBubble(), which always creates a brand new bubble.
   changeSelectedBubbleShape(type: 'round' | 'square' | 'cloud') {
     this.updateSelectedBubble({ type });
   }
 
-  // Text details modifiers
   updateSelectedBubble(partial: Partial<SpeechBubble>, skipHistory = false) {
     if (this.editorState.selectedBubbleId) {
       this.editorService.updateBubble(this.editorState.selectedBubbleId, partial, skipHistory);

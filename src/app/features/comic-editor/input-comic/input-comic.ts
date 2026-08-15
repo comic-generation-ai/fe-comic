@@ -45,7 +45,6 @@ export class InputComic implements OnInit {
   }
 
   ngOnInit(): void {
-    // Notify parent of initial layout selection on init
     this.onFrameCountChange.emit(this.frameCount);
   }
 

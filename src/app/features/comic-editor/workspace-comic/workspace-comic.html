@@ -68,18 +68,6 @@
         @if (comicData) {
         @if (getPanelData(idx)?.imageUrl) {
         <img [src]="getPanelData(idx)!.imageUrl" class="panel-image" alt="Comic Panel Image">
-
-        <div class="panel-action-overlay">
-          <span class="overlay-title">{{ 'WORKSPACE_COMIC.ADD_BUBBLE_TITLE' | translate }}</span>
-          <div class="overlay-btn-group">
-            <button class="overlay-btn btn-rnd" (click)="addSpeechBubbleToPanel(idx, 'round', $event)" [title]="'WORKSPACE_COMIC.BUBBLE_ROUND' | translate">💬
-              {{ 'WORKSPACE_COMIC.BUBBLE_ROUND' | translate }}</button>
-            <button class="overlay-btn btn-sq" (click)="addSpeechBubbleToPanel(idx, 'square', $event)" [title]="'WORKSPACE_COMIC.BUBBLE_SQUARE' | translate">🔲
-              {{ 'WORKSPACE_COMIC.BUBBLE_SQUARE' | translate }}</button>
-            <button class="overlay-btn btn-cld" (click)="addSpeechBubbleToPanel(idx, 'cloud', $event)" [title]="'WORKSPACE_COMIC.BUBBLE_CLOUD' | translate">💭
-              {{ 'WORKSPACE_COMIC.BUBBLE_CLOUD' | translate }}</button>
-          </div>
-        </div>
         } @else if (getPanelData(idx)?.status === 'FAILED') {
         <div class="panel-error-state">
           <span>{{ getPanelData(idx)?.errorMessage || ('WORKSPACE_COMIC.PANEL_FAILED' | translate) }}</span>
@@ -106,10 +94,6 @@
 
       <!-- SVG Speech Bubble Vector Layer (Only when image is generated) -->
       @if (comicData) {
-      <!-- viewBox cố định 0 0 bubbleViewBoxSize bubbleViewBoxSize: bắt toàn bộ bong bóng
-           (w/h/tailX/tailY tính bằng đơn vị tham chiếu) tự co giãn đúng tỉ lệ theo kích
-           thước thật của panel-card (vuông, aspect-ratio 1/1), thay vì giữ nguyên px
-           tuyệt đối khi panel co lại lúc mở tab editor-comic. -->
       <svg class="vector-overlay-layer"
         [attr.viewBox]="'0 0 ' + bubbleViewBoxSize + ' ' + bubbleViewBoxSize"
         preserveAspectRatio="none">
@@ -125,19 +109,17 @@
           <g [attr.transform]="'translate(' + (-bubble.w / 2) + ', ' + (-bubble.h / 2) + ')'"
             (mousedown)="selectBubble(bubble.id, $event)">
 
-            <!-- Bounding Box dotted outline shown when selected -->
+            <!-- Vẽ outline cho các thoại khi được chọn -->
             @if (editorState.selectedBubbleId === bubble.id) {
             <rect [attr.x]="-6" [attr.y]="-6" [attr.width]="bubble.w + 12" [attr.height]="bubble.h + 12" fill="none"
               stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="3,3" rx="4" />
             }
 
-            <!-- Main bubble shape fill and outline -->
+            <!-- Các loại hợp thoại -->
             @if (bubble.type === 'round') {
             <ellipse [attr.cx]="bubble.w / 2" [attr.cy]="bubble.h / 2" [attr.rx]="bubble.w / 2 - 2"
               [attr.ry]="bubble.h / 2 - 2" fill="#ffffff" stroke="#000000" stroke-width="3" class="bubble-body-shape"
               (mousedown)="startDrag($event, bubble, 'move')" />
-
-            <!-- Tail elements for seamless outline -->
             <polygon [attr.points]="getTailPoints(bubble)" fill="#ffffff" stroke="none" />
             <path [attr.d]="getTailStroke(bubble)" fill="none" stroke="#000000" stroke-width="3"
               stroke-linecap="round" />
@@ -147,8 +129,6 @@
             <rect x="2" y="2" [attr.width]="bubble.w - 4" [attr.height]="bubble.h - 4" rx="14" ry="14" fill="#ffffff"
               stroke="#000000" stroke-width="3" class="bubble-body-shape"
               (mousedown)="startDrag($event, bubble, 'move')" />
-
-            <!-- Tail elements for seamless outline -->
             <polygon [attr.points]="getTailPoints(bubble)" fill="#ffffff" stroke="none" />
             <path [attr.d]="getTailStroke(bubble)" fill="none" stroke="#000000" stroke-width="3"
               stroke-linecap="round" />
@@ -158,7 +138,7 @@
             <path [attr.d]="getCloudPath(bubble.w, bubble.h)" fill="#ffffff" stroke="#000000" stroke-width="3"
               class="bubble-body-shape" (mousedown)="startDrag($event, bubble, 'move')" />
 
-            <!-- Tail is represented by 3 circles of decreasing size towards the pointer target -->
+            <!-- Đuôi thoại suy nghĩ  -->
             @if (bubble.hasTail !== false) {
             <g class="cloud-tail">
               <circle [attr.cx]="bubble.w/2 + bubble.tailX * 0.3" [attr.cy]="bubble.h/2 + bubble.tailY * 0.3" r="9"
@@ -171,7 +151,7 @@
             }
             }
 
-            <!-- Inner text overlay via foreignObject for seamless native HTML layout -->
+            <!-- Điền chữ -->
             <foreignObject x="12" y="12" [attr.width]="bubble.w - 24" [attr.height]="bubble.h - 24"
               style="pointer-events: auto;">
               <div xmlns="http://www.w3.org/1999/xhtml" class="inner-bubble-text-container"
@@ -194,16 +174,15 @@
               </div>
             </foreignObject>
 
-            <!-- Custom handles only displayed when bubble is selected -->
+            <!-- Nút điều khiển mấy cái khớp kéo co dãn -->
             @if (editorState.selectedBubbleId === bubble.id) {
             <g class="selection-handles">
-              <!-- Resize handle (bottom-right) with expanded click target -->
               <g class="resize-handle-group" (mousedown)="startDrag($event, bubble, 'resize')" style="cursor: nwse-resize; pointer-events: auto;">
                 <circle [attr.cx]="bubble.w" [attr.cy]="bubble.h" r="16" fill="transparent" />
                 <circle [attr.cx]="bubble.w" [attr.cy]="bubble.h" r="7" class="handle-knob resize-knob" style="pointer-events: none;" />
               </g>
 
-              <!-- Tail direct manipulation target knob with expanded click target -->
+              <!-- Kéo cái đuôi thoại -->
               @if (bubble.hasTail !== false) {
               <g class="tail-handle-group" (mousedown)="startDrag($event, bubble, 'tail')" style="cursor: pointer; pointer-events: auto;">
                 <circle [attr.cx]="bubble.w/2 + bubble.tailX" [attr.cy]="bubble.h/2 + bubble.tailY" r="16" fill="transparent" />
@@ -211,7 +190,7 @@
               </g>
               }
 
-              <!-- Deletion action quick button -->
+              <!-- Nút xóa thoại -->
               <g class="btn-delete-bubble" (click)="deleteBubble(bubble.id, $event)"
                 [attr.transform]="'translate(' + (bubble.w) + ', -8)'" style="pointer-events: auto;">
                 <circle cx="0" cy="0" r="10" fill="#ef4444" stroke="#ffffff" stroke-width="1.5" />
@@ -274,14 +253,6 @@
     } @else {
     <!-- Code Box Container -->
     <div class="json-code-box">
-      <div class="code-box-header">
-        <div class="mac-dots">
-          <span class="dot red"></span>
-          <span class="dot yellow"></span>
-          <span class="dot green"></span>
-        </div>
-        <span class="code-box-filename">{{ jsonMode === 'jsonl' ? 'story_script.jsonl' : 'story_script.json' }}</span>
-      </div>
       <div class="json-code-container">
         <pre class="json-code-block"><code>{{ jsonOutput }}</code></pre>
       </div>

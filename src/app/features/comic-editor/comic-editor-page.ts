@@ -12,7 +12,6 @@ import { Subscription, interval, switchMap, takeWhile, forkJoin, of } from 'rxjs
 import { catchError } from 'rxjs/operators';
 import { I18nService } from '../../core/i18n/i18n.service';
 
-// Frame.status (be-comic) -> Panel.status (dùng chung UI với luồng generate mới)
 const FRAME_STATUS_MAP: Record<FrameDto['status'], Panel['status']> = {
   PENDING: 'PENDING',
   GENERATING: 'PROCESSING',
@@ -42,19 +41,16 @@ interface GeneratedResult {
   styleUrl: './comic-editor-page.scss',
 })
 export class ComicEditorPage implements OnInit, OnDestroy {
-  // Input states managed in parent for synchronization
   storyTitle: string = '';
   storyScript: string = '';
   artStyle: string = 'manga';
-  selectedFrames: number = 4; // layoutType
-
-  // Page level state variables requested for step state management
-  viewMode: 'input' | 'edit' = 'input'; // unified viewMode
-  isEditorPanelOpen: boolean = false; // editor-comic tab starts closed — workspace-comic fills the screen by default
+  selectedFrames: number = 4;
+  viewMode: 'input' | 'edit' = 'input';
+  isEditorPanelOpen: boolean = false;
   editorTab: 'frame' | 'bubble' | 'text' = 'frame';
-  isFormValid: boolean = false; // to enable/disable generate button
-  isGenerating: boolean = false; // loading state
-  generatedResult: GeneratedResult | null = null; // result passed to editor and workspace
+  isFormValid: boolean = false;
+  isGenerating: boolean = false;
+  generatedResult: GeneratedResult | null = null;
   generationError: string | null = null;
   private activeProjectId: string = '';
 
@@ -75,7 +71,6 @@ export class ComicEditorPage implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    // Mở lại 1 project có sẵn từ story-board: /app/comic-editor?projectId=xxx
     const projectId = this.route.snapshot.queryParamMap.get('projectId');
     if (projectId) {
       this.loadExistingProject(projectId);
@@ -87,7 +82,6 @@ export class ComicEditorPage implements OnInit, OnDestroy {
     this.pollSub?.unsubscribe();
   }
 
-  // Load 1 project đã tạo trước đó (từ story-board) và hiển thị lại các ảnh đã sinh trong workspace
   private loadExistingProject(projectId: string): void {
     this.isGenerating = true;
     this.generationError = null;
@@ -187,7 +181,6 @@ export class ComicEditorPage implements OnInit, OnDestroy {
     this.checkValidation();
   }
 
-  // Triggered when user clicks Generate Comic
   generateComic(): void {
     this.checkValidation();
     if (!this.isFormValid || this.isGenerating) return;
@@ -195,12 +188,11 @@ export class ComicEditorPage implements OnInit, OnDestroy {
     this.isGenerating = true;
     this.generationError = null;
     this.isEditorPanelOpen = false;
-    this.editorService.reset(); // Reset central editor state
+    this.editorService.reset(); 
 
     this.pipelineSub?.unsubscribe();
     this.pollSub?.unsubscribe();
 
-    // 1) Tạo project thật (không còn projectId hard-code) 2) tạo job sinh truyện trên project đó
     this.pipelineSub = this.projectApi
       .createProject({
         title: this.storyTitle,
@@ -249,14 +241,13 @@ export class ComicEditorPage implements OnInit, OnDestroy {
       });
   }
 
-  // Poll GET /api/generation-jobs/:id mỗi 2s cho tới khi job xong (COMPLETED/FAILED/CANCELLED)
   private startPolling(jobId: string): void {
     this.pollSub = interval(2000)
       .pipe(
         switchMap(() => this.comicApi.getJobStatus(jobId)),
         takeWhile(
           (res) => res.localJob.status === 'QUEUED' || res.localJob.status === 'RUNNING',
-          true, // vẫn xử lý lần emit cuối (khi job vừa chuyển sang trạng thái kết thúc)
+          true,
         ),
       )
       .subscribe({
@@ -288,9 +279,6 @@ export class ComicEditorPage implements OnInit, OnDestroy {
       case 'COMPLETED':
         this.isGenerating = false;
         this.generatedResult.currentStep = this.i18nService.lang === 'vi' ? 'Hoàn tất' : 'Completed';
-        // Callback này chạy async (sau khi HTTP response về), tức là SAU dòng
-        // cdr.detectChanges() ở cuối hàm — nếu không tự ép CD lại ở đây thì bong
-        // bóng vừa hydrate xong sẽ không tự hiện ra, phải chờ người dùng click.
         this.framesApi.getFramesByProject(this.activeProjectId).subscribe((frames) => {
           this.editorService.hydrateBubblesFromFrames(frames);
           this.cdr.markForCheck();
@@ -364,7 +352,6 @@ export class ComicEditorPage implements OnInit, OnDestroy {
     this.isEditorPanelOpen = false;
     this.activeProjectId = '';
     this.editorService.reset(); // reset central workspace state
-    // Bỏ ?projectId khỏi URL — tránh load lại project cũ nếu người dùng F5 sau khi Back
     this.router.navigate([], { relativeTo: this.route, queryParams: {} });
     this.cdr.markForCheck();
     this.cdr.detectChanges();

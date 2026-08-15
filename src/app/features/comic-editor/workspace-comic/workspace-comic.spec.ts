@@ -129,12 +129,10 @@ describe('WorkspaceComic', () => {
       fixture.detectChanges();
     });
 
-    it('addSpeechBubbleToPanel() thêm đúng loại bong bóng và vẽ đúng hình SVG (round/square/cloud)', () => {
-      const event = new MouseEvent('click');
-
-      component.addSpeechBubbleToPanel(0, 'round', event);
-      component.addSpeechBubbleToPanel(0, 'square', event);
-      component.addSpeechBubbleToPanel(0, 'cloud', event);
+    it('thêm đúng loại bong bóng và vẽ đúng hình SVG (round/square/cloud)', () => {
+      editorService.addBubble(0, 'round');
+      editorService.addBubble(0, 'square');
+      editorService.addBubble(0, 'cloud');
       fixture.detectChanges();
 
       expect(editorService.getState().bubbles.length).toBe(3);
@@ -145,7 +143,7 @@ describe('WorkspaceComic', () => {
     });
 
     it('selectBubble() hiển thị khung chọn (selection-handles) quanh bong bóng', () => {
-      component.addSpeechBubbleToPanel(0, 'round', new MouseEvent('click'));
+      editorService.addBubble(0, 'round');
       const id = editorService.getState().bubbles[0].id;
 
       component.selectBubble(id, new MouseEvent('mousedown'));
@@ -155,7 +153,7 @@ describe('WorkspaceComic', () => {
     });
 
     it('deleteBubble() xoá bong bóng khỏi canvas', () => {
-      component.addSpeechBubbleToPanel(0, 'round', new MouseEvent('click'));
+      editorService.addBubble(0, 'round');
       const id = editorService.getState().bubbles[0].id;
 
       component.deleteBubble(id, new MouseEvent('click'));
@@ -166,7 +164,7 @@ describe('WorkspaceComic', () => {
     });
 
     it('startEditingText()/onTextChange()/onTextBlur() chuyển đổi giữa hiển thị tĩnh và ô nhập chữ', () => {
-      component.addSpeechBubbleToPanel(0, 'round', new MouseEvent('click'));
+      editorService.addBubble(0, 'round');
       const id = editorService.getState().bubbles[0].id;
 
       component.startEditingText(id, new MouseEvent('mousedown'));
@@ -186,7 +184,7 @@ describe('WorkspaceComic', () => {
       component.selectedFrames = 1;
       component.comicData = { title: 'T', panels: [{ imageUrl: 'x', status: 'SUCCESS' }] };
       fixture.detectChanges();
-      component.addSpeechBubbleToPanel(0, 'round', new MouseEvent('click'));
+      editorService.addBubble(0, 'round');
     });
 
     it('startDrag(move) rồi onMouseMove() di chuyển bong bóng trong giới hạn 5-95%', () => {
@@ -323,7 +321,7 @@ describe('WorkspaceComic', () => {
     });
 
     it('mousedown vào thân bong bóng (ellipse) bắt đầu kéo; bấm nút xoá xoá đúng bong bóng', () => {
-      component.addSpeechBubbleToPanel(0, 'round', new MouseEvent('click'));
+      editorService.addBubble(0, 'round');
       fixture.detectChanges();
 
       const shape = fixture.nativeElement.querySelector('ellipse.bubble-body-shape');
@@ -336,7 +334,7 @@ describe('WorkspaceComic', () => {
     });
 
     it('double-click vào chữ tĩnh chuyển sang ô nhập; nhập chữ rồi rời khỏi ô lưu lại lịch sử', () => {
-      component.addSpeechBubbleToPanel(0, 'round', new MouseEvent('click'));
+      editorService.addBubble(0, 'round');
       fixture.detectChanges();
 
       fixture.nativeElement.querySelector('.bubble-static-text').dispatchEvent(new MouseEvent('dblclick', { bubbles: true }));

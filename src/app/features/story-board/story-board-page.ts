@@ -19,8 +19,6 @@ export interface ComicProject {
   isDraft?: boolean;
 }
 
-// Phải là 1 trong 5 key STYLES (xem assets/i18n/*.json) — dùng làm fallback khi
-// project chưa có art_style (draft) để tránh 'STYLES.<label lạ>' không dịch được.
 const DEFAULT_STYLE_KEY = 'storybook';
 
 @Component({
@@ -41,12 +39,10 @@ export class StoryBoardPage implements OnInit {
 
   comics: ComicProject[] = [];
 
-  // true khi đang chờ /api/projects trả về — tránh chớp empty-state trước khi có kết quả
   loading = true;
   loadError = false;
 
   ngOnInit() {
-    // Chặn gọi API lúc SSR/prerender — URL tương đối không có origin trên server
     if (!isPlatformBrowser(this.platformId)) return;
     this.loadProjects();
   }
@@ -59,7 +55,6 @@ export class StoryBoardPage implements OnInit {
       next: (projects) => {
         this.comics = projects.map((p) => this.toComicProject(p));
         this.loading = false;
-        // App zoneless — mutate state trong .subscribe() không tự vẽ lại view
         this.cdr.markForCheck();
         this.cdr.detectChanges();
         this.loadCoverImages();
@@ -77,9 +72,6 @@ export class StoryBoardPage implements OnInit {
     this.loadProjects();
   }
 
-  // Lấy ảnh của frame đầu tiên (order_index nhỏ nhất) đã sinh xong trong mỗi
-  // project để làm ảnh bìa card — thay vì luôn hiện icon fallback. Chạy sau khi
-  // danh sách project đã hiển thị nên không làm chậm lần render đầu.
   private loadCoverImages() {
     if (this.comics.length === 0) return;
 
@@ -92,7 +84,6 @@ export class StoryBoardPage implements OnInit {
           firstFrame ? this.framesApi.getFrameImageUrl(firstFrame.id) : of(null),
         ),
         map((res) => ({ id: comic.id, url: res?.url ?? '' })),
-        // Project draft chưa có frame, hoặc lỗi lấy presigned URL — bỏ qua, giữ fallback icon
         catchError(() => of({ id: comic.id, url: '' })),
       ),
     );
@@ -113,8 +104,6 @@ export class StoryBoardPage implements OnInit {
       title: p.title || 'Untitled',
       coverImage: '',
       createdAt: new Date(p.created_at),
-      // style dùng để tra key 'STYLES.<style>' trong i18n — art_style luôn là 1 trong
-      // 5 key hợp lệ (đã validate ở be-comic), genre là text tự do nên không dùng ở đây.
       style: p.art_style || DEFAULT_STYLE_KEY,
       status: p.status,
       isDraft: p.status === 'DRAFT',
@@ -138,21 +127,16 @@ export class StoryBoardPage implements OnInit {
     this.viewMode = this.viewMode === 'grid' ? 'list' : 'grid';
   }
 
-  // Danh sách thể loại thật lấy từ dữ liệu đã fetch, thay vì list cứng Sci-Fi/Fantasy/Drama
   get availableGenres(): string[] {
     const genres = new Set(this.comics.map((c) => c.style));
     return Array.from(genres);
   }
 
-  // Lọc danh sách truyện theo Ngày và Phong cách (Genre)
   get filteredComics(): ComicProject[] {
     return this.comics.filter(comic => {
-      // 1. Lọc theo thể loại/phong cách
       if (this.selectedGenreFilter !== 'All Genres' && comic.style !== this.selectedGenreFilter) {
         return false;
       }
-
-      // 2. Lọc theo thời gian tạo
       if (this.selectedDateFilter !== 'All Dates') {
         const now = new Date();
         const diffTime = Math.abs(now.getTime() - comic.createdAt.getTime());
@@ -197,7 +181,6 @@ export class StoryBoardPage implements OnInit {
   showDeletePopup = false;
   comicToDelete?: ComicProject;
 
-  // Click vào card (xem chi tiết) — mở lại project trong comic-editor, hiển thị ảnh đã sinh ở workspace
   viewComic(comic: ComicProject) {
     this.router.navigate(['/app/comic-editor'], { queryParams: { projectId: comic.id } });
   }

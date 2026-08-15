@@ -43,13 +43,10 @@ export class FramesApiService {
 
   constructor(private http: HttpClient) {}
 
-  // GET /api/frames?projectId=xxx — toàn bộ frame (ảnh) đã sinh của 1 project, sắp theo order_index
   getFramesByProject(projectId: string): Observable<FrameDto[]> {
     return this.http.get<FrameDto[]>(this.baseUrl, { params: { projectId } });
   }
-
-  // GET /api/frames/:id/image-url — image_url lưu trong DB chỉ là object key MinIO,
-  // phải đổi thành presigned URL mới hiển thị được trực tiếp trên <img>
+  
   getFrameImageUrl(frameId: string): Observable<FrameImageUrlResponse> {
     return this.http.get<FrameImageUrlResponse>(`${this.baseUrl}/${frameId}/image-url`);
   }

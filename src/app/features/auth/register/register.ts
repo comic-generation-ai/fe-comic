@@ -23,9 +23,6 @@ export class Register {
   showPassword = false;
   showConfirmPassword = false;
   scrollY = 0;
-  // Signal thay vì property thường: app dùng provideZonelessChangeDetection(),
-  // set property trong callback subscribe() (ngoài event Angular theo dõi) sẽ
-  // không tự vẽ lại view — phải dùng signal để Angular biết mà re-render.
   isSubmitting = signal(false);
   errorMessage = signal('');
 
@@ -74,7 +71,6 @@ export class Register {
       next: (res) => {
         this.isSubmitting.set(false);
         if (res.success) {
-          // Đăng ký xong quay về tab đăng nhập để user tự nhập lại email/mật khẩu vừa tạo.
           this.router.navigate(['/auth/login'], { queryParams: { registered: '1' } });
         } else {
           this.errorMessage.set(this.mapErrorMessage(res.message));

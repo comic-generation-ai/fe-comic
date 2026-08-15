@@ -860,38 +860,6 @@
     width: 100%;
     box-sizing: border-box;
 
-    .code-box-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 8px 14px;
-      background: var(--bg-surface);
-      border-bottom: 1px solid var(--border-color);
-
-      .mac-dots {
-        display: flex;
-        gap: 6px;
-
-        .dot {
-          width: 10px;
-          height: 10px;
-          border-radius: 50%;
-          display: inline-block;
-
-          &.red { background: #ff5f56; }
-          &.yellow { background: #ffbd2e; }
-          &.green { background: #27c93f; }
-        }
-      }
-
-      .code-box-filename {
-        font-family: 'Fira Code', 'Consolas', monospace;
-        font-size: 0.75rem;
-        color: var(--text-muted);
-        font-weight: 500;
-      }
-    }
-
     .json-code-container {
       padding: 16px 20px;
       background: var(--bg-surface-focus);

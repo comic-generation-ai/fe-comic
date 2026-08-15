@@ -102,21 +102,12 @@ export class WorkspaceComic implements OnInit, OnDestroy {
   // Active text inline-editing bubble ID
   editingTextId: string | null = null;
 
-  // Hệ toạ độ tham chiếu cố định cho lớp SVG bong bóng thoại (viewBox="0 0 500 500").
-  // Panel luôn là hình vuông (aspect-ratio 1/1) nên dùng chung 1 giá trị cho cả 2 trục.
-  // Nhờ viewBox này, bubble.w/h/tailX/tailY (đơn vị "px tham chiếu") sẽ tự scale theo
-  // đúng tỉ lệ khi panel-card đổi kích thước thật trên màn hình (mở/đóng tab editor-comic,
-  // zoom trình duyệt, breakpoint responsive...) thay vì giữ nguyên số px tuyệt đối như
-  // trước đây (SVG không có viewBox => 1 unit = 1px thật, không co giãn theo panel).
   readonly bubbleViewBoxSize = 500;
 
   ngOnInit() {
     this.sub.add(
       this.editorService.state$.subscribe((state) => {
         this.editorState = state;
-        // App chạy zoneless — subscribe() ngoài event DOM không tự trigger CD,
-        // nếu thiếu dòng này bong bóng vừa sinh xong (hydrateBubblesFromFrames)
-        // sẽ không tự hiện ra cho tới khi người dùng click vào đâu đó.
         this.cdr.markForCheck();
         this.cdr.detectChanges();
       })
@@ -150,38 +141,31 @@ export class WorkspaceComic implements OnInit, OnDestroy {
     return this.editorState.bubbles.filter((b) => b.panelIndex === panelIndex);
   }
 
-  // Set the selected bubble inside the editor
+  // Chọn hộp thoại
   selectBubble(id: string, event: MouseEvent) {
     event.stopPropagation();
     this.editorService.selectBubble(id);
   }
 
-  // Set the active panel frame
+  // Chọn panel
   selectPanel(index: number, event: MouseEvent) {
     event.stopPropagation();
     this.editorService.selectPanel(index);
   }
 
-  // Deselect bubble when clicking empty workspace
+  // click ngoài ô hộp thoại để bỏ chọn
   deselectBubble(event: MouseEvent) {
     this.editorService.selectBubble(null);
   }
 
-  // Add speech bubble directly to a specific panel
-  addSpeechBubbleToPanel(panelIndex: number, type: 'round' | 'square' | 'cloud', event: MouseEvent) {
-    event.stopPropagation();
-    this.editorService.addBubble(panelIndex, type);
-  }
-
-  // Delete specific bubble
+  // Xóa hộp thoại
   deleteBubble(id: string, event: MouseEvent) {
     event.stopPropagation();
     this.editorService.deleteBubble(id);
   }
 
+  // bắt đầu kéo thả hộp thoại
   startDrag(event: MouseEvent, bubble: SpeechBubble, dragType: 'move' | 'resize' | 'tail') {
-    // Chỉ gọi preventDefault khi không phải là thao tác di chuyển ('move')
-    // Điều này cho phép sự kiện dblclick (double click) kích hoạt chế độ chỉnh sửa chữ hoạt động bình thường
     if (dragType !== 'move') {
       event.preventDefault();
     }
@@ -200,14 +184,13 @@ export class WorkspaceComic implements OnInit, OnDestroy {
     this.initialTailY = bubble.tailY;
 
     this.editorService.selectBubble(bubble.id);
-
-    // Save current state into undo list before starting any mouse manipulation
     this.editorService.saveHistory();
 
     window.addEventListener('mousemove', this.onMouseMove);
     window.addEventListener('mouseup', this.onMouseUp);
   }
 
+  // di chuyển chuột khi đang kéo thả hộp thoại
   onMouseMove = (event: MouseEvent) => {
     if (!this.activeBubbleId || !this.activeDragType) return;
 
@@ -233,9 +216,6 @@ export class WorkspaceComic implements OnInit, OnDestroy {
 
       this.editorService.updateBubble(this.activeBubbleId, { x: newX, y: newY }, true);
     } else if (this.activeDragType === 'resize') {
-      // dx/dy là px thật của chuột trên màn hình, còn bubble.w/h nằm trong hệ toạ độ
-      // tham chiếu (viewBox) của SVG — phải quy đổi theo tỉ lệ panel thật/viewBox thì
-      // thao tác kéo-resize mới bám đúng theo con trỏ chuột ở mọi kích cỡ panel.
       const scaleX = this.bubbleViewBoxSize / panelWidth;
       const scaleY = this.bubbleViewBoxSize / panelHeight;
       const newW = Math.max(80, Math.min(400, this.initialBubbleW + dx * scaleX));
@@ -252,6 +232,7 @@ export class WorkspaceComic implements OnInit, OnDestroy {
     }
   };
 
+  // Dọn dẹp trạng thái khi nhả chuột (Resize hoặc Kéo đuôi)
   onMouseUp = (event: MouseEvent) => {
     this.activeDragType = null;
     this.activeBubbleId = null;
@@ -259,7 +240,7 @@ export class WorkspaceComic implements OnInit, OnDestroy {
     window.removeEventListener('mouseup', this.onMouseUp);
   };
 
-  // CDK Drag & Drop ended handler
+  // Tính toán vị trí khi nhả chuột kéo di chuyển bong bóng
   onBubbleDragEnded(event: CdkDragEnd, bubble: SpeechBubble) {
     const distance = event.distance;
     const panelElement = document.getElementById(`panel-card-${bubble.panelIndex}`);
@@ -275,33 +256,31 @@ export class WorkspaceComic implements OnInit, OnDestroy {
     const newX = Math.max(5, Math.min(95, bubble.x + dpx));
     const newY = Math.max(5, Math.min(95, bubble.y + dpy));
 
-    // Save history and update service
     this.editorService.saveHistory();
     this.editorService.updateBubble(bubble.id, { x: newX, y: newY });
 
-    // Important: reset CDK Drag inline CSS transform so SVG standard style translates remain the single source of truth
     event.source.reset();
   }
 
-  // Text Direct Inline Editor Actions
+  // Bắt đầu chỉnh sửa nội dung thoại
   startEditingText(id: string, event: MouseEvent) {
     event.stopPropagation();
     this.editingTextId = id;
     this.editorService.selectBubble(id);
   }
 
+  //Thay đổi nội dung thoại
   onTextChange(id: string, text: string) {
-    // Tự động nới cao bong bóng khi chữ dài hơn chỗ chứa hiện có được xử lý tập
-    // trung trong ComicEditorService.updateBubble() — xem estimateBubbleHeight().
     this.editorService.updateBubble(id, { text }, true);
   }
 
+  // Khi nội dung thoại bị ẩn (thay đổi vùng nói) hoặc click ra ngoài ô thoại để kết thúc chỉnh sửa
   onTextBlur(id: string) {
-    this.editorService.saveHistory(); // save completed text editing to undo stack
+    this.editorService.saveHistory();
     this.editingTextId = null;
   }
 
-  // SVG Drawing Helpers
+  // Hàm vẽ đám mây
   getCloudPath(w: number, h: number): string {
     const cx = w / 2;
     const cy = h / 2;
@@ -331,6 +310,7 @@ export class WorkspaceComic implements OnInit, OnDestroy {
     return path + ' Z';
   }
 
+  // Hàm vẽ đuôi thoại
   getTailPoints(b: SpeechBubble): string {
     if (b.hasTail === false) return '';
     const cx = b.w / 2;
@@ -352,6 +332,7 @@ export class WorkspaceComic implements OnInit, OnDestroy {
     return `${ax},${ay} ${tx},${ty} ${bx},${by}`;
   }
 
+  // Hàm vẽ đường nối
   getTailStroke(b: SpeechBubble): string {
     if (b.hasTail === false) return '';
     const cx = b.w / 2;
@@ -373,12 +354,13 @@ export class WorkspaceComic implements OnInit, OnDestroy {
     return `M ${ax} ${ay} L ${tx} ${ty} L ${bx} ${by}`;
   }
 
+  //Xuất truyện dưới dạng ảnh
   exportComicAsImage() {
     const gridElement = this.el.nativeElement.querySelector('.comic-grid-layout');
     if (!gridElement) return;
 
     const rect = gridElement.getBoundingClientRect();
-    const outerPadding = 30; 
+    const outerPadding = 30;
     const canvas = document.createElement('canvas');
     canvas.width = (rect.width + outerPadding * 2) * 2;
     canvas.height = (rect.height + outerPadding * 2) * 2;
@@ -393,6 +375,7 @@ export class WorkspaceComic implements OnInit, OnDestroy {
     const panelCards = this.el.nativeElement.querySelectorAll('.comic-panel-card');
     const imagePromises: Promise<void>[] = [];
 
+    // Vẽ từng khung tranh
     panelCards.forEach((card: HTMLElement, idx: number) => {
       const cardRect = card.getBoundingClientRect();
       const cx = (cardRect.left - rect.left + outerPadding) * 2;
@@ -409,7 +392,7 @@ export class WorkspaceComic implements OnInit, OnDestroy {
       ctx.fillStyle = '#ffffff';
       ctx.fillRect(cx, cy, cw, ch);
 
-      // Check if image exists
+      // Kiểm tra xem có ảnh không
       const imgEl = card.querySelector('.panel-image') as HTMLImageElement;
       if (imgEl && imgEl.src) {
         const drawImgPromise = new Promise<void>((resolve) => {
@@ -445,7 +428,7 @@ export class WorkspaceComic implements OnInit, OnDestroy {
       ctx.restore();
     });
 
-    // Wait for images to load, then render the borders and bubbles
+    // Đợi ảnh tải xong rồi mới vẽ đường viền và bong bóng
     Promise.all(imagePromises).then(() => {
       panelCards.forEach((card: HTMLElement, idx: number) => {
         const cardRect = card.getBoundingClientRect();
@@ -454,7 +437,7 @@ export class WorkspaceComic implements OnInit, OnDestroy {
         const cw = cardRect.width * 2;
         const ch = cardRect.height * 2;
 
-        // Draw panel borders on top of the images
+        // Vẽ đường viền khung tranh
         if (this.editorState.borderWidth > 0) {
           ctx.save();
           ctx.beginPath();
@@ -466,6 +449,7 @@ export class WorkspaceComic implements OnInit, OnDestroy {
           ctx.restore();
         }
 
+        // Vẽ bong bóng thoại
         const bubbles = this.getBubblesForPanel(idx);
         const scale = cw / this.bubbleViewBoxSize;
         bubbles.forEach((b) => {
@@ -484,6 +468,7 @@ export class WorkspaceComic implements OnInit, OnDestroy {
           ctx.strokeStyle = '#000000';
           ctx.fillStyle = '#ffffff';
 
+          // Vẽ đường nối thoại
           if (b.type !== 'cloud' && b.hasTail !== false) {
             const angle = Math.atan2(b.tailY, b.tailX);
             const delta = 0.28;
@@ -503,6 +488,7 @@ export class WorkspaceComic implements OnInit, OnDestroy {
             ctx.fill();
           }
 
+          // Vẽ hình dạng bong bóng thoại
           ctx.beginPath();
           if (b.type === 'round') {
             ctx.ellipse(bx, by, bw / 2, bh / 2, 0, 0, 2 * Math.PI);
@@ -584,6 +570,7 @@ export class WorkspaceComic implements OnInit, OnDestroy {
             ctx.stroke();
           }
 
+          // Vẽ nội dung thoại
           if (b.text) {
             ctx.fillStyle = b.fontColor;
             ctx.textAlign = b.textAlign;
@@ -602,6 +589,7 @@ export class WorkspaceComic implements OnInit, OnDestroy {
             const lines: string[] = [];
             const canvasLineHeight = b.lineHeight * fSize;
 
+            // TODO: sửa lỗi text hiển thị ra ngoài
             for (let n = 0; n < words.length; n++) {
               const testLine = line + words[n] + ' ';
               const metrics = ctx.measureText(testLine);
@@ -632,6 +620,7 @@ export class WorkspaceComic implements OnInit, OnDestroy {
         });
       });
 
+      // Tải ảnh về máy
       const link = document.createElement('a');
       link.download = `comic_masterpiece_${Date.now()}.png`;
       link.href = canvas.toDataURL('image/png');
