@@ -1,5 +1,5 @@
 import { Component, ElementRef, HostListener, inject, OnInit } from '@angular/core';
-import { Router, RouterLinkActive } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { I18nService } from '../../../core/i18n/i18n.service';
 import { TranslatePipe } from '../../../core/i18n/translate.pipe';
@@ -11,7 +11,8 @@ import { getAvatarInitial } from '../../../core/utils/avatar.util';
 
 @Component({
   selector: 'app-header',
-  imports: [CommonModule, RouterLinkActive, TranslatePipe, Modal],
+  standalone: true,
+  imports: [CommonModule, RouterLink, RouterLinkActive, TranslatePipe, Modal],
   templateUrl: './header.html',
   styleUrl: './header.scss',
 })

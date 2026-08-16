@@ -6,7 +6,7 @@
   </div>
 
   <!-- Left Side: Mobile Logo (Mobile Only) -->
-  <div class="mobile-logo">
+  <a routerLink="/app/comic-editor" class="mobile-logo" (click)="showMobileMenu = false">
     <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M12 2L14.8 9.2L22 12L14.8 14.8L12 22L9.2 14.8L2 12L9.2 9.2L12 2Z" fill="url(#mobile-logo-grad)"/>
       <defs>
@@ -17,7 +17,7 @@
       </defs>
     </svg>
     <span class="logo-text">{{ 'LAYOUT.SIDEBAR.BRAND' | translate }}</span>
-  </div>
+  </a>
 
   <!-- Right Side: Controls and Actions (Desktop Only) -->
   <div class="header-actions">
@@ -127,6 +127,10 @@
     <a routerLink="/app/story-board" routerLinkActive="active" class="drawer-nav-item" (click)="showMobileMenu = false">
       <i class="pi material-symbols-outlined">grid_view</i>
       <span>{{ 'LAYOUT.SIDEBAR.STORY_BOARD' | translate }}</span>
+    </a>
+    <a routerLink="/app/profile" routerLinkActive="active" class="drawer-nav-item" (click)="showMobileMenu = false">
+      <i class="pi material-symbols-outlined">account_circle</i>
+      <span>{{ 'LAYOUT.SIDEBAR.PROFILE' | translate }}</span>
     </a>
   </nav>
 

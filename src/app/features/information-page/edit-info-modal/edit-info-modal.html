@@ -15,7 +15,15 @@
     <div class="modal-content">
       <!-- Photo Editor -->
       <section class="photo-editor-section">
-        <div class="modal-avatar-wrapper">
+        <!-- Hidden file input for uploading from device -->
+        <input
+          #fileInput
+          type="file"
+          accept="image/*"
+          style="display: none"
+          (change)="onFileSelected($event)" />
+
+        <div class="modal-avatar-wrapper" (click)="triggerFileInput(fileInput)">
           <img *ngIf="localProfile.avatar; else fallbackAvatar" [src]="localProfile.avatar" alt="Preview Avatar" class="avatar-preview-img" />
           <ng-template #fallbackAvatar>
             <div class="fallback-avatar-container">{{ avatarInitial }}</div>
@@ -30,13 +38,14 @@
         </div>
 
         <div class="photo-controls-row">
-          <button class="btn-text-action btn-change">
+          <button type="button" class="btn-text-action btn-change" (click)="triggerFileInput(fileInput)">
             {{ 'PROFILE.EDIT_MODAL.CHANGE_PHOTO' | translate }}
           </button>
-          <button class="btn-text-action btn-remove" (click)="removePhoto()">
+          <button type="button" class="btn-text-action btn-remove" (click)="removePhoto()">
             {{ 'PROFILE.EDIT_MODAL.REMOVE' | translate }}
           </button>
         </div>
+
       </section>
 
       <!-- Edit Form Grid -->

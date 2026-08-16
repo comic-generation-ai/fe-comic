@@ -72,16 +72,17 @@ export class EditInfoModal implements OnInit {
       img.onload = () => {
         const scale = Math.min(1, MAX_AVATAR_DIMENSION / Math.max(img.width, img.height));
         const canvas = document.createElement('canvas');
-        canvas.width = img.width * scale;
-        canvas.height = img.height * scale;
+        canvas.width = Math.round(img.width * scale);
+        canvas.height = Math.round(img.height * scale);
         const ctx = canvas.getContext('2d');
         ctx?.drawImage(img, 0, 0, canvas.width, canvas.height);
         this.localProfile.avatar = canvas.toDataURL('image/jpeg', 0.85);
-        // FileReader/Image.onload chạy ngoài Angular (app zoneless) — không tự vẽ
-        // lại view, phải báo scheduler thủ công để ảnh hiện ngay, không cần thao
-        // tác gì khác mới thấy.
+        input.value = '';
         this.cdr.markForCheck();
         this.cdr.detectChanges();
+      };
+      img.onerror = () => {
+        input.value = '';
       };
       img.src = reader.result as string;
     };

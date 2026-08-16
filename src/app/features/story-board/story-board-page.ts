@@ -179,6 +179,7 @@ export class StoryBoardPage implements OnInit {
   }
 
   showDeletePopup = false;
+  showSuccessPopup = false;
   comicToDelete?: ComicProject;
 
   viewComic(comic: ComicProject) {
@@ -204,6 +205,7 @@ export class StoryBoardPage implements OnInit {
           this.comics = this.comics.filter((c) => c.id !== target.id);
           this.comicToDelete = undefined;
           this.showDeletePopup = false;
+          this.showSuccessPopup = true;
           this.cdr.markForCheck();
           this.cdr.detectChanges();
         },
@@ -222,6 +224,12 @@ export class StoryBoardPage implements OnInit {
   cancelDelete() {
     this.comicToDelete = undefined;
     this.showDeletePopup = false;
+  }
+
+  closeSuccessPopup() {
+    this.showSuccessPopup = false;
+    this.cdr.markForCheck();
+    this.cdr.detectChanges();
   }
 
   @HostListener('document:click')

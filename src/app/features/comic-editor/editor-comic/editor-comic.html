@@ -6,7 +6,7 @@
       <p class="panel-subtitle">{{ 'EDITOR_COMIC.SUBTITLE' | translate }}</p>
     </div>
 
-    <!-- History Controls (Undo / Redo / Reset) -->
+    <!-- Undo / Redo / Reset -->
     <div class="history-controls">
       <button class="btn-history" [disabled]="!canUndo()" (click)="undo()" [title]="'EDITOR_COMIC.UNDO' | translate">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
@@ -14,6 +14,7 @@
           <path d="M3 7v6h6" />
           <path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13" />
         </svg>
+        
       </button>
       <button class="btn-history" [disabled]="!canRedo()" (click)="redo()" [title]="'EDITOR_COMIC.REDO' | translate">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
@@ -32,7 +33,7 @@
     </div>
   </header>
 
-  <!-- Accordion/Tab selectors -->
+  <!-- Tab selectors -->
   <nav class="sidebar-tabs">
     <button class="tab-btn" [class.active]="activeTab === 'frame'" (click)="setTab('frame')">
       <span class="material-symbols-outlined tab-icon">aspect_ratio</span>
@@ -56,7 +57,7 @@
     <div class="tab-panel animate-fade">
       <h4 class="panel-section-title">{{ 'EDITOR_COMIC.FRAME_SETTINGS_TITLE' | translate }}</h4>
 
-      <!-- Border Width Control -->
+      <!-- Border Width -->
       <div class="control-group">
         <div class="control-label-row">
           <span class="control-label">{{ 'EDITOR_COMIC.BORDER_WIDTH' | translate }}</span>
@@ -66,7 +67,7 @@
           (ngModelChange)="onBorderWidthChange($event)" class="range-slider">
       </div>
 
-      <!-- Border Radius Control -->
+      <!-- Border Radius -->
       <div class="control-group">
         <div class="control-label-row">
           <span class="control-label">{{ 'EDITOR_COMIC.BORDER_RADIUS' | translate }}</span>
@@ -76,7 +77,7 @@
           (ngModelChange)="onBorderRadiusChange($event)" class="range-slider">
       </div>
 
-      <!-- Border Color Control -->
+      <!-- Border Color -->
       <div class="control-group">
         <span class="control-label">{{ 'EDITOR_COMIC.BORDER_COLOR' | translate }}</span>
         <div class="swatch-grid">
@@ -108,7 +109,7 @@
     <div class="tab-panel animate-fade">
       <h4 class="panel-section-title">{{ 'EDITOR_COMIC.BUBBLE_SETTINGS_TITLE' | translate }}</h4>
 
-      <!-- Current active frame (switch by clicking a frame on the canvas) -->
+      <!-- Current active frame -->
       <div class="active-frame-indicator">
         <div class="active-frame-row">
           <span class="material-symbols-outlined">aspect_ratio</span>
@@ -117,7 +118,7 @@
         <span class="hint">{{ 'EDITOR_COMIC.SWITCH_FRAME_HINT' | translate }}</span>
       </div>
 
-      <!-- Speech bubbles of the active frame, shown as a chip list -->
+      <!-- Speech bubbles of the active frame -->
       <div class="control-group">
         <label class="control-label">{{ 'EDITOR_COMIC.BUBBLES_IN_FRAME_LABEL' | translate }}</label>
         @if (getBubblesForActiveFrame().length > 0) {
@@ -281,8 +282,9 @@
     }
   </div>
 
-  <!-- Premium Sticky Footer for Saving / Exporting -->
+  <!-- Footer for Saving / Exporting -->
   <footer class="editor-sidebar-footer">
+    <!-- Hiển thị thông báo lưu thành công/thất bại -->
     @if (saveStatus === 'success') {
     <p class="save-status-msg success">
       <span class="material-symbols-outlined">check_circle</span>
@@ -294,6 +296,8 @@
       {{ 'EDITOR_COMIC.SAVE_ERROR_MESSAGE' | translate }}
     </p>
     }
+
+    <!-- Nút Lưu và Download -->
     <div class="footer-btn-row">
       <button class="btn-save-full" [disabled]="isSaving" (click)="saveProject()">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"

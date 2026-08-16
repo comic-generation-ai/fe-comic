@@ -7,15 +7,15 @@ import { SpeechBubblesApiService, CreateSpeechBubbleRequest, UpdateSpeechBubbleR
 export interface SpeechBubble {
   id: string;
   panelIndex: number;
-  frameId?: string; // id frame thật ở BE — cần để lưu bong bóng (POST/PATCH /api/speech-bubbles)
-  x: number; // relative X percentage (0-100) inside the panel
-  y: number; // relative Y percentage (0-100) inside the panel
-  w: number; // width in px
-  h: number; // height in px
+  frameId?: string;
+  x: number;
+  y: number;
+  w: number;
+  h: number;
   type: 'round' | 'square' | 'cloud';
-  tailX: number; // pointer tail X (px, relative to center)
-  tailY: number; // pointer tail Y (px, relative to center)
-  hasTail?: boolean; // mặc định true — false cho NARRATION (không đuôi)
+  tailX: number;
+  tailY: number;
+  hasTail?: boolean;
   text: string;
   fontFamily: string;
   fontSize: number;
@@ -24,11 +24,6 @@ export interface SpeechBubble {
   lineHeight: number;
 }
 
-// Lời thoại nhân vật (SPEECH/SHOUT) dùng 1 kiểu tròn thống nhất, có mũi tên chỉ
-// vào nhân vật đang nói. Lời người dẫn truyện (NARRATION) luôn là khung chữ nhật
-// nằm dưới đáy khung tranh (be-comic đặt sẵn pos_y: 88, tail_direction: 'none' —
-// xem computeBubbleLayout() trong frames.service.ts) và KHÔNG có mũi tên, để phân
-// biệt rõ với lời thoại nhân vật. Chỉ giữ riêng hình đám mây (cloud) cho THOUGHT.
 const BUBBLE_TYPE_MAP: Record<SpeechBubbleDto['bubble_type'], SpeechBubble['type']> = {
   SPEECH: 'round',
   THOUGHT: 'cloud',
@@ -50,11 +45,6 @@ function tailFromDirection(direction: string | null, w: number, h: number): { x:
   }
 }
 
-// tail_direction chỉ lưu được 1 trong 4 hướng cố định (down/down-left/down-right/none)
-// nên khi kéo mũi nhọn tự do vào đúng nhân vật rồi lưu, quy về hướng gần nhất sẽ làm
-// bong bóng "nhảy" tail về vị trí mặc định của hướng đó sau khi tải lại. Toạ độ tailX/
-// tailY chính xác vì vậy được lưu kèm trong style_config (jsonb, không giới hạn) — nếu
-// có sẵn thì luôn ưu tiên dùng thay vì suy ra gần đúng từ tail_direction.
 function resolveTail(b: SpeechBubbleDto): { x: number; y: number; hasTail: boolean } {
   const exactX = b.style_config?.['tailX'];
   const exactY = b.style_config?.['tailY'];
@@ -64,7 +54,6 @@ function resolveTail(b: SpeechBubbleDto): { x: number; y: number; hasTail: boole
   return tailFromDirection(b.tail_direction, b.width, b.height);
 }
 
-// Chiều ngược lại của tailFromDirection() — dùng khi lưu bong bóng về BE.
 function directionFromTail(b: SpeechBubble): string {
   if (b.hasTail === false) return 'none';
   if (b.tailX < -5) return 'down-left';
@@ -72,16 +61,12 @@ function directionFromTail(b: SpeechBubble): string {
   return 'down';
 }
 
-// Ước lượng chiều cao cần thiết để chữ không bị tràn ra ngoài rồi bị
-// .bubble-static-text { -webkit-line-clamp: 5; overflow: hidden } ở FE che/cắt
-// mất khi bong bóng quá nhỏ so với lời thoại (đổi text, fontSize hoặc lineHeight
-// đều có thể làm nội dung không còn vừa chỗ chứa hiện có).
 function estimateBubbleHeight(b: SpeechBubble): number {
   const len = b.text?.trim().length ?? 0;
   if (len === 0) return b.h;
 
-  const padding = 28; // foreignObject inset 12px x2 + container padding
-  const avgCharWidthPx = b.fontSize * 0.55; // ước lượng bề rộng ký tự trung bình theo cỡ chữ hiện tại
+  const padding = 28;
+  const avgCharWidthPx = b.fontSize * 0.55;
   const usableWidth = Math.max(20, b.w - padding);
   const charsPerLine = Math.max(4, Math.floor(usableWidth / avgCharWidthPx));
   const lines = Math.max(1, Math.ceil(len / charsPerLine));
@@ -90,9 +75,6 @@ function estimateBubbleHeight(b: SpeechBubble): number {
   return Math.ceil(lines * lineHeightPx + padding);
 }
 
-// Chiều ngược lại của BUBBLE_TYPE_MAP — dùng khi lưu bong bóng về BE.
-// Vì round giờ dùng chung cho cả SPEECH/NARRATION/SHOUT nên khi lưu lại
-// luôn quy về SPEECH (loại phổ biến nhất), chỉ cloud mới còn giữ THOUGHT.
 function bubbleTypeToDto(type: SpeechBubble['type']): SpeechBubbleDto['bubble_type'] {
   switch (type) {
     case 'cloud':
@@ -134,12 +116,7 @@ export class ComicEditorService {
   private pastStates: string[] = [];
   private futureStates: string[] = [];
 
-  // frame.order_index -> frame.id thật ở BE — cần để gắn frameId cho bong bóng
-  // mới thêm (chưa từng được hydrate từ BE).
   private panelFrameIds: Record<number, string> = {};
-  // Tập id bong bóng đã tồn tại trong DB tính từ lần hydrate/save gần nhất —
-  // dùng để phân biệt PATCH (đã có) vs POST (mới thêm ở FE) và phát hiện các
-  // bong bóng đã bị xoá cục bộ cần DELETE khi lưu.
   private persistedBubbleIds = new Set<string>();
 
   private speechBubblesApi = inject(SpeechBubblesApiService);
@@ -167,8 +144,8 @@ export class ComicEditorService {
       id: 'bubble_' + Math.random().toString(36).substr(2, 9),
       panelIndex,
       frameId: this.panelFrameIds[panelIndex],
-      x: 50, // center
-      y: 50, // center
+      x: 50, 
+      y: 50, 
       w: 160,
       h: 100,
       type,
@@ -189,8 +166,6 @@ export class ComicEditorService {
     });
   }
 
-  // Nạp bong bóng tự động sinh từ BE (frame.speech_bubbles[]) vào state editor —
-  // gọi sau khi generate xong hoặc mở lại project cũ, thay thế toàn bộ bubbles hiện có.
   hydrateBubblesFromFrames(frames: FrameDto[]) {
     const bubbles: SpeechBubble[] = [];
     this.panelFrameIds = {};
@@ -224,10 +199,6 @@ export class ComicEditorService {
     this.updateState({ bubbles }, true);
   }
 
-  // Lưu toàn bộ thay đổi bong bóng (vị trí, kích thước, hình dạng, nội dung...)
-  // của project hiện tại về BE — bong bóng mới thêm ở FE sẽ được POST tạo mới,
-  // bong bóng đã có sẽ được PATCH cập nhật, bong bóng đã xoá cục bộ sẽ bị DELETE.
-  // Mở lại project từ story-board sau đó sẽ hydrate đúng những gì vừa lưu.
   saveBubbles(): Observable<void> {
     const current = this.stateSubject.getValue();
     const currentIds = new Set(current.bubbles.map((b) => b.id));
@@ -243,8 +214,6 @@ export class ComicEditorService {
         posY: b.y,
         width: b.w,
         height: b.h,
-        // tailDirection chỉ để tương thích ngược/hiển thị thô — vị trí chính xác
-        // của mũi nhọn nằm trong styleConfig.tailX/tailY (xem resolveTail()).
         tailDirection: directionFromTail(b),
         styleConfig: {
           fontFamily: b.fontFamily,
@@ -261,8 +230,6 @@ export class ComicEditorService {
       if (this.persistedBubbleIds.has(b.id)) {
         return this.speechBubblesApi.update(b.id, payload);
       }
-      // Bong bóng mới thêm ở FE (id tạm local) chưa có trong DB — tạo mới rồi
-      // gán lại id thật do BE trả về để lần lưu sau PATCH thay vì POST trùng.
       return this.speechBubblesApi
         .create(payload as CreateSpeechBubbleRequest)
         .pipe(tap((saved) => this.remapLocalBubbleId(b.id, saved.id)));
@@ -300,9 +267,6 @@ export class ComicEditorService {
       if (b.id !== id) return b;
       const merged = { ...b, ...partial };
 
-      // Chỉ tự nới cao khi thay đổi có thể ảnh hưởng tới lượng chữ vừa khung
-      // (text/fontSize/lineHeight) và người dùng không đang tự kéo resize
-      // (partial.h đã có sẵn thì tôn trọng thao tác thủ công đó).
       if (
         partial.h === undefined &&
         (partial.text !== undefined || partial.fontSize !== undefined || partial.lineHeight !== undefined)

@@ -20,7 +20,8 @@
             (click)="setDateFilter('All Dates')">
             {{ 'STORY_BOARD.FILTERS.ALL_DATES' | translate }}
           </li>
-          <li class="dropdown-item" [class.active]="selectedDateFilter === 'Today'" (click)="setDateFilter('Today')">
+          <li class="dropdown-item" [class.active]="selectedDateFilter === 'Today'" 
+            (click)="setDateFilter('Today')">
             {{ 'STORY_BOARD.FILTERS.TODAY' | translate }}
           </li>
           <li class="dropdown-item" [class.active]="selectedDateFilter === 'This Week'"
@@ -67,7 +68,7 @@
     <span class="material-symbols-outlined state-icon spin">progress_activity</span>
   </div>
   }
-
+  <!-- Có lỗi -->
   @if (!loading && loadError) {
   <div class="library-state animate-fade-up">
     <span class="material-symbols-outlined state-icon">error_outline</span>
@@ -76,7 +77,7 @@
     <button type="button" class="btn-state-cta" (click)="retryLoad()">{{ 'STORY_BOARD.RETRY' | translate }}</button>
   </div>
   }
-
+  <!-- Không có truyện -->
   @if (!loading && !loadError && comics.length === 0) {
   <div class="library-state animate-fade-up">
     <span class="material-symbols-outlined state-icon">auto_stories</span>
@@ -85,7 +86,7 @@
     <a routerLink="/app/comic-editor" class="btn-state-cta">{{ 'STORY_BOARD.EMPTY_CTA' | translate }}</a>
   </div>
   }
-
+  <!-- Không có truyện đã lọc -->
   @if (!loading && comics.length > 0 && filteredComics.length === 0) {
   <div class="library-state animate-fade-up">
     <span class="material-symbols-outlined state-icon">filter_alt_off</span>
@@ -94,7 +95,7 @@
   </div>
   }
 
-  <!-- Comic Cards Grid -->
+  <!-- Có truyện -->
   @if (!loading && filteredComics.length > 0) {
   <div class="library-grid animate-fade-up">
     @for (comic of filteredComics; track comic.id; let idx = $index) {
@@ -108,7 +109,7 @@
         </button>
       </div>
 
-      <!-- Card Image -->
+      <!-- Bìa truyện -->
       <div class="card-image-wrapper">
         @if (comic.coverImage) {
         <img [src]="comic.coverImage" [alt]="comic.title" class="comic-cover">
@@ -125,6 +126,7 @@
         <div class="card-gradient-overlay"></div>
       </div>
 
+      <!-- Tên truyện, ngày tạo, trạng thái -->
       <div class="card-content-overlay">
         <h3 class="comic-title">
           {{ comic.title }}
@@ -137,11 +139,6 @@
           <div class="meta-item">
             <span class="material-symbols-outlined meta-icon">calendar_today</span>
             <span class="meta-text">{{ comic.createdAt | date:'MMM dd, yyyy' }}</span>
-          </div>
-          <span class="meta-dot">•</span>
-          <div class="meta-item">
-            <span class="material-symbols-outlined meta-icon">auto_stories</span>
-            <span class="meta-text">{{ ('STORY_BOARD.STATUS_' + comic.status) | translate }}</span>
           </div>
         </div>
       </div>
@@ -164,5 +161,18 @@
     [materialIcon]="'delete_forever'"
     (confirm)="confirmDelete()"
     (cancel)="cancelDelete()">
+  </app-pop-up>
+
+  <!-- Reusable Success PopUp after Deleting Project -->
+  <app-pop-up
+    [isOpen]="showSuccessPopup"
+    [title]="'STORY_BOARD.DELETE_SUCCESS_TITLE' | translate"
+    [message]="'STORY_BOARD.DELETE_SUCCESS' | translate"
+    [confirmLabel]="'STORY_BOARD.OK_LABEL' | translate"
+    [cancelLabel]="''"
+    [type]="'primary'"
+    [materialIcon]="'check_circle'"
+    (confirm)="closeSuccessPopup()"
+    (cancel)="closeSuccessPopup()">
   </app-pop-up>
 </div>

@@ -263,7 +263,7 @@ describe('StoryBoardPage', () => {
       expect(component.comicToDelete).toBe(comic);
     });
 
-    it('confirmDelete() thành công: xoá khỏi danh sách, đóng popup', () => {
+    it('confirmDelete() thành công: xoá khỏi danh sách, đóng delete popup và hiện success popup', () => {
       const { fixture, component, fakeProjectApi } = setup({
         projectApi: {
           getMyProjects: vi.fn(() => of([project({ id: 'c1' })])),
@@ -278,9 +278,10 @@ describe('StoryBoardPage', () => {
       expect(fakeProjectApi.deleteProject).toHaveBeenCalledWith('c1');
       expect(component.comics.length).toBe(0);
       expect(component.showDeletePopup).toBe(false);
+      expect(component.showSuccessPopup).toBe(true);
     });
 
-    it('confirmDelete() lỗi: vẫn đóng popup, không ném lỗi ra ngoài', () => {
+    it('confirmDelete() lỗi: đóng delete popup, không hiện success popup', () => {
       const { fixture, component } = setup({
         projectApi: {
           getMyProjects: vi.fn(() => of([project({ id: 'c1' })])),
@@ -293,7 +294,16 @@ describe('StoryBoardPage', () => {
       component.confirmDelete();
 
       expect(component.showDeletePopup).toBe(false);
+      expect(component.showSuccessPopup).toBe(false);
       expect(component.comics.length).toBe(1); // xoá thất bại nên vẫn còn trong danh sách
+    });
+
+    it('closeSuccessPopup() đóng popup thông báo thành công', () => {
+      const { component } = setup();
+      component.showSuccessPopup = true;
+
+      component.closeSuccessPopup();
+      expect(component.showSuccessPopup).toBe(false);
     });
 
     it('confirmDelete() không làm gì khi không có comicToDelete', () => {
