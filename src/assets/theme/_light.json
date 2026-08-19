@@ -5,7 +5,7 @@
   "--bg-secondary": "#ffffff",
   "--bg-surface": "#f3f4f6",
   "--bg-surface-focus": "#ffffff",
-  "--bg-surface-hover": "rgba(0, 0, 0, 0.02)",
+  "--bg-surface-hover": "rgba(0, 0, 0, 0.03)",
   "--border-color": "#d1d5db",
   "--border-hover": "#9ca3af",
   "--divider-color": "rgba(0, 0, 0, 0.06)",

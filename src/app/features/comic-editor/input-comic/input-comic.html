@@ -79,19 +79,23 @@
                 </svg>
                 <span class="label-text">{{ 'INPUT_COMIC.ART_STYLE' | translate }}</span>
             </label>
-            <div class="select-wrapper">
-                <select id="art-style-select" class="form-select" [(ngModel)]="artStyle"
-                    (ngModelChange)="artStyleChange.emit($event)" [disabled]="isGenerating">
+            <div class="custom-dropdown-wrapper" [class.disabled]="isGenerating">
+                <button type="button" class="custom-dropdown-btn" (click)="toggleStyleDropdown($event)" [disabled]="isGenerating">
+                    <span>{{ ('STYLES.' + artStyle) | translate }}</span>
+                    <span class="chevron-icon" [class.open]="showStyleDropdown">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </span>
+                </button>
+                <ul class="custom-dropdown-list" *ngIf="showStyleDropdown">
                     @for (s of styles; track s) {
-                        <option [value]="s">{{ ('STYLES.' + s) | translate }}</option>
+                        <li class="custom-dropdown-item" [class.active]="artStyle === s" (click)="selectStyle(s)">
+                            {{ ('STYLES.' + s) | translate }}
+                        </li>
                     }
-                </select>
-                <span class="select-arrow">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                    </svg>
-                </span>
+                </ul>
             </div>
         </div>
 

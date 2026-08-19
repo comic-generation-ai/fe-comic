@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '../../../core/i18n/translate.pipe';
@@ -27,10 +27,29 @@ export class InputComic implements OnInit {
   styles: string[] = ['storybook', 'anime', 'manga', 'retro', 'american_comic'];
   frames: number[] = [3, 4, 5, 6];
 
+  showStyleDropdown = false;
+
   readonly titleMaxLength = 150;
   readonly scriptMaxLength = 1000;
   readonly titleMinLength = 2;
   readonly scriptMinLength = 15;
+
+  toggleStyleDropdown(event: Event): void {
+    if (this.isGenerating) return;
+    event.stopPropagation();
+    this.showStyleDropdown = !this.showStyleDropdown;
+  }
+
+  selectStyle(style: string): void {
+    this.artStyle = style;
+    this.artStyleChange.emit(style);
+    this.showStyleDropdown = false;
+  }
+
+  @HostListener('document:click')
+  closeStyleDropdown(): void {
+    this.showStyleDropdown = false;
+  }
 
   get isTitleInvalid(): boolean {
     const trimmed = (this.storyTitle || '').trim();
