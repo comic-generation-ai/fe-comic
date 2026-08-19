@@ -88,8 +88,6 @@ export class InformationPage implements OnInit {
         email: profile.email,
         avatar: profile.avatarUrl || '',
       };
-      // App chạy zoneless — mutate this.user (plain object, không phải signal) bên
-      // trong effect() không tự khiến template vẽ lại, phải báo cho scheduler.
       this.cdr.markForCheck();
       this.cdr.detectChanges();
     });
@@ -111,7 +109,6 @@ export class InformationPage implements OnInit {
     });
   }
 
-  // "March 2024" / "Tháng 3 2024" tùy ngôn ngữ hiện tại
   private formatJoinDate(iso: string): string {
     const locale = this.i18nService.lang === 'vi' ? 'vi-VN' : 'en-US';
     return new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric' }).format(new Date(iso));
@@ -237,7 +234,6 @@ export class InformationPage implements OnInit {
   }
 
   // Update profile information from modal save — lưu thật lên BE (PATCH /users/me),
-  // this.user sẽ tự cập nhật qua effect() khi currentUserService.profile() đổi
   saveProfile(updatedInfo: UserProfileInfo) {
     const profileTitle = this.i18nService.translate('PROFILE.EDIT_MODAL.TITLE');
 
