@@ -243,7 +243,12 @@
       "ALL_DATES": "Tất cả ngày",
       "TODAY": "Hôm nay",
       "THIS_WEEK": "Tuần này",
-      "ALL_GENRES": "Tất cả thể loại"
+      "ALL_GENRES": "Tất cả thể loại",
+      "ALL_FRAMES": "Tất cả khung hình",
+      "FRAMES_3": "3 khung hình",
+      "FRAMES_4": "4 khung hình",
+      "FRAMES_5": "5 khung hình",
+      "FRAMES_6": "6 khung hình"
     }
   },
   "PROFILE": {

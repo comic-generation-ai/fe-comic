@@ -243,7 +243,12 @@
       "ALL_DATES": "All dates",
       "TODAY": "Today",
       "THIS_WEEK": "This week",
-      "ALL_GENRES": "All genres"
+      "ALL_GENRES": "All genres",
+      "ALL_FRAMES": "All frames",
+      "FRAMES_3": "3 frames",
+      "FRAMES_4": "4 frames",
+      "FRAMES_5": "5 frames",
+      "FRAMES_6": "6 frames"
     }
   },
   "PROFILE": {

@@ -17,6 +17,7 @@ export interface ComicProject {
   style: string;
   status: string;
   isDraft?: boolean;
+  frameCount?: number;
 }
 
 const DEFAULT_STYLE_KEY = 'storybook';
@@ -77,22 +78,41 @@ export class StoryBoardPage implements OnInit {
 
     const covers$ = this.comics.map((comic) =>
       this.framesApi.getFramesByProject(comic.id).pipe(
-        map((frames) =>
-          [...frames].sort((a, b) => a.order_index - b.order_index).find((f) => !!f.image_url),
-        ),
-        switchMap((firstFrame) =>
-          firstFrame ? this.framesApi.getFrameImageUrl(firstFrame.id) : of(null),
-        ),
-        map((res) => ({ id: comic.id, url: res?.url ?? '' })),
-        catchError(() => of({ id: comic.id, url: '' })),
+        map((frames) => {
+          const sorted = [...frames].sort((a, b) => a.order_index - b.order_index);
+          const firstFrame = sorted.find((f) => !!f.image_url);
+          return {
+            firstFrame,
+            count: frames.length
+          };
+        }),
+        switchMap((res) => {
+          if (res.firstFrame) {
+            return this.framesApi.getFrameImageUrl(res.firstFrame.id).pipe(
+              map((urlRes) => ({ id: comic.id, url: urlRes?.url ?? '', count: res.count })),
+              catchError(() => of({ id: comic.id, url: '', count: res.count }))
+            );
+          } else {
+            return of({ id: comic.id, url: '', count: res.count });
+          }
+        }),
+        catchError(() => of({ id: comic.id, url: '', count: 0 })),
       ),
     );
 
     forkJoin(covers$).subscribe((results) => {
-      const urlById = new Map(results.map((r) => [r.id, r.url]));
-      this.comics = this.comics.map((c) =>
-        urlById.get(c.id) ? { ...c, coverImage: urlById.get(c.id)! } : c,
-      );
+      const dataById = new Map(results.map((r) => [r.id, { url: r.url, count: r.count }]));
+      this.comics = this.comics.map((c) => {
+        const data = dataById.get(c.id);
+        if (data) {
+          return {
+            ...c,
+            coverImage: data.url || c.coverImage,
+            frameCount: data.count
+          };
+        }
+        return c;
+      });
       this.cdr.markForCheck();
       this.cdr.detectChanges();
     });
@@ -112,9 +132,11 @@ export class StoryBoardPage implements OnInit {
 
   selectedDateFilter = 'All Dates';
   selectedGenreFilter = 'All Genres';
+  selectedFrameFilter: 'All Frames' | number = 'All Frames';
 
   showDateDropdown = false;
   showGenreDropdown = false;
+  showFrameDropdown = false;
 
   viewMode: 'grid' | 'list' = 'grid';
 
@@ -135,6 +157,9 @@ export class StoryBoardPage implements OnInit {
   get filteredComics(): ComicProject[] {
     return this.comics.filter(comic => {
       if (this.selectedGenreFilter !== 'All Genres' && comic.style !== this.selectedGenreFilter) {
+        return false;
+      }
+      if (this.selectedFrameFilter !== 'All Frames' && comic.frameCount !== this.selectedFrameFilter) {
         return false;
       }
       if (this.selectedDateFilter !== 'All Dates') {
@@ -160,12 +185,21 @@ export class StoryBoardPage implements OnInit {
     event.stopPropagation();
     this.showDateDropdown = !this.showDateDropdown;
     this.showGenreDropdown = false;
+    this.showFrameDropdown = false;
   }
 
   toggleGenreDropdown(event: Event) {
     event.stopPropagation();
     this.showGenreDropdown = !this.showGenreDropdown;
     this.showDateDropdown = false;
+    this.showFrameDropdown = false;
+  }
+
+  toggleFrameDropdown(event: Event) {
+    event.stopPropagation();
+    this.showFrameDropdown = !this.showFrameDropdown;
+    this.showDateDropdown = false;
+    this.showGenreDropdown = false;
   }
 
   setDateFilter(value: string) {
@@ -176,6 +210,11 @@ export class StoryBoardPage implements OnInit {
   setGenreFilter(value: string) {
     this.selectedGenreFilter = value;
     this.showGenreDropdown = false;
+  }
+
+  setFrameFilter(value: 'All Frames' | number) {
+    this.selectedFrameFilter = value;
+    this.showFrameDropdown = false;
   }
 
   showDeletePopup = false;
@@ -236,5 +275,6 @@ export class StoryBoardPage implements OnInit {
   closeDropdowns() {
     this.showDateDropdown = false;
     this.showGenreDropdown = false;
+    this.showFrameDropdown = false;
   }
 }

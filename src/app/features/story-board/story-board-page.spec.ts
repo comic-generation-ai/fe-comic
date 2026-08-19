@@ -193,10 +193,30 @@ describe('StoryBoardPage', () => {
 
       expect(component.filteredComics.map((c) => c.id)).toEqual(['today']);
     });
+
+    it('filteredComics() lọc theo số lượng khung hình (frameCount) đã chọn', () => {
+      const { fixture, component } = setup({
+        projectApi: { getMyProjects: vi.fn(() => of([project({ id: 'a' }), project({ id: 'b' })])) },
+        framesApi: {
+          getFramesByProject: vi.fn((projectId) => {
+            if (projectId === 'a') {
+              return of([{ id: 'f1' }, { id: 'f2' }, { id: 'f3' }]); // 3 frames
+            }
+            return of([{ id: 'f1' }, { id: 'f2' }, { id: 'f3' }, { id: 'f4' }]); // 4 frames
+          }),
+        }
+      });
+      fixture.detectChanges();
+
+      component.setFrameFilter(3);
+
+      expect(component.filteredComics.length).toBe(1);
+      expect(component.filteredComics[0].id).toBe('a');
+    });
   });
 
-  describe('dropdown lọc (date/genre)', () => {
-    it('toggleDateDropdown()/toggleGenreDropdown() loại trừ lẫn nhau và stopPropagation', () => {
+  describe('dropdown lọc (date/genre/frame)', () => {
+    it('toggleDateDropdown()/toggleGenreDropdown()/toggleFrameDropdown() loại trừ lẫn nhau và stopPropagation', () => {
       const { component } = setup();
       const event = new MouseEvent('click');
       vi.spyOn(event, 'stopPropagation');
@@ -208,31 +228,41 @@ describe('StoryBoardPage', () => {
       component.toggleGenreDropdown(new MouseEvent('click'));
       expect(component.showGenreDropdown).toBe(true);
       expect(component.showDateDropdown).toBe(false);
+
+      component.toggleFrameDropdown(new MouseEvent('click'));
+      expect(component.showFrameDropdown).toBe(true);
+      expect(component.showGenreDropdown).toBe(false);
     });
 
-    it('closeDropdowns() (click ra ngoài) đóng cả hai dropdown', () => {
+    it('closeDropdowns() (click ra ngoài) đóng cả ba dropdown', () => {
       const { component } = setup();
       component.showDateDropdown = true;
       component.showGenreDropdown = true;
+      component.showFrameDropdown = true;
 
       component.closeDropdowns();
 
       expect(component.showDateDropdown).toBe(false);
       expect(component.showGenreDropdown).toBe(false);
+      expect(component.showFrameDropdown).toBe(false);
     });
 
-    it('setDateFilter()/setGenreFilter() cập nhật giá trị và đóng dropdown tương ứng', () => {
+    it('setDateFilter()/setGenreFilter()/setFrameFilter() cập nhật giá trị và đóng dropdown tương ứng', () => {
       const { component } = setup();
       component.showDateDropdown = true;
       component.showGenreDropdown = true;
+      component.showFrameDropdown = true;
 
       component.setDateFilter('This Week');
       component.setGenreFilter('anime');
+      component.setFrameFilter(4);
 
       expect(component.selectedDateFilter).toBe('This Week');
       expect(component.showDateDropdown).toBe(false);
       expect(component.selectedGenreFilter).toBe('anime');
       expect(component.showGenreDropdown).toBe(false);
+      expect(component.selectedFrameFilter).toBe(4);
+      expect(component.showFrameDropdown).toBe(false);
     });
   });
 
