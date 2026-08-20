@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { SpeechBubbleDto } from './frames-api.service';
 
-// Payload khớp CreateSpeechBubbleDto / UpdateSpeechBubbleDto của be-comic
 // (src/module/speech-bubbles/dto/*.ts)
 export interface CreateSpeechBubbleRequest {
   frameId: string;

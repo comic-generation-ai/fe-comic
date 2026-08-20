@@ -45,7 +45,6 @@ export interface ChangePasswordPayload {
   providedIn: 'root',
 })
 export class AuthApiService {
-  // Nhờ proxy.conf.json, `/api` tự động chuyển hướng về be-comic (http://localhost:3000/api)
   private readonly baseUrl = '/api/auth';
 
   constructor(private http: HttpClient) {}

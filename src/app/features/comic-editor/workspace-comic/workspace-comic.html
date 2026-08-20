@@ -58,10 +58,9 @@
   <div class="comic-grid-layout" [attr.data-frames]="selectedFrames" [style.gap.px]="editorState.gutterSize">
     @for (panelNum of panels; track panelNum; let idx = $index) {
     <div class="comic-panel-card" [id]="'panel-card-' + idx"
-      [class.active-panel]="comicData && editorState.activePanelIndex === idx"
-      (click)="selectPanel(idx, $event)"
-      [style.border-width.px]="editorState.borderWidth"
-      [style.border-radius.px]="editorState.borderRadius" [style.border-color]="editorState.borderColor"
+      [class.active-panel]="comicData && editorState.activePanelIndex === idx" (click)="selectPanel(idx, $event)"
+      [style.border-width.px]="editorState.borderWidth" [style.border-radius.px]="editorState.borderRadius"
+      [style.border-color]="editorState.borderColor"
       [style.border-style]="editorState.borderWidth > 0 ? 'solid' : 'dashed'">
 
       <div class="panel-content-area">
@@ -94,16 +93,12 @@
 
       <!-- SVG Speech Bubble Vector Layer (Only when image is generated) -->
       @if (comicData) {
-      <svg class="vector-overlay-layer"
-        [attr.viewBox]="'0 0 ' + bubbleViewBoxSize + ' ' + bubbleViewBoxSize"
+      <svg class="vector-overlay-layer" [attr.viewBox]="'0 0 ' + bubbleViewBoxSize + ' ' + bubbleViewBoxSize"
         preserveAspectRatio="none">
         @for (bubble of getBubblesForPanel(idx); track bubble.id) {
         <!-- Wrap in a translated <g> so coordinates x,y represent percentage of parent card size -->
-        <g cdkDrag
-           (cdkDragEnded)="onBubbleDragEnded($event, bubble)"
-           class="bubble-vector-group"
-           [style.transform]="'translate(' + bubble.x + '%, ' + bubble.y + '%)'"
-           style="pointer-events: auto;">
+        <g cdkDrag (cdkDragEnded)="onBubbleDragEnded($event, bubble)" class="bubble-vector-group"
+          [style.transform]="'translate(' + bubble.x + '%, ' + bubble.y + '%)'" style="pointer-events: auto;">
 
           <!-- Draw the group contents in local coordinate system translated so center of bubble is at 0,0 -->
           <g [attr.transform]="'translate(' + (-bubble.w / 2) + ', ' + (-bubble.h / 2) + ')'"
@@ -177,16 +172,21 @@
             <!-- Nút điều khiển mấy cái khớp kéo co dãn -->
             @if (editorState.selectedBubbleId === bubble.id) {
             <g class="selection-handles">
-              <g class="resize-handle-group" (mousedown)="startDrag($event, bubble, 'resize')" style="cursor: nwse-resize; pointer-events: auto;">
+              <g class="resize-handle-group" (mousedown)="startDrag($event, bubble, 'resize')"
+                style="cursor: nwse-resize; pointer-events: auto;">
                 <circle [attr.cx]="bubble.w" [attr.cy]="bubble.h" r="16" fill="transparent" />
-                <circle [attr.cx]="bubble.w" [attr.cy]="bubble.h" r="7" class="handle-knob resize-knob" style="pointer-events: none;" />
+                <circle [attr.cx]="bubble.w" [attr.cy]="bubble.h" r="7" class="handle-knob resize-knob"
+                  style="pointer-events: none;" />
               </g>
 
               <!-- Kéo cái đuôi thoại -->
               @if (bubble.hasTail !== false) {
-              <g class="tail-handle-group" (mousedown)="startDrag($event, bubble, 'tail')" style="cursor: pointer; pointer-events: auto;">
-                <circle [attr.cx]="bubble.w/2 + bubble.tailX" [attr.cy]="bubble.h/2 + bubble.tailY" r="16" fill="transparent" />
-                <circle [attr.cx]="bubble.w/2 + bubble.tailX" [attr.cy]="bubble.h/2 + bubble.tailY" r="7" class="handle-knob tail-knob" style="pointer-events: none;" />
+              <g class="tail-handle-group" (mousedown)="startDrag($event, bubble, 'tail')"
+                style="cursor: pointer; pointer-events: auto;">
+                <circle [attr.cx]="bubble.w/2 + bubble.tailX" [attr.cy]="bubble.h/2 + bubble.tailY" r="16"
+                  fill="transparent" />
+                <circle [attr.cx]="bubble.w/2 + bubble.tailX" [attr.cy]="bubble.h/2 + bubble.tailY" r="7"
+                  class="handle-knob tail-knob" style="pointer-events: none;" />
               </g>
               }
 
